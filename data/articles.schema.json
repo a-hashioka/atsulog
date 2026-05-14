@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/articles.schema.json",
+  "title": "Articles",
+  "description": "Metadata list for markdown articles.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "slug",
+      "title",
+      "filePath",
+      "createdAt",
+      "modifiedAt",
+      "tags",
+      "series",
+      "category",
+      "viewCount"
+    ],
+    "properties": {
+      "slug": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+        "description": "URL-safe article identifier."
+      },
+      "title": {
+        "type": "string",
+        "minLength": 1
+      },
+      "filePath": {
+        "type": "string",
+        "pattern": "^data/md/.+\\.md$",
+        "description": "Relative path to the source markdown file."
+      },
+      "createdAt": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Article publish datetime in ISO 8601."
+      },
+      "modifiedAt": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Last edited datetime in ISO 8601."
+      },
+      "tags": {
+        "type": "array",
+        "minItems": 0,
+        "items": {
+          "type": "string",
+          "minLength": 1
+        },
+        "uniqueItems": true,
+        "description": "Tags for filtering and search."
+      },
+      "series": {
+        "type": ["string", "null"],
+        "minLength": 1,
+        "description": "Series name. Use null when not part of a series."
+      },
+      "category": {
+        "type": "string",
+        "minLength": 1,
+        "description": "Primary article category."
+      },
+      "viewCount": {
+        "type": "integer",
+        "minimum": 0,
+        "description": "Total article page views."
+      }
+    }
+  }
+}
