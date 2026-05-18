@@ -15,6 +15,14 @@ export type ArticleMetadata = {
   viewCount: number;
 };
 
+export type ArticleListItemProps = {
+  article: ArticleMetadata;
+};
+
+export type ArticleListProps = {
+  articles: ArticleMetadata[];
+};
+
 const ARTICLES_JSON_PATH = path.join(process.cwd(), "data", "articles.json");
 const PROJECT_ROOT = process.cwd();
 
