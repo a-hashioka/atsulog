@@ -1,6 +1,6 @@
 import "server-only";
 
-import { readFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 export type ArticleMetadata = {
@@ -52,15 +52,45 @@ function resolveProjectPath(filePath: string): string {
  * @returns Parsed metadata array from data/articles.json.
  */
 export async function loadArticleMetadata(): Promise<ArticleMetadata[]> {
-  const content = await readFile(ARTICLES_JSON_PATH, "utf8");
-  // Parse as unknown first, then validate structure before casting.
-  const parsed = JSON.parse(content) as unknown;
+  try {
+    const content = await readFile(ARTICLES_JSON_PATH, "utf8");
+    // Parse as unknown first, then validate structure before casting.
+    const parsed = JSON.parse(content) as unknown;
 
-  if (!Array.isArray(parsed)) {
-    throw new TypeError("data/articles.json must contain an array.");
+    if (!Array.isArray(parsed)) {
+      throw new TypeError("data/articles.json must contain an array.");
+    }
+
+    return parsed as ArticleMetadata[];
+  } catch (error: unknown) {
+    if (error instanceof TypeError) {
+      throw error;
+    }
+
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      "code" in error &&
+      error.code === "ENOENT"
+    ) {
+      await mkdir(path.dirname(ARTICLES_JSON_PATH), { recursive: true });
+      await writeFile(ARTICLES_JSON_PATH, "[]\n", "utf8");
+      return [];
+    }
+
+    if (error instanceof SyntaxError) {
+      throw new Error(`Invalid JSON format in ${ARTICLES_JSON_PATH}`, {
+        cause: error,
+      });
+    }
+
+    throw new Error(
+      `Failed to load article metadata from ${ARTICLES_JSON_PATH}`,
+      {
+        cause: error,
+      },
+    );
   }
-
-  return parsed as ArticleMetadata[];
 }
 
 /**
@@ -76,5 +106,22 @@ export async function loadArticleContent(filePath: string): Promise<string> {
     throw new TypeError("Path must point to a markdown (.md) file.");
   }
 
-  return readFile(fullPath, "utf8");
+  try {
+    return await readFile(fullPath, "utf8");
+  } catch (error: unknown) {
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      "code" in error &&
+      error.code === "ENOENT"
+    ) {
+      throw new Error(`Article content file not found: ${fullPath}`, {
+        cause: error,
+      });
+    }
+
+    throw new Error(`Failed to load article content from ${fullPath}`, {
+      cause: error,
+    });
+  }
 }
