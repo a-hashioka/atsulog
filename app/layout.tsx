@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { siteConfig } from "@/app/lib/site-config";
 import "./globals.css";
 
@@ -19,7 +20,10 @@ export default function RootLayout({
       <body>
         <div>
           <header>
-            <h1>{siteConfig.title}</h1>
+            <span>{siteConfig.title}</span>
+            <nav aria-label="Global navigation">
+              <Link href="/">Home</Link> <Link href="/articles">Articles</Link>
+            </nav>
           </header>
           <main>{children}</main>
           <footer>

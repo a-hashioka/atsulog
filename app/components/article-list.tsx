@@ -1,28 +1,17 @@
 import Link from "next/link";
+import { formatDate } from "@/app/lib/article-display";
+import type { ArticleMetadata } from "@/app/lib/article-types";
 
-import { siteConfig } from "@/app/lib/site-config";
-import { ArticleListItemProps } from "@/app/lib/article-utils";
-import { ArticleListProps } from "@/app/lib/article-utils";
-
-/**
- * Formats an article metadata date string for display using the site locale and time zone.
- * @param value An ISO 8601 date string.
- * @returns A localized date-time string.
- */
-function formatDate(value: string): string {
-  return new Date(value).toLocaleString(siteConfig.locale, {
-    dateStyle: "medium",
-    timeStyle: "short",
-    timeZone: siteConfig.timeZone,
-  });
-}
+type ArticleListItemProps = {
+  article: ArticleMetadata;
+};
 
 function ArticleListItem({ article }: ArticleListItemProps) {
   return (
     <li>
-      <h3>
+      <span>
         <Link href={`/articles/${article.slug}`}>{article.title}</Link>
-      </h3>
+      </span>
       <p>
         Category: {article.category}
         <br />
@@ -40,6 +29,10 @@ function ArticleListItem({ article }: ArticleListItemProps) {
     </li>
   );
 }
+
+export type ArticleListProps = {
+  articles: ArticleMetadata[];
+};
 
 export function ArticleList({ articles }: ArticleListProps) {
   if (articles.length === 0) {

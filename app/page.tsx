@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { loadArticleMetadata } from "@/app/lib/article-utils";
-import { ArticleListProps } from "@/app/lib/article-utils";
-import { sortArticlesByDateDesc } from "@/app/lib/article-sorting";
-import { ArticleList } from "@/app/components/article-list";
+import { getArticleMetadata } from "@/app/lib/article-repository";
+import { sortArticlesByDateDesc } from "@/app/lib/article-display";
+import { ArticleList, ArticleListProps } from "@/app/components/article-list";
 
 const numberOfArticlesToShow = 3;
 
@@ -15,7 +14,7 @@ function RecentArticles({ articles }: ArticleListProps) {
   return (
     <>
       <div>
-        <h2>Recent Articles</h2>
+        <h1>Recent Articles</h1>
         <ArticleList articles={recentArticles} />
         <Link href="/articles">For More</Link>
       </div>
@@ -24,7 +23,7 @@ function RecentArticles({ articles }: ArticleListProps) {
 }
 
 export default async function Home() {
-  const articles = await loadArticleMetadata();
+  const articles = await getArticleMetadata();
   return (
     <>
       <RecentArticles articles={articles} />
