@@ -3,9 +3,9 @@ import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 
 import {
-  getArticleMetadata,
-  getArticleDetail,
-} from "@/app/lib/article-repository";
+  loadArticleMetadata,
+  loadArticleDetail,
+} from "@/app/lib/repository/article-loader";
 import { formatDate } from "@/app/lib/article-display";
 
 type ArticlePageParams = {
@@ -17,7 +17,7 @@ type ArticlePageParams = {
  * @returns All article slug params for static generation.
  */
 // export async function generateStaticParams(): Promise<ArticlePageParams[]> {
-//   const allArticles = await getArticleMetadata();
+//   const allArticles = await loadArticleMetadata();
 //   return allArticles.map((article) => ({ slug: article.slug }));
 // }
 
@@ -32,8 +32,8 @@ type ArticlePageProps = {
  */
 export default async function ArticlePage({ params }: ArticlePageProps) {
   const { slug } = await params;
-  const articles = await getArticleMetadata();
-  const articleDetail = await getArticleDetail(articles, slug);
+  const articles = await loadArticleMetadata();
+  const articleDetail = await loadArticleDetail(articles, slug);
 
   if (!articleDetail) {
     notFound();

@@ -1,18 +1,26 @@
 import "server-only";
 
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import path from "node:path";
 
 import type { ArticleMetadata } from "@/app/lib/article-types";
 
-const ARTICLES_JSON_PATH = path.join(process.cwd(), "data", "articles.json");
-const PROJECT_ROOT = process.cwd();
+import { ARTICLES_JSON_PATH, PROJECT_ROOT } from "./article-common";
+
+// --- Types ---
+
+export type ArticleDetail = {
+  metadata: ArticleMetadata;
+  content: string;
+};
+
+// --- Exported Functions ---
 
 /**
- * Gets article metadata from data/articles.json.
- * @returns Parsed metadata array.
+ * Loads article metadata from data/articles.json.
+ * @returns A promise that resolves to an array of article metadata. Returns an empty array if the file does not exist.
  */
-export async function getArticleMetadata(): Promise<ArticleMetadata[]> {
+export async function loadArticleMetadata(): Promise<ArticleMetadata[]> {
   try {
     const content = await readFile(ARTICLES_JSON_PATH, "utf8");
     const parsed = JSON.parse(content) as unknown;
@@ -29,8 +37,6 @@ export async function getArticleMetadata(): Promise<ArticleMetadata[]> {
       "code" in error &&
       error.code === "ENOENT"
     ) {
-      await mkdir(path.dirname(ARTICLES_JSON_PATH), { recursive: true });
-      await writeFile(ARTICLES_JSON_PATH, "[]\n", "utf8");
       return [];
     }
 
@@ -49,10 +55,32 @@ export async function getArticleMetadata(): Promise<ArticleMetadata[]> {
   }
 }
 
-// --- Content Loading ---
+/**
+ * Loads both metadata and markdown content for the requested slug.
+ * @param articles - The full array of article metadata to search within.
+ * @param slug - The unique slug of the article to load.
+ * @returns A promise that resolves to the article detail (metadata and content) or null if not found.
+ */
+export async function loadArticleDetail(
+  articles: ArticleMetadata[],
+  slug: string,
+): Promise<ArticleDetail | null> {
+  const metadata = articles.find((article) => article.slug === slug) ?? null;
+
+  if (!metadata) {
+    return null;
+  }
+
+  const content = await readArticleContent(metadata.filePath);
+  return { metadata, content };
+}
+
+// --- Helper Functions ---
 
 /**
  * Resolves an input path to an absolute path under the project root.
+ * @param filePath - The project-relative path to resolve.
+ * @returns The absolute path to the file.
  */
 function resolveProjectPath(filePath: string): string {
   const resolvedPath = path.resolve(PROJECT_ROOT, filePath);
@@ -67,6 +95,8 @@ function resolveProjectPath(filePath: string): string {
 
 /**
  * Reads markdown article content from a project-relative path.
+ * @param filePath - The project-relative path to the markdown file.
+ * @returns A promise that resolves to the raw markdown content string.
  */
 async function readArticleContent(filePath: string): Promise<string> {
   const fullPath = resolveProjectPath(filePath);
@@ -93,36 +123,4 @@ async function readArticleContent(filePath: string): Promise<string> {
       cause: error,
     });
   }
-}
-
-/**
- * Finds article metadata by slug.
- */
-function readArticleMetadata(
-  articles: ArticleMetadata[],
-  slug: string,
-): ArticleMetadata | null {
-  return articles.find((article) => article.slug === slug) ?? null;
-}
-
-export type ArticleDetail = {
-  metadata: ArticleMetadata;
-  content: string;
-};
-
-/**
- * Gets both metadata and markdown content for the requested slug.
- */
-export async function getArticleDetail(
-  articles: ArticleMetadata[],
-  slug: string,
-): Promise<ArticleDetail | null> {
-  const metadata = readArticleMetadata(articles, slug);
-
-  if (!metadata) {
-    return null;
-  }
-
-  const content = await readArticleContent(metadata.filePath);
-  return { metadata, content };
 }
