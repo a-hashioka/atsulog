@@ -18,6 +18,7 @@ type ArticleSearchFormProps = {
     category?: string[];
     series?: string[];
   };
+  action?: string;
 };
 
 /**
@@ -27,18 +28,19 @@ type ArticleSearchFormProps = {
 export function ArticleSearchForm({
   searchParams,
   candidates,
+  action = "/articles",
 }: ArticleSearchFormProps) {
   const router = useRouter();
 
   return (
     <section>
       <h1>Search & Filter Articles</h1>
-      <Form action="/articles">
+      <Form action={action}>
         <SearchFields searchParams={searchParams} candidates={candidates} />
 
         <div className="form-actions">
           <button type="submit">Search</button>
-          <button type="button" onClick={() => router.push("/articles")}>
+          <button type="button" onClick={() => router.push(action)}>
             Clear
           </button>
         </div>

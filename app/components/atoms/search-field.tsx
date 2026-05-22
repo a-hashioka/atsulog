@@ -1,49 +1,8 @@
-type SearchFieldProps = {
-  name: string;
-  defaultValue: string;
-  placeholder?: string;
-  candidates?: string[];
-};
-
-/**
- * A reusable search input field with a label and optional autocomplete candidates.
- */
-function SearchField({
-  name,
-  defaultValue,
-  placeholder,
-  candidates,
-}: SearchFieldProps) {
-  const listId = `${name}-list`;
-
-  return (
-    <div>
-      <label htmlFor={name}>
-        {name.charAt(0).toUpperCase() + name.slice(1)}:
-      </label>
-      <input
-        type="text"
-        id={name}
-        name={name}
-        defaultValue={defaultValue}
-        placeholder={placeholder}
-        list={candidates ? listId : undefined}
-        autoComplete="off"
-      />
-      {candidates && candidates.length > 0 && (
-        <datalist id={listId}>
-          {candidates.map((candidate) => (
-            <option key={candidate} value={candidate} />
-          ))}
-        </datalist>
-      )}
-    </div>
-  );
-}
+import { useState, useCallback, useEffect } from "react";
+import { FormField } from "./form-field";
 
 const SEARCH_FIELDS = [
   { name: "keyword", placeholder: "Search articles..." },
-  { name: "tag", placeholder: "e.g. Linux" },
   { name: "category", placeholder: "e.g. Computer Science" },
   { name: "series", placeholder: "e.g. My Dev" },
 ] as const;
@@ -66,17 +25,59 @@ export function SearchFields({ searchParams, candidates }: SearchFieldsProps) {
     return val ?? "";
   };
 
+  const initialTagValue = getFirstValue(searchParams.tag);
+  const [tagValue, setTagValue] = useState(initialTagValue);
+  const [tagCandidates, setTagCandidates] = useState<string[]>(
+    candidates?.tag ?? [],
+  );
+
+  // Synchronize state with searchParams if they change (e.g. Clear button)
+  useEffect(() => {
+    setTagValue(initialTagValue);
+  }, [initialTagValue]);
+
+  const handleTagsChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value;
+      setTagValue(value);
+
+      if (!candidates?.tag) return;
+
+      const lastCommaIndex = value.lastIndexOf(",");
+      const prefix = value.substring(0, lastCommaIndex + 1);
+      const lastPart = value.substring(lastCommaIndex + 1).trim();
+
+      const filtered = candidates.tag.filter((c) =>
+        c.toLowerCase().includes(lastPart.toLowerCase()),
+      );
+
+      setTagCandidates(
+        filtered.map((c) => `${prefix}${prefix ? " " : ""}${c}`),
+      );
+    },
+    [candidates?.tag],
+  );
+
   return (
     <>
       {SEARCH_FIELDS.map(({ name, placeholder }) => (
-        <SearchField
+        <FormField
           key={name}
-          name={name}
+          id={name}
           defaultValue={getFirstValue(searchParams[name])}
           placeholder={placeholder}
           candidates={candidates?.[name as keyof typeof candidates]}
+          required={false}
         />
-      ))}
+      ))}{" "}
+      <FormField
+        id="tag"
+        value={tagValue}
+        onChange={handleTagsChange}
+        candidates={tagCandidates}
+        placeholder="tag1, tag2, ..."
+        required={false}
+      />
     </>
   );
 }

@@ -3,6 +3,7 @@ import { EditArticleForm } from "@/app/components/organisms/edit-article-form";
 import { loadArticleMetadata } from "@/app/lib/repository/article-loader";
 import { saveArticleDetail } from "@/app/lib/repository/article-saver";
 import type { ArticleMetadata } from "@/app/lib/article-types";
+import { extractArticleCandidates } from "@/app/lib/article-display";
 
 /**
  * Page for creating a new article.
@@ -18,6 +19,7 @@ export default async function NewArticlePage() {
     title: "",
     category: "",
     series: null,
+    seriesOrder: null,
     tags: [],
     filePath: "",
     createdAt: "",
@@ -52,6 +54,7 @@ export default async function NewArticlePage() {
       title: raw.title,
       category: raw.category,
       series: raw.series.trim() || null,
+      seriesOrder: null,
       tags: raw.tags
         .split(",")
         .map((t) => t.trim())
@@ -69,6 +72,9 @@ export default async function NewArticlePage() {
     redirect(`/edit/`);
   }
 
+  const articles = await loadArticleMetadata();
+  const candidates = extractArticleCandidates(articles);
+
   return (
     <main>
       <h1>Create New Article</h1>
@@ -76,6 +82,8 @@ export default async function NewArticlePage() {
         metadata={initialMetadata}
         content=""
         action={handleCreate}
+        articles={articles}
+        candidates={candidates}
       />
     </main>
   );

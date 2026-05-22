@@ -6,6 +6,7 @@ import {
 } from "@/app/lib/repository/article-loader";
 import { saveArticleDetail } from "@/app/lib/repository/article-saver";
 import { EditArticleForm } from "@/app/components/organisms/edit-article-form";
+import { extractArticleCandidates } from "@/app/lib/article-display";
 
 /**
  * Article Edit Page.
@@ -24,6 +25,8 @@ export default async function EditArticlePage({
   if (!detail) {
     notFound();
   }
+
+  const candidates = extractArticleCandidates(articles);
 
   /**
    * Server Action to handle the update of an article.
@@ -65,6 +68,8 @@ export default async function EditArticlePage({
         metadata={detail.metadata}
         content={detail.content}
         action={handleSave}
+        articles={articles}
+        candidates={candidates}
       />
     </main>
   );

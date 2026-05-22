@@ -6,6 +6,7 @@ export type ArticleMetadata = {
   modifiedAt: string;
   tags: string[];
   series: string | null;
+  seriesOrder: number | null;
   category: string;
   viewCount: number;
 };

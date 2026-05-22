@@ -41,6 +41,7 @@ export default async function NewArticlePage({
       <ArticleSearchForm
         searchParams={resolvedSearchParams}
         candidates={candidates}
+        action="/edit"
       />
       <PaginatedArticleList
         articles={sortedArticles}

@@ -45,9 +45,19 @@ export function filterArticles(
       if (!matchesKeyword) return false;
     }
 
-    // Tag filter
-    if (lowTag && !article.tags.some((t) => t.toLowerCase() === lowTag)) {
-      return false;
+    // Tag filter (Supports multiple comma-separated tags - AND search)
+    if (lowTag) {
+      const searchTags = lowTag
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean);
+      const articleTags = article.tags.map((t) => t.toLowerCase());
+
+      const matchesAllTags = searchTags.every((st) =>
+        articleTags.includes(st),
+      );
+
+      if (!matchesAllTags) return false;
     }
 
     // Series filter

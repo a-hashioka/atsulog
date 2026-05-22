@@ -4,6 +4,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import type { ArticleMetadata } from "@/app/lib/article-types";
+import { getNextSeriesOrder } from "@/app/lib/article-series";
 
 import { ARTICLES_JSON_PATH } from "./article-common";
 
@@ -34,6 +35,7 @@ export async function saveArticleMetadataList(
 
 /**
  * Updates an article's metadata and optionally its markdown content.
+ * Automatically assigns seriesOrder if it's a new article in a series.
  * @param articles - The current array of article metadata.
  * @param newArticle - The article metadata to update.
  * @param content - Optional markdown content to save.
@@ -48,15 +50,33 @@ export async function saveArticleDetail(
   );
   const newMetadataList = [...articles];
 
+  let articleToSave = { ...newArticle };
+
+  // Assign seriesOrder for NEW articles if a series is specified
+  if (index === -1 && articleToSave.series) {
+    articleToSave.seriesOrder = getNextSeriesOrder(
+      articleToSave.series,
+      articles,
+    );
+  }
+
   if (index !== -1) {
-    newMetadataList[index] = newArticle;
+    // For existing articles, preserve the existing seriesOrder unless explicitly changed
+    articleToSave = {
+      ...newMetadataList[index],
+      ...articleToSave,
+    };
+    newMetadataList[index] = articleToSave;
   } else {
-    newMetadataList.push(newArticle);
+    newMetadataList.push(articleToSave);
   }
+
   const tasks: Promise<void>[] = [saveArticleMetadataList(newMetadataList)];
+
   if (content !== undefined) {
-    tasks.push(saveArticleContent(newArticle.filePath, content));
+    tasks.push(saveArticleContent(articleToSave.filePath, content));
   }
+
   await Promise.all(tasks);
 }
 
