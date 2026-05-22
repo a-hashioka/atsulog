@@ -4,6 +4,7 @@ type PaginationNavProps = {
   currentPage: number;
   totalPages: number;
   basePath?: string;
+  searchParams?: Record<string, string | string[] | undefined>;
 };
 
 /**
@@ -15,17 +16,34 @@ export function PaginationNav({
   currentPage,
   totalPages,
   basePath = "/articles",
+  searchParams = {},
 }: PaginationNavProps) {
   const hasPreviousPage = currentPage > 1;
   const hasNextPage = currentPage < totalPages;
-  const connector = basePath.includes("?") ? "&" : "?";
 
   /**
-   * Generates a URL for a specific page.
+   * Generates a URL for a specific page, preserving other search parameters.
    * @param page - The page number.
    * @returns The formatted URL string.
    */
-  const getPageUrl = (page: number) => `${basePath}${connector}page=${page}`;
+  const getPageUrl = (page: number) => {
+    const params = new URLSearchParams();
+
+    // Add existing search params
+    Object.entries(searchParams).forEach(([key, value]) => {
+      if (key === "page" || value === undefined) return;
+      if (Array.isArray(value)) {
+        value.forEach((v) => params.append(key, v));
+      } else {
+        params.append(key, value);
+      }
+    });
+
+    // Set the new page
+    params.set("page", page.toString());
+
+    return `${basePath}?${params.toString()}`;
+  };
 
   return (
     <nav aria-label="Pagination">

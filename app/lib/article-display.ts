@@ -1,4 +1,5 @@
 import { siteConfig } from "@/app/lib/site-config";
+import type { ArticleMetadata } from "./article-types";
 
 export type ArticleDateField = "createdAt" | "modifiedAt";
 
@@ -27,4 +28,19 @@ export function formatDate(value: string): string {
     timeStyle: "short",
     timeZone: siteConfig.timeZone,
   });
+}
+
+/**
+ * Extracts unique candidates (tags, categories, series) from a list of article metadata.
+ * @param metadata List of article metadata.
+ * @returns An object containing sorted unique tags, categories, and series.
+ */
+export function extractArticleCandidates(metadata: ArticleMetadata[]) {
+  return {
+    tag: Array.from(new Set(metadata.flatMap((a) => a.tags))).sort(),
+    category: Array.from(new Set(metadata.map((a) => a.category))).sort(),
+    series: Array.from(
+      new Set(metadata.map((a) => a.series).filter((s): s is string => !!s)),
+    ).sort(),
+  };
 }

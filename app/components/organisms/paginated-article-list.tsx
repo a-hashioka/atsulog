@@ -10,6 +10,10 @@ export const ARTICLES_PER_PAGE = 12;
 
 type SearchParams = {
   page?: string | string[];
+  keyword?: string | string[];
+  tag?: string | string[];
+  series?: string | string[];
+  category?: string | string[];
 };
 
 export type ArticlesPageProps = {
@@ -56,6 +60,7 @@ export function PaginatedArticleList({
         currentPage={currentPage}
         totalPages={totalPages}
         basePath={basePath}
+        searchParams={searchParams}
       />
     </section>
   );
