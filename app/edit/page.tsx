@@ -5,6 +5,7 @@ import {
 } from "@/app/components/organisms/paginated-article-list";
 import { sortArticlesByDateDesc } from "@/app/lib/article-display";
 import Link from "next/link";
+import { LogoutButton } from "@/app/components/atoms/logout-button";
 
 /**
  * Renders the page for article management.
@@ -23,7 +24,8 @@ export default async function NewArticlePage({
 
   return (
     <main>
-      <div style={{ marginBottom: "2rem" }}>
+      <div>
+        <LogoutButton />
         <Link href="/edit/create">Create New Article</Link>
       </div>
       <PaginatedArticleList

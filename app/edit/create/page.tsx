@@ -65,7 +65,8 @@ export default async function NewArticlePage() {
     const currentArticles = await loadArticleMetadata();
     await saveArticleDetail(currentArticles, newMetadata, raw.content);
 
-    redirect(`/articles/${slug}`);
+    // redirect(`/articles/${slug}`);
+    redirect(`/edit/`);
   }
 
   return (

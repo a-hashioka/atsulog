@@ -4,7 +4,7 @@ import { siteConfig } from "@/app/lib/site-config";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: siteConfig.title,
+  title: siteConfig.title[0].toUpperCase() + siteConfig.title.slice(1),
   description: siteConfig.description,
 };
 

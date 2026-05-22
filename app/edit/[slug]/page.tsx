@@ -54,7 +54,8 @@ export default async function EditArticlePage({
       raw.content,
     );
 
-    redirect(`/articles/${slug}`);
+    // redirect(`/articles/${slug}`);
+    redirect(`/edit/`);
   }
 
   return (

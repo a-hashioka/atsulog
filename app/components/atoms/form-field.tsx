@@ -4,6 +4,7 @@
 export type FormFieldProps = {
   id: string;
   defaultValue: string;
+  type?: "text" | "password";
   required?: boolean;
 };
 
@@ -16,6 +17,7 @@ export type FormFieldProps = {
 export function FormField({
   id,
   defaultValue,
+  type = "text",
   required = true,
 }: FormFieldProps) {
   const displayLabel = id.charAt(0).toUpperCase() + id.slice(1);
@@ -24,7 +26,7 @@ export function FormField({
     <>
       <label htmlFor={id}>{displayLabel}:</label>
       <input
-        type="text"
+        type={type}
         id={id}
         name={id}
         defaultValue={defaultValue}
