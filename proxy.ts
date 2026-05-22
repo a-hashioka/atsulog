@@ -3,11 +3,11 @@ import { decrypt } from "@/app/lib/auth";
 import { siteConfig } from "@/app/lib/site-config";
 
 /**
- * Middleware to protect administrative routes and handle authentication redirects.
+ * Proxy to protect administrative routes and handle authentication redirects.
  * @param request - The incoming request object.
  * @returns The next response (redirect or continue).
  */
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Define protected routes and public authentication routes
@@ -39,7 +39,7 @@ export async function middleware(request: NextRequest) {
 }
 
 /**
- * Configuration for the middleware to specify which paths should trigger it.
+ * Configuration for the proxy to specify which paths should trigger it.
  */
 export const config = {
   matcher: [
