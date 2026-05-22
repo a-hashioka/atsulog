@@ -3,11 +3,11 @@ import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 
 import {
-  loadArticleMetadata,
-  loadArticleDetail,
-} from "@/app/lib/repository/article-loader";
-import { incrementViewCount } from "@/app/lib/repository/article-saver";
-import { formatDate } from "@/app/lib/article-display";
+  getArticles,
+  getArticleBySlug,
+  incrementViewCount,
+} from "@/app/lib/article-repository";
+import { formatDate } from "@/app/lib/article-utils";
 
 type ArticlePageParams = {
   slug: string;
@@ -25,8 +25,8 @@ type ArticlePageProps = {
  */
 export default async function ArticlePage({ params }: ArticlePageProps) {
   const { slug } = await params;
-  const articles = await loadArticleMetadata();
-  const articleDetail = await loadArticleDetail(articles, slug);
+  const articles = await getArticles();
+  const articleDetail = await getArticleBySlug(articles, slug);
 
   if (!articleDetail) {
     notFound();

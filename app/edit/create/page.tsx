@@ -1,9 +1,8 @@
 import { redirect } from "next/navigation";
 import { EditArticleForm } from "@/app/components/organisms/edit-article-form";
-import { loadArticleMetadata } from "@/app/lib/repository/article-loader";
-import { saveArticleDetail } from "@/app/lib/repository/article-saver";
+import { getArticles, saveArticle } from "@/app/lib/article-repository";
 import type { ArticleMetadata } from "@/app/lib/article-types";
-import { extractArticleCandidates } from "@/app/lib/article-display";
+import { getTaxonomies } from "@/app/lib/article-utils";
 
 /**
  * Page for creating a new article.
@@ -65,15 +64,15 @@ export default async function NewArticlePage() {
       viewCount: 0,
     };
 
-    const currentArticles = await loadArticleMetadata();
-    await saveArticleDetail(currentArticles, newMetadata, raw.content);
+    const currentArticles = await getArticles();
+    await saveArticle(currentArticles, newMetadata, raw.content);
 
     // redirect(`/articles/${slug}`);
     redirect(`/edit/`);
   }
 
-  const articles = await loadArticleMetadata();
-  const candidates = extractArticleCandidates(articles);
+  const articles = await getArticles();
+  const taxonomies = getTaxonomies(articles);
 
   return (
     <main>
@@ -83,7 +82,7 @@ export default async function NewArticlePage() {
         content=""
         action={handleCreate}
         articles={articles}
-        candidates={candidates}
+        candidates={taxonomies}
       />
     </main>
   );

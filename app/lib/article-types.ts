@@ -10,3 +10,13 @@ export type ArticleMetadata = {
   category: string;
   viewCount: number;
 };
+
+export type ArticleDetail = {
+  metadata: ArticleMetadata;
+  content: string;
+};
+
+/**
+ * Raw search parameters from Next.js.
+ */
+export type RawSearchParams = Record<string, string | string[] | undefined>;

@@ -4,7 +4,7 @@ import { useState, useCallback } from "react";
 import type { ArticleMetadata } from "@/app/lib/article-types";
 import { FormField } from "@/app/components/atoms/form-field";
 import { MarkdownField } from "@/app/components/atoms/markdown-field";
-import { getNextSeriesOrder } from "@/app/lib/article-series";
+import { getNextSeriesOrder } from "@/app/lib/article-utils";
 
 // --- Types ---
 
@@ -17,7 +17,7 @@ type EditArticleFormProps = {
   action: (formData: FormData) => Promise<void>;
   articles: ArticleMetadata[];
   candidates?: {
-    tag?: string[];
+    tags?: string[];
     category?: string[];
     series?: string[];
   };
@@ -42,7 +42,7 @@ export function EditArticleForm({
   const [series, setSeries] = useState(metadata.series ?? "");
   const [tags, setTags] = useState(metadata.tags.join(", "));
   const [tagCandidates, setTagCandidates] = useState<string[]>(
-    candidates?.tag ?? [],
+    candidates?.tags ?? [],
   );
 
   const handleSeriesChange = useCallback(
@@ -68,20 +68,22 @@ export function EditArticleForm({
       const value = e.target.value;
       setTags(value);
 
-      if (!candidates?.tag) return;
+      if (!candidates?.tags) return;
 
       const lastCommaIndex = value.lastIndexOf(",");
       const prefix = value.substring(0, lastCommaIndex + 1);
       const lastPart = value.substring(lastCommaIndex + 1).trim();
 
       // Filter and then map with prefix so the browser's datalist matches the full input
-      const filtered = candidates.tag.filter((c) =>
+      const filtered = candidates.tags.filter((c) =>
         c.toLowerCase().includes(lastPart.toLowerCase()),
       );
 
-      setTagCandidates(filtered.map((c) => `${prefix}${prefix ? " " : ""}${c}`));
+      setTagCandidates(
+        filtered.map((c) => `${prefix}${prefix ? " " : ""}${c}`),
+      );
     },
-    [candidates?.tag],
+    [candidates?.tags],
   );
 
   return (

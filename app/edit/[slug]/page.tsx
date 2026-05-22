@@ -1,12 +1,12 @@
 import { notFound, redirect } from "next/navigation";
 
 import {
-  loadArticleDetail,
-  loadArticleMetadata,
-} from "@/app/lib/repository/article-loader";
-import { saveArticleDetail } from "@/app/lib/repository/article-saver";
+  getArticleBySlug,
+  getArticles,
+  saveArticle,
+} from "@/app/lib/article-repository";
 import { EditArticleForm } from "@/app/components/organisms/edit-article-form";
-import { extractArticleCandidates } from "@/app/lib/article-display";
+import { getTaxonomies } from "@/app/lib/article-utils";
 
 /**
  * Article Edit Page.
@@ -19,14 +19,14 @@ export default async function EditArticlePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const articles = await loadArticleMetadata();
-  const detail = await loadArticleDetail(articles, slug);
+  const articles = await getArticles();
+  const detail = await getArticleBySlug(articles, slug);
 
   if (!detail) {
     notFound();
   }
 
-  const candidates = extractArticleCandidates(articles);
+  const taxonomies = getTaxonomies(articles);
 
   /**
    * Server Action to handle the update of an article.
@@ -51,11 +51,7 @@ export default async function EditArticlePage({
     };
 
     // Use fresh metadata list for saving to prevent potential race conditions
-    await saveArticleDetail(
-      await loadArticleMetadata(),
-      updatedMetadata,
-      raw.content,
-    );
+    await saveArticle(await getArticles(), updatedMetadata, raw.content);
 
     // redirect(`/articles/${slug}`);
     redirect(`/edit/`);
@@ -69,7 +65,7 @@ export default async function EditArticlePage({
         content={detail.content}
         action={handleSave}
         articles={articles}
-        candidates={candidates}
+        candidates={taxonomies}
       />
     </main>
   );

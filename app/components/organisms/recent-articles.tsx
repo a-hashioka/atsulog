@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { sortArticlesByDateDesc } from "@/app/lib/article-display";
+import { sortArticlesByDate } from "@/app/lib/article-utils";
 import {
   ArticleList,
   type ArticleListProps,
@@ -13,7 +13,7 @@ const numberOfArticlesToShow = 3;
  * @returns A section displaying the latest articles and a link to the archive.
  */
 export function RecentArticles({ articles }: ArticleListProps) {
-  const recentArticles = sortArticlesByDateDesc(articles, "createdAt").slice(
+  const recentArticles = sortArticlesByDate(articles, "createdAt").slice(
     0,
     numberOfArticlesToShow,
   );

@@ -2,13 +2,13 @@ import {
   PaginatedArticleList,
   ArticlesPageProps,
 } from "@/app/components/organisms/paginated-article-list";
-import { loadArticleMetadata } from "@/app/lib/repository/article-loader";
+import { getArticles } from "@/app/lib/article-repository";
 import {
-  sortArticlesByDateDesc,
-  extractArticleCandidates,
-} from "@/app/lib/article-display";
+  sortArticlesByDate,
+  getTaxonomies,
+  filterArticles,
+} from "@/app/lib/article-utils";
 import { ArticleSearchForm } from "@/app/components/organisms/article-search-form";
-import { filterArticles } from "@/app/lib/article-filter";
 
 /**
  * Renders the paginated articles list page with search and filtering.
@@ -21,14 +21,14 @@ export default async function ArticlesPage({
   const resolvedSearchParams = await searchParams;
 
   // 1. Data Fetching
-  const allMetadata = await loadArticleMetadata();
+  const allMetadata = await getArticles();
 
   // 2. Prepare Form Candidates
-  const candidates = extractArticleCandidates(allMetadata);
+  const candidates = getTaxonomies(allMetadata);
 
   // 3. Filtering & Sorting (Logic encapsulated in libraries)
   const filteredArticles = filterArticles(allMetadata, resolvedSearchParams);
-  const sortedArticles = sortArticlesByDateDesc(filteredArticles, "createdAt");
+  const sortedArticles = sortArticlesByDate(filteredArticles, "createdAt");
 
   // 4. Rendering
   return (

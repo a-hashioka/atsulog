@@ -1,36 +1,25 @@
 import Link from "next/link";
-import { formatDate } from "@/app/lib/article-display";
+import { formatDate } from "@/app/lib/article-utils";
 import type { ArticleMetadata } from "@/app/lib/article-types";
-
-// --- Types ---
 
 export type ArticleListProps = {
   articles: ArticleMetadata[];
   basePath?: string;
 };
 
-type ArticleListItemProps = {
-  article: ArticleMetadata;
-  basePath: string;
-};
-
-// --- Main Component ---
-
 /**
- * Renders a list of articles.
- * @param props - Component props.
- * @returns An unordered list of article items or a message if empty.
+ * Displays a list of articles with their metadata.
  */
 export function ArticleList({
   articles,
   basePath = "/articles",
 }: ArticleListProps) {
   if (articles.length === 0) {
-    return <p>No Articles</p>;
+    return <p>No articles found.</p>;
   }
 
   return (
-    <ul>
+    <ul className="article-list">
       {articles.map((article) => (
         <ArticleListItem
           key={article.slug}
@@ -42,33 +31,34 @@ export function ArticleList({
   );
 }
 
-// --- Sub-components ---
-
-/**
- * A single item in the article list.
- * @param props - Component props.
- * @returns A list item displaying article details.
- */
-function ArticleListItem({ article, basePath }: ArticleListItemProps) {
+function ArticleListItem({
+  article,
+  basePath,
+}: {
+  article: ArticleMetadata;
+  basePath: string;
+}) {
   return (
-    <li>
-      <span>
-        <Link href={`${basePath}/${article.slug}`}>{article.title}</Link>
-      </span>
-      <p>
-        Category: {article.category}
+    <li className="article-item">
+      <Link href={`${basePath}/${article.slug}`} className="article-link">
+        {article.title}
+      </Link>
+      <div className="article-metadata">
+        <span>Category: {article.category}</span>
         <br />
-        Created at {formatDate(article.createdAt)}
+        <span>Created: {formatDate(article.createdAt)}</span>
         <br />
-        Modified at {formatDate(article.modifiedAt)}
-      </p>
-      {article.tags.length > 0 ? (
-        <div>
+        <span>Modified: {formatDate(article.modifiedAt)}</span>
+      </div>
+      {article.tags.length > 0 && (
+        <div className="article-tags">
           {article.tags.map((tag) => (
-            <span key={tag}>#{tag}</span>
+            <span key={tag} className="tag-item">
+              #{tag}
+            </span>
           ))}
         </div>
-      ) : null}
+      )}
     </li>
   );
 }

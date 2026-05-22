@@ -10,7 +10,7 @@ const SEARCH_FIELDS = [
 type SearchFieldsProps = {
   searchParams: Record<string, string | string[] | undefined>;
   candidates?: {
-    tag?: string[];
+    tags?: string[];
     category?: string[];
     series?: string[];
   };
@@ -28,7 +28,7 @@ export function SearchFields({ searchParams, candidates }: SearchFieldsProps) {
   const initialTagValue = getFirstValue(searchParams.tag);
   const [tagValue, setTagValue] = useState(initialTagValue);
   const [tagCandidates, setTagCandidates] = useState<string[]>(
-    candidates?.tag ?? [],
+    candidates?.tags ?? [],
   );
 
   // Synchronize state with searchParams if they change (e.g. Clear button)
@@ -41,13 +41,13 @@ export function SearchFields({ searchParams, candidates }: SearchFieldsProps) {
       const value = e.target.value;
       setTagValue(value);
 
-      if (!candidates?.tag) return;
+      if (!candidates?.tags) return;
 
       const lastCommaIndex = value.lastIndexOf(",");
       const prefix = value.substring(0, lastCommaIndex + 1);
       const lastPart = value.substring(lastCommaIndex + 1).trim();
 
-      const filtered = candidates.tag.filter((c) =>
+      const filtered = candidates.tags.filter((c) =>
         c.toLowerCase().includes(lastPart.toLowerCase()),
       );
 
@@ -55,21 +55,31 @@ export function SearchFields({ searchParams, candidates }: SearchFieldsProps) {
         filtered.map((c) => `${prefix}${prefix ? " " : ""}${c}`),
       );
     },
-    [candidates?.tag],
+    [candidates?.tags],
   );
 
   return (
     <>
-      {SEARCH_FIELDS.map(({ name, placeholder }) => (
-        <FormField
-          key={name}
-          id={name}
-          defaultValue={getFirstValue(searchParams[name])}
-          placeholder={placeholder}
-          candidates={candidates?.[name as keyof typeof candidates]}
-          required={false}
-        />
-      ))}{" "}
+      <FormField
+        id="keyword"
+        defaultValue={getFirstValue(searchParams.keyword)}
+        placeholder="Search articles..."
+        required={false}
+      />
+      <FormField
+        id="category"
+        defaultValue={getFirstValue(searchParams.category)}
+        placeholder="e.g. Computer Science"
+        candidates={candidates?.category}
+        required={false}
+      />
+      <FormField
+        id="series"
+        defaultValue={getFirstValue(searchParams.series)}
+        placeholder="e.g. My Dev"
+        candidates={candidates?.series}
+        required={false}
+      />
       <FormField
         id="tag"
         value={tagValue}

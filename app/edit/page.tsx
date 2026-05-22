@@ -1,16 +1,16 @@
-import { loadArticleMetadata } from "@/app/lib/repository/article-loader";
+import { getArticles } from "@/app/lib/article-repository";
 import {
   PaginatedArticleList,
   type ArticlesPageProps,
 } from "@/app/components/organisms/paginated-article-list";
 import {
-  sortArticlesByDateDesc,
-  extractArticleCandidates,
-} from "@/app/lib/article-display";
+  sortArticlesByDate,
+  getTaxonomies,
+  filterArticles,
+} from "@/app/lib/article-utils";
 import Link from "next/link";
 import { LogoutButton } from "@/app/components/atoms/logout-button";
 import { ArticleSearchForm } from "@/app/components/organisms/article-search-form";
-import { filterArticles } from "@/app/lib/article-filter";
 
 /**
  * Renders the page for article management with search and filtering.
@@ -23,14 +23,14 @@ export default async function NewArticlePage({
   const resolvedSearchParams = await searchParams;
 
   // 1. Data Fetching
-  const allMetadata = await loadArticleMetadata();
+  const allMetadata = await getArticles();
 
   // 2. Prepare Form Candidates
-  const candidates = extractArticleCandidates(allMetadata);
+  const taxonomies = getTaxonomies(allMetadata);
 
-  // 3. Filtering & Sorting (Using shared libraries)
+  // 3. Filtering & Sorting
   const filteredArticles = filterArticles(allMetadata, resolvedSearchParams);
-  const sortedArticles = sortArticlesByDateDesc(filteredArticles, "createdAt");
+  const sortedArticles = sortArticlesByDate(filteredArticles, "createdAt");
 
   return (
     <main>
@@ -40,7 +40,7 @@ export default async function NewArticlePage({
       </header>
       <ArticleSearchForm
         searchParams={resolvedSearchParams}
-        candidates={candidates}
+        candidates={taxonomies}
         action="/edit"
       />
       <PaginatedArticleList

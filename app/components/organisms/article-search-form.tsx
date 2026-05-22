@@ -14,7 +14,7 @@ type SearchParams = {
 type ArticleSearchFormProps = {
   searchParams: SearchParams;
   candidates?: {
-    tag?: string[];
+    tags?: string[];
     category?: string[];
     series?: string[];
   };
