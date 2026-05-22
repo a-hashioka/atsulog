@@ -6,20 +6,12 @@ import {
   loadArticleMetadata,
   loadArticleDetail,
 } from "@/app/lib/repository/article-loader";
+import { incrementViewCount } from "@/app/lib/repository/article-saver";
 import { formatDate } from "@/app/lib/article-display";
 
 type ArticlePageParams = {
   slug: string;
 };
-
-/**
- * Generates the list of static params for article detail pages.
- * @returns All article slug params for static generation.
- */
-// export async function generateStaticParams(): Promise<ArticlePageParams[]> {
-//   const allArticles = await loadArticleMetadata();
-//   return allArticles.map((article) => ({ slug: article.slug }));
-// }
 
 type ArticlePageProps = {
   params: Promise<ArticlePageParams>;
@@ -27,6 +19,7 @@ type ArticlePageProps = {
 
 /**
  * Renders an article detail page from markdown content.
+ * Increments the view count on each render.
  * @param props Route props including async params.
  * @returns The article detail page element.
  */
@@ -38,6 +31,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   if (!articleDetail) {
     notFound();
   }
+
+  // Increment view count using the already loaded metadata list
+  await incrementViewCount(articles, slug);
 
   const { metadata, content } = articleDetail;
 
