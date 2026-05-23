@@ -40,12 +40,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# github copilot
-.github/
-
 # data
 /data/
 /data/**
-
-# gemini cli
-GEMINI.md
