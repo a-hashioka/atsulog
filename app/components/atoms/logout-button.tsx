@@ -1,4 +1,6 @@
+import { LogOut } from "lucide-react";
 import { logoutAction } from "@/app/lib/auth-actions";
+import { Button } from "./button";
 
 /**
  * A reusable logout button component.
@@ -8,7 +10,9 @@ import { logoutAction } from "@/app/lib/auth-actions";
 export function LogoutButton() {
   return (
     <form action={logoutAction}>
-      <button type="submit">Logout</button>
+      <Button type="submit" variant="outline" icon={LogOut}>
+        Logout
+      </Button>
     </form>
   );
 }

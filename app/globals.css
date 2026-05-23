@@ -1,26 +1,150 @@
-/* @import "tailwindcss"; */
-/**/
-/* :root { */
-/*   --background: #ffffff; */
-/*   --foreground: #171717; */
-/* } */
-/**/
-/* @theme inline { */
-/*   --color-background: var(--background); */
-/*   --color-foreground: var(--foreground); */
-/*   --font-sans: var(--font-geist-sans); */
-/*   --font-mono: var(--font-geist-mono); */
-/* } */
-/**/
-/* @media (prefers-color-scheme: dark) { */
-/*   :root { */
-/*     --background: #0a0a0a; */
-/*     --foreground: #ededed; */
-/*   } */
-/* } */
-/**/
-/* body { */
-/*   background: var(--background); */
-/*   color: var(--foreground); */
-/*   font-family: Arial, Helvetica, sans-serif; */
-/* } */
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+:root {
+  --background: #ffffff;
+  --foreground: #111827; /* gray-900 */
+  --muted: #6b7280; /* gray-500 */
+  --primary: #0ea5e9; /* sky-500 */
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-primary: var(--primary);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    "Noto Sans",
+    sans-serif,
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Segoe UI Symbol",
+    "Noto Color Emoji";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+@layer utilities {
+  .animate-fade-in-up {
+    opacity: 0;
+    animation: fade-in-up 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  }
+
+  .delay-100 {
+    animation-delay: 100ms;
+  }
+  .delay-200 {
+    animation-delay: 200ms;
+  }
+  .delay-300 {
+    animation-delay: 300ms;
+  }
+  .delay-400 {
+    animation-delay: 400ms;
+  }
+  .delay-500 {
+    animation-delay: 500ms;
+  }
+
+  /* Custom Markdown Styling (Safe and Extensible) */
+  .prose-atsulog {
+    @apply prose max-w-none prose-sky prose-headings:scroll-mt-20;
+
+    /* Tables */
+    & table {
+      @apply border-collapse border-2 border-gray-300 w-full my-8 shadow-sm;
+    }
+    & th {
+      @apply bg-gray-100 text-gray-900 border-2 border-gray-300 px-4 py-3 text-left text-sm font-bold uppercase tracking-wide;
+    }
+    & td {
+      @apply border border-gray-300 px-4 py-3 text-sm text-gray-700 bg-white;
+    }
+    & tr:hover td {
+      @apply bg-sky-50/30 transition-colors;
+    }
+
+    /* Code Blocks */
+    & pre {
+      @apply bg-gray-900 rounded-xl p-4 shadow-inner overflow-x-auto;
+    }
+    & code {
+      @apply font-mono text-sm leading-relaxed;
+    }
+    & :not(pre) > code {
+      @apply bg-gray-100 text-sky-600 px-1.5 py-0.5 rounded-md font-medium;
+      &::before,
+      &::after {
+        content: none;
+      }
+    }
+
+    /* Links */
+    & a {
+      @apply text-sky-500 no-underline font-medium hover:underline;
+    }
+
+    /* Blockquotes */
+    & blockquote {
+      @apply border-l-4 border-sky-500 bg-sky-50/50 py-1 pl-4 rounded-r-lg italic text-gray-700;
+      & p::before,
+      & p::after {
+        content: none;
+      }
+    }
+
+    /* Images */
+    & img {
+      @apply max-w-full h-auto max-h-[25rem] mx-auto rounded-3xl shadow-md border border-gray-100 object-contain;
+    }
+
+    /* Lists */
+    & ul {
+      @apply list-disc marker:text-gray-900;
+      & ul {
+        @apply list-[circle] ml-6 marker:text-gray-900;
+        & ul {
+          @apply list-[square] ml-6 marker:text-gray-900;
+        }
+      }
+    }
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(1.25rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply font-semibold tracking-tight;
+}
+
+a {
+  @apply transition-colors duration-200;
+}

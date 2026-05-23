@@ -1,3 +1,6 @@
+/**
+ * Core metadata for an article.
+ */
 export type ArticleMetadata = {
   slug: string;
   title: string;
@@ -11,12 +14,46 @@ export type ArticleMetadata = {
   viewCount: number;
 };
 
+/**
+ * Full details of an article, including its content.
+ */
 export type ArticleDetail = {
   metadata: ArticleMetadata;
   content: string;
 };
 
 /**
- * Raw search parameters from Next.js.
+ * Valid sort keys for articles.
+ */
+export type SortBy = "created" | "modified" | "views";
+
+/**
+ * Valid sort orders.
+ */
+export type SortOrder = "asc" | "desc";
+
+/**
+ * Standard search parameters used across article list pages.
+ */
+export type ArticleSearchParams = {
+  page?: string | string[];
+  keyword?: string | string[];
+  tag?: string | string[];
+  series?: string | string[];
+  category?: string | string[];
+  sortBy?: string | string[];
+  order?: string | string[];
+};
+
+/**
+ * Standard props for pages that handle article search parameters.
+ */
+export type ArticlePageProps = {
+  params?: Promise<unknown>;
+  searchParams: Promise<ArticleSearchParams>;
+};
+
+/**
+ * Raw search parameters from Next.js (Legacy/Generic).
  */
 export type RawSearchParams = Record<string, string | string[] | undefined>;

@@ -6,12 +6,13 @@ import { getTaxonomies } from "@/app/lib/article-utils";
 
 /**
  * Page for creating a new article.
- * @returns The new article page component.
  */
 export default async function NewArticlePage() {
+  const articles = await getArticles();
+  const taxonomies = getTaxonomies(articles);
+
   /**
    * Initial metadata for a brand new article.
-   * slug is empty as it will be generated upon submission.
    */
   const initialMetadata: ArticleMetadata = {
     slug: "",
@@ -28,8 +29,6 @@ export default async function NewArticlePage() {
 
   /**
    * Server Action to handle the creation of a new article.
-   * Generates a timestamp-based slug (YYYYMMDDHHMMSS) and saves the article.
-   * @param formData - The submitted form data.
    */
   async function handleCreate(formData: FormData) {
     "use server";
@@ -39,14 +38,14 @@ export default async function NewArticlePage() {
     const isoString = now.toISOString();
 
     // Generate a timestamp-based slug (YYYYMMDDHHMMSS)
-    // Example: 20231027153045
-    const slug =
-      now.getFullYear().toString() +
-      (now.getMonth() + 1).toString().padStart(2, "0") +
-      now.getDate().toString().padStart(2, "0") +
-      now.getHours().toString().padStart(2, "0") +
-      now.getMinutes().toString().padStart(2, "0") +
-      now.getSeconds().toString().padStart(2, "0");
+    const slug = [
+      now.getFullYear(),
+      (now.getMonth() + 1).toString().padStart(2, "0"),
+      now.getDate().toString().padStart(2, "0"),
+      now.getHours().toString().padStart(2, "0"),
+      now.getMinutes().toString().padStart(2, "0"),
+      now.getSeconds().toString().padStart(2, "0"),
+    ].join("");
 
     const newMetadata: ArticleMetadata = {
       slug,
@@ -64,19 +63,15 @@ export default async function NewArticlePage() {
       viewCount: 0,
     };
 
-    const currentArticles = await getArticles();
-    await saveArticle(currentArticles, newMetadata, raw.content);
-
-    // redirect(`/articles/${slug}`);
+    await saveArticle(await getArticles(), newMetadata, raw.content);
     redirect(`/edit/`);
   }
 
-  const articles = await getArticles();
-  const taxonomies = getTaxonomies(articles);
-
   return (
-    <main>
-      <h1>Create New Article</h1>
+    <main className="space-y-8">
+      <h1 className="text-3xl font-bold tracking-tight mb-8">
+        Create New Article
+      </h1>
       <EditArticleForm
         metadata={initialMetadata}
         content=""

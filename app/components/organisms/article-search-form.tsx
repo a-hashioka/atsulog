@@ -1,8 +1,10 @@
 "use client";
 
+import { Search, RotateCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Form from "next/form";
 import { SearchFields } from "@/app/components/atoms/search-field";
+import { Button } from "@/app/components/atoms/button";
 
 type SearchParams = {
   keyword?: string | string[];
@@ -33,16 +35,29 @@ export function ArticleSearchForm({
   const router = useRouter();
 
   return (
-    <section>
-      <h1>Search & Filter Articles</h1>
+    <section className="mb-16">
+      <h2 className="text-3xl font-bold tracking-tight mb-8">
+        Search & Filter
+      </h2>
       <Form action={action}>
-        <SearchFields searchParams={searchParams} candidates={candidates} />
+        <SearchFields
+          key={JSON.stringify(searchParams)}
+          searchParams={searchParams}
+          candidates={candidates}
+        />
 
-        <div className="form-actions">
-          <button type="submit">Search</button>
-          <button type="button" onClick={() => router.push(action)}>
+        <div className="flex items-center space-x-4">
+          <Button type="submit" icon={Search} variant="primary">
+            Search
+          </Button>
+          <Button
+            type="button"
+            onClick={() => router.push(action)}
+            icon={RotateCcw}
+            variant="outline"
+          >
             Clear
-          </button>
+          </Button>
         </div>
       </Form>
     </section>

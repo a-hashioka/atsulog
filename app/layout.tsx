@@ -1,6 +1,9 @@
+import { Home, Newspaper, Pencil } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { siteConfig } from "@/app/lib/site-config";
+import { isAuthenticated } from "@/app/lib/auth";
+import { LogoutButton } from "@/app/components/atoms/logout-button";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -8,28 +11,74 @@ export const metadata: Metadata = {
   description: siteConfig.description,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   const currentYear = new Date().getFullYear();
+  const authenticated = await isAuthenticated();
 
   return (
     <html lang={siteConfig.htmlLang}>
-      <body>
-        <div>
-          <header>
-            <span>{siteConfig.title}</span>
-            <nav aria-label="Global navigation">
-              <Link href="/">Home</Link> <Link href="/articles">Articles</Link>
-            </nav>
-          </header>
+      <body className="min-h-screen flex flex-col">
+        <header className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-gray-100 animate-fade-in-up">
+          <div className="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
+            {/* Left: Title & Admin Actions */}
+            <div className="flex items-center space-x-4">
+              <Link
+                href="/"
+                className="group flex items-center text-xl font-bold tracking-tight transition-colors"
+              >
+                <span className="text-2xl text-emerald-500 mr-2 group-hover:translate-x-0.5 transition-transform duration-200">
+                  &gt;
+                </span>
+                <span className="group-hover:text-gray-600">
+                  {siteConfig.title}
+                </span>
+              </Link>
+              {authenticated && (
+                <div className="flex items-center border-l border-gray-100 pl-4">
+                  <LogoutButton />
+                </div>
+              )}
+            </div>
+
+            {/* Right: Navigation */}
+            <div className="flex items-center space-x-6">
+              <Link
+                href="/"
+                className="text-sm font-medium text-gray-500 hover:text-black transition-colors flex items-center"
+              >
+                <Home size={16} className="mr-1.5" />
+                Home
+              </Link>
+              <Link
+                href="/articles"
+                className="text-sm font-medium text-gray-500 hover:text-black transition-colors flex items-center"
+              >
+                <Newspaper size={16} className="mr-1.5" />
+                Articles
+              </Link>
+              {authenticated && (
+                <Link
+                  href="/edit"
+                  className="text-sm font-medium text-gray-500 hover:text-black transition-colors flex items-center"
+                >
+                  <Pencil size={16} className="mr-1.5" />
+                  Edit
+                </Link>
+              )}
+            </div>
+          </div>
+        </header>
+
+        <div className="flex-1 max-w-3xl mx-auto w-full px-6 py-12 animate-fade-in-up delay-200">
           <main>{children}</main>
-          <footer>
-            &copy; {currentYear} {siteConfig.title}
-          </footer>
         </div>
+        <footer className="max-w-3xl mx-auto w-full px-6 py-8 border-t border-gray-100 text-sm text-muted text-center animate-fade-in-up delay-500">
+          &copy; {currentYear} {siteConfig.title}
+        </footer>
       </body>
     </html>
   );

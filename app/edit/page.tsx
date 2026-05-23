@@ -1,25 +1,23 @@
 import { getArticles } from "@/app/lib/article-repository";
+import { PaginatedArticleList } from "@/app/components/organisms/paginated-article-list";
 import {
-  PaginatedArticleList,
-  type ArticlesPageProps,
-} from "@/app/components/organisms/paginated-article-list";
-import {
-  sortArticlesByDate,
+  sortArticles,
   getTaxonomies,
   filterArticles,
+  getSortConfig,
 } from "@/app/lib/article-utils";
-import Link from "next/link";
-import { LogoutButton } from "@/app/components/atoms/logout-button";
 import { ArticleSearchForm } from "@/app/components/organisms/article-search-form";
+import { CreateArticleSection } from "@/app/components/organisms/create-article-section";
+import type { ArticlePageProps } from "@/app/lib/article-types";
 
 /**
  * Renders the page for article management with search and filtering.
  * @param props - Route props including async search parameters.
  * @returns The article management page element.
  */
-export default async function NewArticlePage({
+export default async function EditDashboardPage({
   searchParams,
-}: ArticlesPageProps) {
+}: ArticlePageProps) {
   const resolvedSearchParams = await searchParams;
 
   // 1. Data Fetching
@@ -30,24 +28,26 @@ export default async function NewArticlePage({
 
   // 3. Filtering & Sorting
   const filteredArticles = filterArticles(allMetadata, resolvedSearchParams);
-  const sortedArticles = sortArticlesByDate(filteredArticles, "createdAt");
+  const { field, order } = getSortConfig(resolvedSearchParams);
+  const sortedArticles = sortArticles(filteredArticles, field, order);
 
   return (
-    <main>
-      <header>
-        <LogoutButton />
-        <Link href="/edit/create">Create New Article</Link>
-      </header>
+    <main className="space-y-12">
+      <CreateArticleSection />
+
       <ArticleSearchForm
         searchParams={resolvedSearchParams}
         candidates={taxonomies}
         action="/edit"
       />
-      <PaginatedArticleList
-        articles={sortedArticles}
-        searchParams={resolvedSearchParams}
-        basePath="/edit"
-      />
+
+      <div className="space-y-10">
+        <PaginatedArticleList
+          articles={sortedArticles}
+          searchParams={resolvedSearchParams}
+          basePath="/edit"
+        />
+      </div>
     </main>
   );
 }

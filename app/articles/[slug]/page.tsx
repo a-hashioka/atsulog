@@ -1,29 +1,25 @@
+import { ArrowLeft, Pencil, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import ReactMarkdown from "react-markdown";
+import { MarkdownRenderer } from "@/app/components/atoms/markdown-renderer";
 
 import {
   getArticles,
   getArticleBySlug,
   incrementViewCount,
 } from "@/app/lib/article-repository";
-import { formatDate } from "@/app/lib/article-utils";
-
-type ArticlePageParams = {
-  slug: string;
-};
-
-type ArticlePageProps = {
-  params: Promise<ArticlePageParams>;
-};
+import { isAuthenticated } from "@/app/lib/auth";
+import { Tag } from "@/app/components/atoms/tag";
+import { ArticleMeta } from "@/app/components/atoms/article-meta";
+import type { ArticlePageProps } from "@/app/lib/article-types";
 
 /**
  * Renders an article detail page from markdown content.
  * Increments the view count on each render.
- * @param props Route props including async params.
- * @returns The article detail page element.
  */
-export default async function ArticlePage({ params }: ArticlePageProps) {
+export default async function ArticlePage({
+  params,
+}: ArticlePageProps & { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const articles = await getArticles();
   const articleDetail = await getArticleBySlug(articles, slug);
@@ -36,6 +32,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   await incrementViewCount(articles, slug);
 
   const { metadata, content } = articleDetail;
+  const authenticated = await isAuthenticated();
 
   // Find series navigation
   let previousInSeries = null;
@@ -55,56 +52,86 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   }
 
   return (
-    <main>
-      <article>
-        <header>
-          <h1>{metadata.title}</h1>
-          <p>
-            Created at {formatDate(metadata.createdAt)}
-            <br />
-            Modified at {formatDate(metadata.modifiedAt)}
-            <br />
-            Category: {metadata.category}
-            {metadata.series && (
-              <>
-                <br />
-                Series: {metadata.series}
-              </>
-            )}
-            <br />
-          </p>
-          {metadata.tags.length > 0 ? (
-            <p>{metadata.tags.map((tag) => `#${tag}`).join(" ")}</p>
-          ) : null}
-        </header>
-        <ReactMarkdown>{content}</ReactMarkdown>
-
-        {(previousInSeries || nextInSeries) && (
-          <section className="series-navigation">
-            <hr />
-            <h3>Series: {metadata.series}</h3>
-            <div>
-              {previousInSeries ? (
-                <Link href={`/articles/${previousInSeries.slug}`}>
-                  ← Previous: {previousInSeries.title}
-                </Link>
-              ) : (
-                <span />
-              )}
-              {nextInSeries ? (
-                <Link href={`/articles/${nextInSeries.slug}`}>
-                  Next: {nextInSeries.title} →
-                </Link>
-              ) : (
-                <span />
-              )}
-            </div>
-          </section>
+    <article className="py-10">
+      <header className="mb-12">
+        <h1 className="text-3xl font-bold tracking-tight mb-4">
+          {metadata.title}
+        </h1>
+        <ArticleMeta metadata={metadata} className="mb-6" />
+        {metadata.tags.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {metadata.tags.map((tag) => (
+              <Tag key={tag} label={tag} href={`/articles?tag=${tag}`} />
+            ))}
+          </div>
         )}
-      </article>
-      <nav aria-label="Article detail navigation">
-        <Link href="/articles">Back to Articles</Link>
+      </header>
+
+      <div className="mb-16">
+        <MarkdownRenderer content={content} />
+      </div>
+
+      {(previousInSeries || nextInSeries) && (
+        <section className="bg-gray-50 rounded-xl p-8 mb-12">
+          <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-6">
+            More from {metadata.series}
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {previousInSeries ? (
+              <Link
+                href={`/articles/${previousInSeries.slug}`}
+                className="group block p-4 bg-white border border-gray-100 rounded-lg hover:border-gray-300 transition-colors"
+              >
+                <div className="text-xs text-muted mb-1 flex items-center">
+                  <ChevronLeft size={12} className="mr-1" /> Previous
+                </div>
+                <div className="font-medium group-hover:text-blue-600 transition-colors">
+                  {previousInSeries.title}
+                </div>
+              </Link>
+            ) : (
+              <div />
+            )}
+            {nextInSeries ? (
+              <Link
+                href={`/articles/${nextInSeries.slug}`}
+                className="group block p-4 bg-white border border-gray-100 rounded-lg hover:border-gray-300 transition-colors text-right"
+              >
+                <div className="text-xs text-muted mb-1 flex items-center justify-end">
+                  Next <ChevronRight size={12} className="ml-1" />
+                </div>
+                <div className="font-medium group-hover:text-blue-600 transition-colors">
+                  {nextInSeries.title}
+                </div>
+              </Link>
+            ) : (
+              <div />
+            )}
+          </div>
+        </section>
+      )}
+
+      <nav
+        aria-label="Article detail navigation"
+        className="border-t pt-10 flex items-center justify-between"
+      >
+        <Link
+          href="/articles"
+          className="text-sm font-medium text-gray-600 hover:text-black transition-colors flex items-center"
+        >
+          <ArrowLeft size={16} className="mr-2" />
+          Back to Articles
+        </Link>
+        {authenticated && (
+          <Link
+            href={`/edit/${slug}`}
+            className="text-sm font-medium text-emerald-600 hover:text-emerald-700 transition-colors flex items-center"
+          >
+            <Pencil size={16} className="mr-2" />
+            Edit this article
+          </Link>
+        )}
       </nav>
-    </main>
+    </article>
   );
 }

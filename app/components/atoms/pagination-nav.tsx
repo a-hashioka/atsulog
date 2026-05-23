@@ -1,16 +1,26 @@
+"use client";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+} from "lucide-react";
+import type { ArticleSearchParams } from "@/app/lib/article-types";
 
 type PaginationNavProps = {
   currentPage: number;
   totalPages: number;
   basePath?: string;
-  searchParams?: Record<string, string | string[] | undefined>;
+  searchParams?: ArticleSearchParams;
 };
 
 /**
  * Renders pagination links that are valid for the current position.
- * @param props - Pagination state and optional base path for links.
- * @returns A pagination navigation element.
+ * Allows clicking on the page indicator to input a specific page number to jump to.
  */
 export function PaginationNav({
   currentPage,
@@ -18,20 +28,28 @@ export function PaginationNav({
   basePath = "/articles",
   searchParams = {},
 }: PaginationNavProps) {
+  const router = useRouter();
+  const [isEditing, setIsEditing] = useState(false);
+  const [inputPage, setInputPage] = useState(currentPage.toString());
+  const [prevPage, setPrevPage] = useState(currentPage);
+
+  // Sync input when currentPage changes externally
+  if (currentPage !== prevPage) {
+    setPrevPage(currentPage);
+    setInputPage(currentPage.toString());
+  }
+
   const hasPreviousPage = currentPage > 1;
   const hasNextPage = currentPage < totalPages;
 
   /**
    * Generates a URL for a specific page, preserving other search parameters.
-   * @param page - The page number.
-   * @returns The formatted URL string.
    */
   const getPageUrl = (page: number) => {
     const params = new URLSearchParams();
 
-    // Add existing search params
     Object.entries(searchParams).forEach(([key, value]) => {
-      if (key === "page" || value === undefined) return;
+      if (key === "page" || !value) return;
       if (Array.isArray(value)) {
         value.forEach((v) => params.append(key, v));
       } else {
@@ -39,30 +57,122 @@ export function PaginationNav({
       }
     });
 
-    // Set the new page
     params.set("page", page.toString());
-
     return `${basePath}?${params.toString()}`;
   };
 
+  const handleJump = (e: React.SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const page = parseInt(inputPage);
+    if (!isNaN(page) && page >= 1 && page <= totalPages) {
+      router.push(getPageUrl(page));
+      setIsEditing(false);
+    } else {
+      setInputPage(currentPage.toString());
+      setIsEditing(false);
+    }
+  };
+
   return (
-    <nav aria-label="Pagination">
-      {hasPreviousPage && (
-        <>
-          <Link href={getPageUrl(1)}>First</Link>{" "}
-          <Link href={getPageUrl(currentPage - 1)}>Previous</Link>{" "}
-        </>
-      )}
-      <span>
-        Page {currentPage} of {totalPages}
-      </span>
-      {hasNextPage && (
-        <>
-          {" "}
-          <Link href={getPageUrl(currentPage + 1)}>Next</Link>{" "}
-          <Link href={getPageUrl(totalPages)}>Last</Link>
-        </>
-      )}
+    <nav
+      aria-label="Pagination"
+      className="flex justify-center items-center mt-12 py-8 border-t border-gray-100"
+    >
+      <div className="flex items-center space-x-2">
+        {hasPreviousPage ? (
+          <>
+            <Link
+              href={getPageUrl(1)}
+              className="p-2 text-gray-400 hover:text-black hover:bg-gray-50 rounded-lg transition-all"
+              title="First Page"
+            >
+              <span className="sr-only">First</span>
+              <ChevronsLeft size={16} />
+            </Link>
+            <Link
+              href={getPageUrl(currentPage - 1)}
+              className="p-2 px-3 text-sm font-medium text-gray-600 hover:text-black hover:bg-gray-50 rounded-lg border border-transparent hover:border-gray-200 transition-all flex items-center"
+            >
+              <ChevronLeft size={16} className="mr-1" />
+              <span className="hidden sm:inline">Prev</span>
+            </Link>
+          </>
+        ) : (
+          <>
+            <span className="p-2 text-gray-200 cursor-not-allowed">
+              <ChevronsLeft size={16} />
+            </span>
+            <span className="p-2 px-3 text-sm font-medium text-gray-200 cursor-not-allowed flex items-center">
+              <ChevronLeft size={16} className="mr-1" />
+              <span className="hidden sm:inline">Prev</span>
+            </span>
+          </>
+        )}
+
+        {isEditing ? (
+          <form
+            onSubmit={handleJump}
+            className="px-4 py-2 text-sm font-medium text-gray-900 bg-gray-50 rounded-lg flex items-center"
+          >
+            <input
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              value={inputPage}
+              onChange={(e) =>
+                setInputPage(e.target.value.replace(/[^0-9]/g, ""))
+              }
+              onBlur={() => setIsEditing(false)}
+              autoFocus
+              className="w-6 bg-transparent border-none text-sm font-medium text-gray-900 text-center focus:ring-0 p-0 outline-none"
+            />
+            <span className="text-gray-400 font-normal mx-1">/</span>
+            <span className="text-sm font-medium text-gray-900">
+              {totalPages}
+            </span>
+          </form>
+        ) : (
+          <button
+            onClick={() => setIsEditing(true)}
+            className="px-4 text-sm font-medium text-gray-900 bg-gray-50 py-2 rounded-lg hover:bg-gray-100 transition-colors"
+            title="Jump to page"
+          >
+            {currentPage}{" "}
+            <span className="text-gray-400 font-normal mx-1">/</span>{" "}
+            {totalPages}
+          </button>
+        )}
+
+        {hasNextPage ? (
+          <>
+            <Link
+              href={getPageUrl(currentPage + 1)}
+              className="p-2 px-3 text-sm font-medium text-gray-600 hover:text-black hover:bg-gray-50 rounded-lg border border-transparent hover:border-gray-200 transition-all flex items-center"
+            >
+              <span className="mr-1 hidden sm:inline">Next</span>
+              <ChevronRight size={16} />
+            </Link>
+            <Link
+              href={getPageUrl(totalPages)}
+              className="p-2 text-gray-400 hover:text-black hover:bg-gray-50 rounded-lg transition-all"
+              title="Last Page"
+            >
+              <span className="sr-only">Last</span>
+              <ChevronsRight size={16} />
+            </Link>
+          </>
+        ) : (
+          <>
+            <span className="p-2 px-3 text-sm font-medium text-gray-200 cursor-not-allowed flex items-center">
+              <span className="mr-1 hidden sm:inline">Next</span>
+              <ChevronRight size={16} />
+            </span>
+            <span className="p-2 text-gray-200 cursor-not-allowed">
+              <ChevronsRight size={16} />
+            </span>
+          </>
+        )}
+      </div>
     </nav>
   );
 }

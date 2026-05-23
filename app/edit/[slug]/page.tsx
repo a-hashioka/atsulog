@@ -1,4 +1,6 @@
 import { notFound, redirect } from "next/navigation";
+import Link from "next/link";
+import { ArrowLeft, ExternalLink } from "lucide-react";
 
 import {
   getArticleBySlug,
@@ -8,16 +10,16 @@ import {
 import { EditArticleForm } from "@/app/components/organisms/edit-article-form";
 import { getTaxonomies } from "@/app/lib/article-utils";
 
+type EditArticlePageProps = {
+  params: Promise<{ slug: string }>;
+};
+
 /**
  * Article Edit Page.
- * @param props - Route parameters containing the article slug.
- * @returns The edit page component.
  */
 export default async function EditArticlePage({
   params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+}: EditArticlePageProps) {
   const { slug } = await params;
   const articles = await getArticles();
   const detail = await getArticleBySlug(articles, slug);
@@ -30,8 +32,6 @@ export default async function EditArticlePage({
 
   /**
    * Server Action to handle the update of an article.
-   * Extracts form data, merges it with existing metadata, and saves.
-   * @param formData - The submitted form data.
    */
   async function handleSave(formData: FormData) {
     "use server";
@@ -50,16 +50,16 @@ export default async function EditArticlePage({
       modifiedAt: new Date().toISOString(),
     };
 
-    // Use fresh metadata list for saving to prevent potential race conditions
+    // Use fresh metadata list for saving
     await saveArticle(await getArticles(), updatedMetadata, raw.content);
-
-    // redirect(`/articles/${slug}`);
     redirect(`/edit/`);
   }
 
   return (
-    <main>
-      <h1>Edit Article: {detail.metadata.title}</h1>
+    <main className="space-y-8">
+      <h1 className="text-3xl font-bold tracking-tight mb-8">
+        Edit Article: {detail.metadata.title}
+      </h1>
       <EditArticleForm
         metadata={detail.metadata}
         content={detail.content}
@@ -67,6 +67,25 @@ export default async function EditArticlePage({
         articles={articles}
         candidates={taxonomies}
       />
+      <nav
+        aria-label="Article edit navigation"
+        className="border-t pt-10 flex items-center justify-between"
+      >
+        <Link
+          href="/edit"
+          className="text-sm font-medium text-gray-600 hover:text-black transition-colors flex items-center"
+        >
+          <ArrowLeft size={16} className="mr-2" />
+          Back to Edit List
+        </Link>
+        <Link
+          href={`/articles/${slug}`}
+          className="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors flex items-center"
+        >
+          View this article
+          <ExternalLink size={16} className="ml-2" />
+        </Link>
+      </nav>
     </main>
   );
 }

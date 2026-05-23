@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { sortArticlesByDate } from "@/app/lib/article-utils";
+import { ArrowRight } from "lucide-react";
+import { sortArticles } from "@/app/lib/article-utils";
 import {
   ArticleList,
   type ArticleListProps,
@@ -9,21 +10,32 @@ const numberOfArticlesToShow = 3;
 
 /**
  * Renders a list of the most recent articles.
- * @param props - Component props containing the full list of articles.
- * @returns A section displaying the latest articles and a link to the archive.
  */
 export function RecentArticles({ articles }: ArticleListProps) {
-  const recentArticles = sortArticlesByDate(articles, "createdAt").slice(
+  const recentArticles = sortArticles(articles, "createdAt").slice(
     0,
     numberOfArticlesToShow,
   );
 
   return (
-    <section>
+    <section className="space-y-10">
       <div>
-        <h1>Recent Articles</h1>
+        <h1 className="text-3xl font-bold tracking-tight mb-8">
+          Recent Articles
+        </h1>
         <ArticleList articles={recentArticles} />
-        <Link href="/articles">For More</Link>
+        <div className="mt-12">
+          <Link
+            href="/articles"
+            className="inline-flex items-center text-sm font-medium text-gray-600 hover:text-black transition-colors group"
+          >
+            <span>View all articles</span>
+            <ArrowRight
+              size={16}
+              className="ml-1.5 group-hover:translate-x-1 transition-transform"
+            />
+          </Link>
+        </div>
       </div>
     </section>
   );

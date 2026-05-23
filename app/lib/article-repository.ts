@@ -8,7 +8,11 @@ import { getNextSeriesOrder } from "./article-utils";
 
 // --- Constants ---
 
-const ARTICLES_JSON_PATH = path.join(process.cwd(), "data", "articles.json");
+const ARTICLES_JSON_PATH = path.join(
+  /*turbopackIgnore: true*/ process.cwd(),
+  "data",
+  "articles.json",
+);
 const PROJECT_ROOT = process.cwd();
 
 // --- Public API ---
@@ -146,7 +150,10 @@ async function readContent(filePath: string): Promise<string> {
 }
 
 async function writeContent(filePath: string, content: string): Promise<void> {
-  const fullPath = path.resolve(PROJECT_ROOT, filePath);
+  const fullPath = path.resolve(
+    /*turbopackIgnore: true*/ PROJECT_ROOT,
+    filePath,
+  );
   try {
     await mkdir(path.dirname(fullPath), { recursive: true });
     await writeFile(fullPath, content, "utf8");
@@ -156,7 +163,10 @@ async function writeContent(filePath: string, content: string): Promise<void> {
 }
 
 function resolveProjectPath(filePath: string): string {
-  const resolvedPath = path.resolve(PROJECT_ROOT, filePath);
+  const resolvedPath = path.resolve(
+    /*turbopackIgnore: true*/ PROJECT_ROOT,
+    filePath,
+  );
   const relativePath = path.relative(PROJECT_ROOT, resolvedPath);
 
   if (relativePath.startsWith("..") || path.isAbsolute(relativePath)) {
@@ -166,7 +176,6 @@ function resolveProjectPath(filePath: string): string {
 }
 
 function isNotFound(error: unknown): boolean {
-
   return (
     typeof error === "object" &&
     error !== null &&

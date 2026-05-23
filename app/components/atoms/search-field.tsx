@@ -1,14 +1,11 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
+import { Search, Folder, BookOpen, Tag } from "lucide-react";
 import { FormField } from "./form-field";
-
-const SEARCH_FIELDS = [
-  { name: "keyword", placeholder: "Search articles..." },
-  { name: "category", placeholder: "e.g. Computer Science" },
-  { name: "series", placeholder: "e.g. My Dev" },
-] as const;
+import type { ArticleSearchParams } from "@/app/lib/article-types";
+import { getParam } from "@/app/lib/article-utils";
 
 type SearchFieldsProps = {
-  searchParams: Record<string, string | string[] | undefined>;
+  searchParams: ArticleSearchParams;
   candidates?: {
     tags?: string[];
     category?: string[];
@@ -20,34 +17,26 @@ type SearchFieldsProps = {
  * Renders the full set of search fields as a block.
  */
 export function SearchFields({ searchParams, candidates }: SearchFieldsProps) {
-  const getFirstValue = (val: string | string[] | undefined) => {
-    if (Array.isArray(val)) return val[0] ?? "";
-    return val ?? "";
-  };
-
-  const initialTagValue = getFirstValue(searchParams.tag);
+  const initialTagValue = getParam(searchParams.tag);
   const [tagValue, setTagValue] = useState(initialTagValue);
   const [tagCandidates, setTagCandidates] = useState<string[]>(
     candidates?.tags ?? [],
   );
 
-  // Synchronize state with searchParams if they change (e.g. Clear button)
-  useEffect(() => {
-    setTagValue(initialTagValue);
-  }, [initialTagValue]);
+  const tags = candidates?.tags;
 
   const handleTagsChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value;
       setTagValue(value);
 
-      if (!candidates?.tags) return;
+      if (!tags) return;
 
       const lastCommaIndex = value.lastIndexOf(",");
       const prefix = value.substring(0, lastCommaIndex + 1);
       const lastPart = value.substring(lastCommaIndex + 1).trim();
 
-      const filtered = candidates.tags.filter((c) =>
+      const filtered = tags.filter((c) =>
         c.toLowerCase().includes(lastPart.toLowerCase()),
       );
 
@@ -55,30 +44,33 @@ export function SearchFields({ searchParams, candidates }: SearchFieldsProps) {
         filtered.map((c) => `${prefix}${prefix ? " " : ""}${c}`),
       );
     },
-    [candidates?.tags],
+    [tags],
   );
 
   return (
-    <>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
       <FormField
         id="keyword"
-        defaultValue={getFirstValue(searchParams.keyword)}
+        defaultValue={getParam(searchParams.keyword)}
         placeholder="Search articles..."
         required={false}
+        icon={Search}
       />
       <FormField
         id="category"
-        defaultValue={getFirstValue(searchParams.category)}
+        defaultValue={getParam(searchParams.category)}
         placeholder="e.g. Computer Science"
         candidates={candidates?.category}
         required={false}
+        icon={Folder}
       />
       <FormField
         id="series"
-        defaultValue={getFirstValue(searchParams.series)}
+        defaultValue={getParam(searchParams.series)}
         placeholder="e.g. My Dev"
         candidates={candidates?.series}
         required={false}
+        icon={BookOpen}
       />
       <FormField
         id="tag"
@@ -87,7 +79,8 @@ export function SearchFields({ searchParams, candidates }: SearchFieldsProps) {
         candidates={tagCandidates}
         placeholder="tag1, tag2, ..."
         required={false}
+        icon={Tag}
       />
-    </>
+    </div>
   );
 }
