@@ -39,27 +39,6 @@ body {
 }
 
 @layer utilities {
-  .animate-fade-in-up {
-    opacity: 0;
-    animation: fade-in-up 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-  }
-
-  .delay-100 {
-    animation-delay: 100ms;
-  }
-  .delay-200 {
-    animation-delay: 200ms;
-  }
-  .delay-300 {
-    animation-delay: 300ms;
-  }
-  .delay-400 {
-    animation-delay: 400ms;
-  }
-  .delay-500 {
-    animation-delay: 500ms;
-  }
-
   /* Custom Markdown Styling (Safe and Extensible) */
   .prose-atsulog {
     @apply prose max-w-none prose-sky prose-headings:scroll-mt-20;
@@ -122,17 +101,6 @@ body {
         }
       }
     }
-  }
-}
-
-@keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(1.25rem);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
   }
 }
 

@@ -7,7 +7,7 @@ import { Plus } from "lucide-react";
  */
 export function CreateArticleSection() {
   return (
-    <section className="animate-fade-in-up">
+    <section>
       <h2 className="text-3xl font-bold tracking-tight mb-8">
         Create Articles
       </h2>

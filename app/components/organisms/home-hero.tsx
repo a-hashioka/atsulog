@@ -25,6 +25,7 @@ export function HomeHero({ counts }: HomeHeroProps) {
           height={200}
           className="w-36 h-36 md:w-48 md:h-48"
           priority
+          unoptimized
         />
       </div>
       <ArticleCount counts={counts} />

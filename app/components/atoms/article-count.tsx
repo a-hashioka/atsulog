@@ -23,7 +23,7 @@ export function ArticleCount({
   ];
 
   return (
-    <section className="animate-fade-in-up text-center">
+    <section className="text-center">
       <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-8 md:mb-10 font-mono text-gray-900">
         # of Articles
       </h2>
