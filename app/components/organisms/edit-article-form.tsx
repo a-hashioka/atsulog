@@ -112,8 +112,8 @@ export function EditArticleForm({
   );
 
   return (
-    <form action={action} className="space-y-8 pb-20">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <form action={action} className="space-y-[2rem] pb-[5rem]">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-[1.5rem]">
         <FormField
           id="series"
           value={series}
@@ -152,12 +152,12 @@ export function EditArticleForm({
 
       <MarkdownField value={currentContent} onChange={setCurrentContent} />
 
-      <div className="pt-6 border-t border-gray-100 flex justify-end">
+      <div className="pt-[1.5rem] border-t border-gray-100 flex justify-end">
         <Button
           type="submit"
           icon={Save}
           variant="primary"
-          className="px-10 py-3"
+          className="px-[2.5rem] py-[0.75rem]"
         >
           Save Changes
         </Button>

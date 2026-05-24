@@ -42,7 +42,7 @@ export function FormField({
         htmlFor={id}
         className="text-xs font-semibold text-gray-500 uppercase tracking-wider flex items-center"
       >
-        {Icon && <Icon size={12} className="mr-1.5" />}
+        {Icon && <Icon className="size-3 mr-1.5" />}
         {displayLabel}
         {required && (
           <span className="text-red-500 ml-1" aria-hidden="true">
@@ -61,7 +61,7 @@ export function FormField({
         placeholder={placeholder}
         list={candidates ? listId : undefined}
         autoComplete={candidates ? "off" : undefined}
-        className="w-full px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all placeholder:text-gray-400"
+        className="w-full px-[1rem] py-[0.5rem] bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all placeholder:text-gray-400"
       />
       {candidates && candidates.length > 0 && (
         <datalist id={listId}>

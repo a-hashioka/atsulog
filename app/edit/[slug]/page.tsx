@@ -69,13 +69,13 @@ export default async function EditArticlePage({
       />
       <nav
         aria-label="Article edit navigation"
-        className="border-t pt-10 flex items-center justify-between"
+        className="border-t pt-[2.5rem] flex items-center justify-between"
       >
         <Link
           href="/edit"
           className="text-sm font-medium text-gray-600 hover:text-black transition-colors flex items-center"
         >
-          <ArrowLeft size={16} className="mr-2" />
+          <ArrowLeft className="size-[1rem] mr-[0.5rem]" />
           Back to Edit List
         </Link>
         <Link
@@ -83,7 +83,7 @@ export default async function EditArticlePage({
           className="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors flex items-center"
         >
           View this article
-          <ExternalLink size={16} className="ml-2" />
+          <ExternalLink className="size-[1rem] ml-[0.5rem]" />
         </Link>
       </nav>
     </main>

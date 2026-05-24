@@ -16,22 +16,22 @@ export function ArticleMeta({ metadata, className = "" }: ArticleMetaProps) {
       className={`flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted ${className}`}
     >
       <div className="flex items-center" title="Created At">
-        <Calendar size={14} className="mr-1.5" />
+        <Calendar className="size-3.5 mr-1.5" />
         <span>{formatDate(metadata.createdAt)}</span>
       </div>
       <div className="flex items-center" title="Modified At">
-        <RotateCcw size={14} className="mr-1.5" />
+        <RotateCcw className="size-3.5 mr-1.5" />
         <span>{formatDate(metadata.modifiedAt)}</span>
       </div>
 
       <div className="flex items-center" title="View Count">
-        <Eye size={14} className="mr-1.5" />
+        <Eye className="size-3.5 mr-1.5" />
         <span>{metadata.viewCount.toLocaleString()} views</span>
       </div>
 
-      <span className="w-1 h-1 rounded-full bg-gray-300" aria-hidden="true" />
+      <span className="size-1 rounded-full bg-gray-300" aria-hidden="true" />
       <div className="flex items-center">
-        <Folder size={14} className="mr-1.5" />
+        <Folder className="size-3.5 mr-1.5" />
         <span>{metadata.category}</span>
       </div>
     </div>

@@ -12,7 +12,7 @@ type TagProps = {
  */
 export function Tag({ label, href, className = "" }: TagProps) {
   const baseStyles =
-    "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-sky-50 text-sky-600 border border-sky-100/50 hover:bg-sky-500 hover:text-white hover:border-sky-500 transition-all duration-200";
+    "inline-flex items-center px-[0.625rem] py-[0.125rem] rounded-full text-xs font-medium bg-sky-50 text-sky-600 border border-sky-100/50 hover:bg-sky-500 hover:text-white hover:border-sky-500 transition-all duration-200";
   const combinedStyles = `${baseStyles} ${className}`.trim();
 
   if (href) {

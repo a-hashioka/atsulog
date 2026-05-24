@@ -24,18 +24,18 @@ export function ArticleCount({
 
   return (
     <section className="animate-fade-in-up text-center">
-      <h2 className="text-3xl font-bold tracking-tight mb-10 font-mono text-gray-900">
+      <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-8 md:mb-10 font-mono text-gray-900">
         # of Articles
       </h2>
-      <div className="flex flex-wrap justify-center gap-8 md:gap-16">
+      <div className="flex justify-center gap-6 md:gap-16">
         {statItems.map((item) => (
           <div key={item.label} className="flex flex-col items-center">
-            <span className="text-5xl font-bold font-mono leading-none mb-4 text-gray-900">
+            <span className="text-3xl md:text-5xl font-bold font-mono leading-none mb-3 md:mb-4 text-gray-900">
               {item.value}
             </span>
             <div className="flex items-center text-gray-400">
-              <item.icon size={14} className="mr-1.5" />
-              <span className="text-xs font-bold uppercase tracking-widest">
+              <item.icon className="size-3 md:size-4 mr-1 md:mr-1.5" />
+              <span className="text-[0.625rem] md:text-xs font-bold uppercase tracking-widest">
                 {item.label}
               </span>
             </div>

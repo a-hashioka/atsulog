@@ -16,13 +16,14 @@ type HomeHeroProps = {
  */
 export function HomeHero({ counts }: HomeHeroProps) {
   return (
-    <div className="space-y-12">
+    <div className="space-y-10 md:space-y-12">
       <div className="flex justify-center">
         <Image
           src={siteConfig.icon}
           alt={siteConfig.title}
           width={200}
           height={200}
+          className="w-36 h-36 md:w-48 md:h-48"
           priority
         />
       </div>

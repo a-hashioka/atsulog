@@ -29,7 +29,7 @@ export function Button({
   title,
 }: ButtonProps) {
   const baseStyles =
-    "flex items-center justify-center space-x-2 px-6 py-2 text-sm font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed";
+    "flex items-center justify-center space-x-[0.5rem] px-[1rem] py-[0.5rem] text-sm font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed";
 
   const variants = {
     primary:
@@ -46,7 +46,7 @@ export function Button({
       title={title}
       className={`${baseStyles} ${variants[variant]} ${className}`}
     >
-      {Icon && <Icon size={16} />}
+      {Icon && <Icon className="size-4" />}
       <span>{children}</span>
     </button>
   );

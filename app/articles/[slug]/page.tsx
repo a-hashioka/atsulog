@@ -83,7 +83,7 @@ export default async function ArticlePage({
                 className="group block p-4 bg-white border border-gray-100 rounded-lg hover:border-gray-300 transition-colors"
               >
                 <div className="text-xs text-muted mb-1 flex items-center">
-                  <ChevronLeft size={12} className="mr-1" /> Previous
+                  <ChevronLeft className="size-3 mr-1" /> Previous
                 </div>
                 <div className="font-medium group-hover:text-blue-600 transition-colors">
                   {previousInSeries.title}
@@ -98,7 +98,7 @@ export default async function ArticlePage({
                 className="group block p-4 bg-white border border-gray-100 rounded-lg hover:border-gray-300 transition-colors text-right"
               >
                 <div className="text-xs text-muted mb-1 flex items-center justify-end">
-                  Next <ChevronRight size={12} className="ml-1" />
+                  Next <ChevronRight className="size-3 ml-1" />
                 </div>
                 <div className="font-medium group-hover:text-blue-600 transition-colors">
                   {nextInSeries.title}
@@ -119,7 +119,7 @@ export default async function ArticlePage({
           href="/articles"
           className="text-sm font-medium text-gray-600 hover:text-black transition-colors flex items-center"
         >
-          <ArrowLeft size={16} className="mr-2" />
+          <ArrowLeft className="size-4 mr-2" />
           Back to Articles
         </Link>
         {authenticated && (
@@ -127,7 +127,7 @@ export default async function ArticlePage({
             href={`/edit/${slug}`}
             className="text-sm font-medium text-emerald-600 hover:text-emerald-700 transition-colors flex items-center"
           >
-            <Pencil size={16} className="mr-2" />
+            <Pencil className="size-4 mr-2" />
             Edit this article
           </Link>
         )}

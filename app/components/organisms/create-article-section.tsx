@@ -17,7 +17,7 @@ export function CreateArticleSection() {
       >
         <div className="flex items-center space-x-4">
           <div className="w-10 h-10 bg-gray-50 rounded-full flex items-center justify-center text-gray-500 group-hover:bg-gray-900 group-hover:text-white transition-colors duration-300">
-            <Plus size={20} />
+            <Plus className="size-5" />
           </div>
           <span className="text-lg font-semibold text-gray-900 group-hover:text-black transition-colors">
             Write a new article

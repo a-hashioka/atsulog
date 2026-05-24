@@ -76,9 +76,9 @@ export function PaginationNav({
   return (
     <nav
       aria-label="Pagination"
-      className="flex justify-center items-center mt-12 py-8 border-t border-gray-100"
+      className="flex justify-center items-center mt-[3rem] py-[2rem] border-t border-gray-100"
     >
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-[0.5rem]">
         {hasPreviousPage ? (
           <>
             <Link
@@ -87,24 +87,24 @@ export function PaginationNav({
               title="First Page"
             >
               <span className="sr-only">First</span>
-              <ChevronsLeft size={16} />
+              <ChevronsLeft className="size-4" />
             </Link>
             <Link
               href={getPageUrl(currentPage - 1)}
               className="p-2 px-3 text-sm font-medium text-gray-600 hover:text-black hover:bg-gray-50 rounded-lg border border-transparent hover:border-gray-200 transition-all flex items-center"
             >
-              <ChevronLeft size={16} className="mr-1" />
-              <span className="hidden sm:inline">Prev</span>
+              <ChevronLeft className="size-4 md:mr-1" />
+              <span className="hidden md:inline">Prev</span>
             </Link>
           </>
         ) : (
           <>
             <span className="p-2 text-gray-200 cursor-not-allowed">
-              <ChevronsLeft size={16} />
+              <ChevronsLeft className="size-4" />
             </span>
             <span className="p-2 px-3 text-sm font-medium text-gray-200 cursor-not-allowed flex items-center">
-              <ChevronLeft size={16} className="mr-1" />
-              <span className="hidden sm:inline">Prev</span>
+              <ChevronLeft className="size-4 md:mr-1" />
+              <span className="hidden md:inline">Prev</span>
             </span>
           </>
         )}
@@ -149,8 +149,8 @@ export function PaginationNav({
               href={getPageUrl(currentPage + 1)}
               className="p-2 px-3 text-sm font-medium text-gray-600 hover:text-black hover:bg-gray-50 rounded-lg border border-transparent hover:border-gray-200 transition-all flex items-center"
             >
-              <span className="mr-1 hidden sm:inline">Next</span>
-              <ChevronRight size={16} />
+              <span className="md:mr-1 hidden md:inline">Next</span>
+              <ChevronRight className="size-4" />
             </Link>
             <Link
               href={getPageUrl(totalPages)}
@@ -158,17 +158,17 @@ export function PaginationNav({
               title="Last Page"
             >
               <span className="sr-only">Last</span>
-              <ChevronsRight size={16} />
+              <ChevronsRight className="size-4" />
             </Link>
           </>
         ) : (
           <>
             <span className="p-2 px-3 text-sm font-medium text-gray-200 cursor-not-allowed flex items-center">
-              <span className="mr-1 hidden sm:inline">Next</span>
-              <ChevronRight size={16} />
+              <span className="md:mr-1 hidden md:inline">Next</span>
+              <ChevronRight className="size-4" />
             </span>
             <span className="p-2 text-gray-200 cursor-not-allowed">
-              <ChevronsRight size={16} />
+              <ChevronsRight className="size-4" />
             </span>
           </>
         )}

@@ -23,14 +23,14 @@ export default async function RootLayout({
     <html lang={siteConfig.htmlLang}>
       <body className="min-h-screen flex flex-col">
         <header className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-gray-100 animate-fade-in-up">
-          <div className="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="max-w-3xl mx-auto px-[1.5rem] py-[1rem] flex items-center justify-between">
             {/* Left: Title & Admin Actions */}
             <div className="flex items-center space-x-4">
               <Link
                 href="/"
                 className="group flex items-center text-xl font-bold tracking-tight transition-colors"
               >
-                <span className="text-2xl text-emerald-500 mr-2 group-hover:translate-x-0.5 transition-transform duration-200">
+                <span className="text-[1.5rem] text-emerald-500 mr-2 group-hover:translate-x-0.5 transition-transform duration-200">
                   &gt;
                 </span>
                 <span className="group-hover:text-gray-600">
@@ -50,23 +50,23 @@ export default async function RootLayout({
                 href="/"
                 className="text-sm font-medium text-gray-500 hover:text-black transition-colors flex items-center"
               >
-                <Home size={16} className="mr-1.5" />
-                Home
+                <Home className="size-4.5 md:size-4 md:mr-1.5" />
+                <span className="hidden md:inline">Home</span>
               </Link>
               <Link
                 href="/articles"
                 className="text-sm font-medium text-gray-500 hover:text-black transition-colors flex items-center"
               >
-                <Newspaper size={16} className="mr-1.5" />
-                Articles
+                <Newspaper className="size-4.5 md:size-4 md:mr-1.5" />
+                <span className="hidden md:inline">Articles</span>
               </Link>
               {authenticated && (
                 <Link
                   href="/edit"
                   className="text-sm font-medium text-gray-500 hover:text-black transition-colors flex items-center"
                 >
-                  <Pencil size={16} className="mr-1.5" />
-                  Edit
+                  <Pencil className="size-4.5 md:size-4 md:mr-1.5" />
+                  <span className="hidden md:inline">Edit</span>
                 </Link>
               )}
             </div>

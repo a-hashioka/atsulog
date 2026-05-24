@@ -35,8 +35,8 @@ export function ArticleSearchForm({
   const router = useRouter();
 
   return (
-    <section className="mb-16">
-      <h2 className="text-3xl font-bold tracking-tight mb-8">
+    <section className="mb-[4rem]">
+      <h2 className="text-3xl font-bold tracking-tight mb-[2rem]">
         Search & Filter
       </h2>
       <Form action={action}>
@@ -46,7 +46,7 @@ export function ArticleSearchForm({
           candidates={candidates}
         />
 
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-[1rem]">
           <Button type="submit" icon={Search} variant="primary">
             Search
           </Button>

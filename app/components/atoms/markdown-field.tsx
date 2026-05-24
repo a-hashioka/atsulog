@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import {
   Bold,
   Italic,
@@ -57,6 +57,15 @@ export function MarkdownField({
   const [isUploading, setIsUploading] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Auto-resize textarea to fit content
+  useEffect(() => {
+    const textarea = textareaRef.current;
+    if (textarea && mode === "edit") {
+      textarea.style.height = "auto";
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    }
+  }, [value, mode]);
 
   const insertMarkdown = useCallback(
     (prefix: string, suffix: string = "", placeholder: string = "") => {
@@ -239,8 +248,8 @@ export function MarkdownField({
   );
 
   return (
-    <div className="flex flex-col space-y-4">
-      <div className="flex items-center justify-between border-b border-gray-100 pb-2">
+    <div className="flex flex-col space-y-[1rem]">
+      <div className="flex items-center justify-between border-b border-gray-100 pb-[0.5rem]">
         <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
           {label}
         </label>
@@ -248,7 +257,7 @@ export function MarkdownField({
       </div>
 
       {mode === "edit" && (
-        <div className="flex flex-col space-y-2 animate-fade-in">
+        <div className="flex flex-col space-y-[0.5rem] animate-fade-in">
           <Toolbar
             onAction={insertMarkdown}
             onUploadClick={() => fileInputRef.current?.click()}
@@ -265,7 +274,7 @@ export function MarkdownField({
       )}
 
       <div
-        className="min-h-[25rem]"
+        className="w-full"
         onDragOver={(e) => e.preventDefault()}
         onDrop={onDrop}
       >
@@ -410,13 +419,16 @@ function Toolbar({
   ];
 
   return (
-    <div className="flex flex-wrap items-center gap-1 p-1 bg-white border border-gray-200 rounded-lg shadow-sm w-fit mx-auto">
+    <div className="flex flex-wrap items-center gap-[0.25rem] p-[0.25rem] bg-white border border-gray-100 rounded-lg shadow-sm w-fit mx-auto">
       {groups.map((group, groupIdx) => (
         <div key={groupIdx} className="flex items-center">
           {groupIdx > 0 && (
-            <div className="w-px h-4 bg-gray-200 mx-1" aria-hidden="true" />
+            <div
+              className="w-px h-[1rem] bg-gray-200 mx-[0.25rem]"
+              aria-hidden="true"
+            />
           )}
-          <div className="flex items-center gap-0.5">
+          <div className="flex items-center gap-[0.125rem]">
             {group.items.map((item) => (
               <button
                 key={item.title}
@@ -424,27 +436,30 @@ function Toolbar({
                 onClick={() =>
                   onAction(item.prefix, item.suffix, item.placeholder)
                 }
-                className="p-1.5 text-gray-500 hover:text-black hover:bg-gray-100 rounded-md transition-colors"
+                className="p-[0.375rem] text-gray-500 hover:text-black hover:bg-gray-100 rounded-md transition-colors"
                 title={item.title}
               >
-                <item.icon size={16} />
+                <item.icon className="size-[1rem]" />
               </button>
             ))}
           </div>
         </div>
       ))}
-      <div className="w-px h-4 bg-gray-200 mx-1" aria-hidden="true" />
+      <div
+        className="w-px h-[1rem] bg-gray-200 mx-[0.25rem]"
+        aria-hidden="true"
+      />
       <button
         type="button"
         onClick={onUploadClick}
         disabled={isUploading}
-        className="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-md transition-colors disabled:opacity-50"
+        className="p-[0.375rem] text-emerald-600 hover:bg-emerald-50 rounded-md transition-colors disabled:opacity-50"
         title="Upload Image"
       >
         {isUploading ? (
-          <Loader2 size={16} className="animate-spin" />
+          <Loader2 className="size-[1rem] animate-spin" />
         ) : (
-          <ImageIcon size={16} />
+          <ImageIcon className="size-[1rem]" />
         )}
       </button>
     </div>
@@ -464,29 +479,27 @@ function ModeToggle({
   const isEdit = mode === "edit";
 
   return (
-    <div className="flex bg-gray-100 p-1 rounded-lg">
+    <div className="flex bg-gray-100 p-[0.25rem] rounded-lg">
       <button
         type="button"
         onClick={() => onToggle("edit")}
-        className={`flex items-center px-3 py-1 text-xs font-medium rounded-md transition-all ${
+        className={`flex items-center px-[0.75rem] py-[0.25rem] text-xs font-medium rounded-md transition-all ${
           isEdit
             ? "bg-white text-black shadow-sm"
             : "text-gray-500 hover:text-gray-700"
         }`}
       >
-        <Pencil size={12} className="mr-1.5" />
+        <Pencil className="size-[0.75rem] mr-[0.375rem]" />
         Edit
       </button>
       <button
         type="button"
         onClick={() => onToggle("preview")}
-        className={`flex items-center px-3 py-1 text-xs font-medium rounded-md transition-all ${
-          !isEdit
-            ? "bg-white text-black shadow-sm"
-            : "text-gray-500 hover:text-gray-700"
+        className={`flex items-center px-[0.75rem] py-[0.25rem] text-xs font-medium rounded-md transition-all ${
+          !isEdit ? "bg-white text-black shadow-sm" : "text-gray-700"
         }`}
       >
-        <Eye size={12} className="mr-1.5" />
+        <Eye className="size-[0.75rem] mr-[0.375rem]" />
         Preview
       </button>
     </div>
@@ -519,7 +532,7 @@ function Editor({
       onKeyDown={onKeyDown}
       required
       rows={rows}
-      className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all resize-y min-h-[25rem]"
+      className="w-full p-[1rem] bg-gray-50/50 rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-sky-500/10 transition-all overflow-hidden"
     />
   );
 }
@@ -529,7 +542,7 @@ function Editor({
  */
 function Preview({ content }: { content: string }) {
   return (
-    <div className="p-4 border border-dashed border-gray-200 rounded-xl bg-white min-h-[25rem]">
+    <div className="p-[1rem] bg-white">
       <MarkdownRenderer content={content} />
       {/* Hidden textarea to ensure the form still submits the content even in preview mode */}
       <textarea name="content" value={content} readOnly hidden />

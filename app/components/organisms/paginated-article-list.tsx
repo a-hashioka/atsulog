@@ -92,7 +92,7 @@ export function PaginatedArticleList({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <h1 className="text-3xl font-bold tracking-tight">Articles</h1>
 
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-[0.5rem]">
           {/* Sort By Toggle */}
           <Link
             href={getUpdateUrl({
@@ -102,7 +102,7 @@ export function PaginatedArticleList({
                 ? { order: "desc" }
                 : {}),
             })}
-            className={`flex items-center space-x-2 px-3 py-1.5 text-sm font-medium rounded-lg transition-all border ${
+            className={`flex items-center space-x-[0.5rem] px-[0.75rem] py-[0.375rem] text-sm font-medium rounded-lg transition-all border ${
               isViews
                 ? "bg-amber-50 border-amber-100 text-amber-700 hover:bg-amber-100"
                 : isModified
@@ -113,17 +113,17 @@ export function PaginatedArticleList({
           >
             {isViews ? (
               <>
-                <BarChart3 size={14} />
+                <BarChart3 className="size-[0.875rem]" />
                 <span>Views</span>
               </>
             ) : isModified ? (
               <>
-                <RotateCcw size={14} />
+                <RotateCcw className="size-[0.875rem]" />
                 <span>Modified</span>
               </>
             ) : (
               <>
-                <Calendar size={14} />
+                <Calendar className="size-[0.875rem]" />
                 <span>Created</span>
               </>
             )}
@@ -133,17 +133,17 @@ export function PaginatedArticleList({
           {isCreated && (
             <Link
               href={getUpdateUrl({ order: isAsc ? "desc" : "asc" })}
-              className="flex items-center space-x-2 px-3 py-1.5 text-sm font-medium text-gray-500 hover:text-black hover:bg-gray-50 border border-gray-100 hover:border-gray-200 rounded-lg transition-all"
+              className="flex items-center space-x-[0.5rem] px-[0.75rem] py-[0.375rem] text-sm font-medium text-gray-500 hover:text-black hover:bg-gray-50 border border-gray-100 hover:border-gray-200 rounded-lg transition-all"
               title={isAsc ? "Sort Descending" : "Sort Ascending"}
             >
               {isAsc ? (
                 <>
-                  <ArrowUpNarrowWide size={14} />
+                  <ArrowUpNarrowWide className="size-[0.875rem]" />
                   <span>Asc</span>
                 </>
               ) : (
                 <>
-                  <ArrowDownWideNarrow size={14} />
+                  <ArrowDownWideNarrow className="size-[0.875rem]" />
                   <span>Desc</span>
                 </>
               )}

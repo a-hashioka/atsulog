@@ -30,10 +30,7 @@ export function RecentArticles({ articles }: ArticleListProps) {
             className="inline-flex items-center text-sm font-medium text-gray-600 hover:text-black transition-colors group"
           >
             <span>View all articles</span>
-            <ArrowRight
-              size={16}
-              className="ml-1.5 group-hover:translate-x-1 transition-transform"
-            />
+            <ArrowRight className="size-4 ml-1.5 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
       </div>
