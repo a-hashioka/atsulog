@@ -3,6 +3,7 @@ import { FormField } from "@/app/components/atoms/form-field";
 import { Button } from "@/app/components/atoms/button";
 import { LogIn } from "lucide-react";
 import Image from "next/image";
+import { siteConfig } from "@/app/lib/site-config";
 
 /**
  * Login page component.
@@ -17,12 +18,12 @@ export default async function LoginPage({
 
   return (
     <main className="min-h-[70vh] flex items-center justify-center py-[3rem] px-[1rem] sm:px-[1.5rem] lg:px-[2rem]">
-      <div className="max-w-md w-full space-y-[2rem] bg-white p-[2.5rem] rounded-[2.5rem] border border-gray-100 shadow-2xl shadow-sky-500/10 animate-in fade-in zoom-in duration-700">
+      <div className="max-w-md w-full space-y-[2rem] bg-white p-[2.5rem] animate-in fade-in zoom-in duration-700">
         <div className="flex flex-col items-center">
           <div className="mb-[1.5rem] relative">
-            <div className="relative w-[5rem] h-[5rem] bg-white rounded-3xl shadow-[0_20px_50px_-12px_rgba(0,0,0,0.2)] flex items-center justify-center border border-gray-100">
+            <div className="relative w-[5rem] h-[5rem] bg-white rounded-3xl shadow-[0_1.25rem_3.125rem_-0.75rem_rgba(0,0,0,0.2)] flex items-center justify-center border border-gray-100">
               <Image
-                src="/favicon.ico"
+                src={siteConfig.icon}
                 alt="Site Icon"
                 width={48}
                 height={48}
@@ -34,12 +35,12 @@ export default async function LoginPage({
             Admin Login
           </h1>
           <p className="mt-[0.5rem] text-sm text-gray-500 font-medium">
-            Welcome back to atsulog
+            Welcome back to {siteConfig.title}
           </p>
         </div>
 
         <form action={loginAction} className="mt-[2rem] space-y-[1.5rem]">
-          <div className="rounded-md shadow-sm space-y-[1rem]">
+          <div className="space-y-[1rem]">
             <FormField
               id="password"
               type="password"

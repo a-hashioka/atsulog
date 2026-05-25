@@ -9,9 +9,8 @@ import {
   incrementViewCount,
 } from "@/app/lib/article-repository";
 import { isAuthenticated } from "@/app/lib/auth";
-import { Tag } from "@/app/components/atoms/tag";
 import { ArticleMeta } from "@/app/components/atoms/article-meta";
-import type { ArticlePageProps } from "@/app/lib/article-types";
+import { Tag } from "@/app/components/atoms/tag";
 
 /**
  * Renders an article detail page from markdown content.
@@ -19,7 +18,9 @@ import type { ArticlePageProps } from "@/app/lib/article-types";
  */
 export default async function ArticlePage({
   params,
-}: ArticlePageProps & { params: Promise<{ slug: string }> }) {
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
   const articles = await getArticles();
   const articleDetail = await getArticleBySlug(articles, slug);

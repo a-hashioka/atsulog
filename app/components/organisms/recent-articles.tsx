@@ -6,7 +6,7 @@ import {
   type ArticleListProps,
 } from "@/app/components/atoms/article-list";
 
-const numberOfArticlesToShow = 3;
+import { siteConfig } from "@/app/lib/site-config";
 
 /**
  * Renders a list of the most recent articles.
@@ -14,7 +14,7 @@ const numberOfArticlesToShow = 3;
 export function RecentArticles({ articles }: ArticleListProps) {
   const recentArticles = sortArticles(articles, "createdAt").slice(
     0,
-    numberOfArticlesToShow,
+    siteConfig.recentArticlesCount,
   );
 
   return (

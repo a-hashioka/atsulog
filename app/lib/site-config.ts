@@ -6,4 +6,6 @@ export const siteConfig = {
   htmlLang: "ja",
   locale: "ja-JP",
   timeZone: "Asia/Tokyo",
+  articlesPerPage: 6,
+  recentArticlesCount: 3,
 } as const;

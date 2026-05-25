@@ -13,10 +13,9 @@ import type {
   ArticleSearchParams,
 } from "@/app/lib/article-types";
 import { getParam, getSortConfig } from "@/app/lib/article-utils";
+import { siteConfig } from "@/app/lib/site-config";
 
 // --- Constants ---
-
-export const ARTICLES_PER_PAGE = 6;
 
 // --- Types ---
 
@@ -57,13 +56,13 @@ export function PaginatedArticleList({
   // Calculate pagination window
   const totalPages = Math.max(
     1,
-    Math.ceil(articles.length / ARTICLES_PER_PAGE),
+    Math.ceil(articles.length / siteConfig.articlesPerPage),
   );
   const currentPage = Math.min(requestedPage, totalPages);
-  const startIndex = (currentPage - 1) * ARTICLES_PER_PAGE;
+  const startIndex = (currentPage - 1) * siteConfig.articlesPerPage;
   const pagedArticles = articles.slice(
     startIndex,
-    startIndex + ARTICLES_PER_PAGE,
+    startIndex + siteConfig.articlesPerPage,
   );
 
   /**

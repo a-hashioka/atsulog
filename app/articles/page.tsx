@@ -7,14 +7,18 @@ import {
   getSortConfig,
 } from "@/app/lib/article-utils";
 import { ArticleSearchForm } from "@/app/components/organisms/article-search-form";
-import type { ArticlePageProps } from "@/app/lib/article-types";
+import type { ArticleSearchParams } from "@/app/lib/article-types";
 
 /**
  * Renders the paginated articles list page with search and filtering.
  * @param props Route props including async search parameters.
  * @returns The articles page element.
  */
-export default async function ArticlesPage({ searchParams }: ArticlePageProps) {
+export default async function ArticlesPage({
+  searchParams,
+}: {
+  searchParams: Promise<ArticleSearchParams>;
+}) {
   const resolvedSearchParams = await searchParams;
 
   // 1. Data Fetching

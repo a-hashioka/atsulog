@@ -8,14 +8,14 @@ type MarkdownRendererProps = {
 
 /**
  * A safe and flexible Markdown renderer using react-markdown and remark-gfm.
- * Uses a custom .prose-atsulog class for high-fidelity styling control.
+ * Uses a custom .prose-site class for high-fidelity styling control.
  */
 export function MarkdownRenderer({
   content,
   className = "",
 }: MarkdownRendererProps) {
   return (
-    <div className={`prose-atsulog ${className}`}>
+    <div className={`prose-site ${className}`}>
       <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
     </div>
   );

@@ -8,7 +8,7 @@ import {
 } from "@/app/lib/article-utils";
 import { ArticleSearchForm } from "@/app/components/organisms/article-search-form";
 import { CreateArticleSection } from "@/app/components/organisms/create-article-section";
-import type { ArticlePageProps } from "@/app/lib/article-types";
+import type { ArticleSearchParams } from "@/app/lib/article-types";
 
 /**
  * Renders the page for article management with search and filtering.
@@ -17,7 +17,9 @@ import type { ArticlePageProps } from "@/app/lib/article-types";
  */
 export default async function EditDashboardPage({
   searchParams,
-}: ArticlePageProps) {
+}: {
+  searchParams: Promise<ArticleSearchParams>;
+}) {
   const resolvedSearchParams = await searchParams;
 
   // 1. Data Fetching
