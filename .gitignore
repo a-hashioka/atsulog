@@ -44,4 +44,7 @@ next-env.d.ts
 /data/
 /data/**
 
+# deployment
+deploy.tar.gz
+
 .github/
