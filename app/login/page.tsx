@@ -23,7 +23,7 @@ export default async function LoginPage({
           <div className="mb-[1.5rem] relative">
             <div className="relative w-[5rem] h-[5rem] bg-white rounded-3xl shadow-[0_1.25rem_3.125rem_-0.75rem_rgba(0,0,0,0.2)] flex items-center justify-center border border-gray-100">
               <Image
-                src={siteConfig.icon}
+                src="/favicon.ico"
                 alt="Site Icon"
                 width={48}
                 height={48}
