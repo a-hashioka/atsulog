@@ -128,10 +128,10 @@ export default async function ArticlePage({
         {authenticated && (
           <Link
             href={`/edit/${slug}`}
-            className="inline-flex items-center px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium hover:bg-black transition-colors"
+            className="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors"
           >
             <Pencil className="size-4 mr-2" />
-            Edit Article
+            Edit this article
           </Link>
         )}
       </footer>

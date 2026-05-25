@@ -54,19 +54,21 @@ function ArticleListItem({
   article: ArticleMetadata;
   basePath: string;
 }) {
+  const articleHref = `${basePath}/${article.slug}`;
+
   return (
-    <div className="group bg-white border border-gray-100 rounded-2xl shadow-sm hover:border-sky-200 transition-all duration-300 flex flex-col p-[1.5rem] space-y-[1.25rem]">
-      {/* Article Title Link */}
-      <Link href={`${basePath}/${article.slug}`}>
-        <h2 className="text-xl font-bold leading-tight hover:text-sky-600 transition-colors duration-300">
+    <div className="group relative bg-white border border-gray-100 rounded-2xl shadow-sm hover:border-sky-200 transition-all duration-300 flex flex-col p-[1.5rem] space-y-[1.25rem]">
+      <Link href={articleHref} className="space-y-[1.25rem]">
+        {/* Article Title */}
+        <h2 className="text-xl font-bold leading-tight group-hover:text-sky-600 transition-colors duration-300">
           {article.title}
         </h2>
+
+        {/* Metadata (Dates, Views) */}
+        <ArticleMeta metadata={article} />
       </Link>
 
-      {/* Metadata (Dates, Views) */}
-      <ArticleMeta metadata={article} />
-
-      {/* Taxonomy Links (Category, Series, Tags) */}
+      {/* Taxonomy Links (Category, Series, Tags) - Kept outside the main link for separate interaction */}
       <ArticleTaxonomies
         metadata={article}
         basePath={basePath}
