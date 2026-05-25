@@ -1,16 +1,20 @@
 import { SearchX } from "lucide-react";
 import Link from "next/link";
 import type { ArticleMetadata } from "@/app/lib/article-types";
-import { Tag } from "@/app/components/atoms/tag";
 import { ArticleMeta } from "@/app/components/atoms/article-meta";
+import { ArticleTaxonomies } from "@/app/components/atoms/article-taxonomies";
 
+/**
+ * Props for the ArticleList component.
+ */
 export type ArticleListProps = {
   articles: ArticleMetadata[];
   basePath?: string;
 };
 
 /**
- * Displays a list of articles with their metadata.
+ * Renders a list of article items.
+ * Shows a "not found" state if the list is empty.
  */
 export function ArticleList({
   articles,
@@ -40,6 +44,9 @@ export function ArticleList({
   );
 }
 
+/**
+ * Renders an individual article item within a list.
+ */
 function ArticleListItem({
   article,
   basePath,
@@ -48,23 +55,23 @@ function ArticleListItem({
   basePath: string;
 }) {
   return (
-    <div className="group bg-white border border-gray-100 rounded-2xl shadow-sm hover:border-sky-200 transition-all duration-300 flex flex-col">
-      <Link
-        href={`${basePath}/${article.slug}`}
-        className="p-[1.5rem] flex-1 flex flex-col space-y-[1rem]"
-      >
-        <h2 className="text-xl font-bold leading-tight transition-colors duration-300">
+    <div className="group bg-white border border-gray-100 rounded-2xl shadow-sm hover:border-sky-200 transition-all duration-300 flex flex-col p-[1.5rem] space-y-[1.25rem]">
+      {/* Article Title Link */}
+      <Link href={`${basePath}/${article.slug}`}>
+        <h2 className="text-xl font-bold leading-tight hover:text-sky-600 transition-colors duration-300">
           {article.title}
         </h2>
-        <ArticleMeta metadata={article} />
       </Link>
-      {article.tags.length > 0 && (
-        <div className="px-[1.5rem] pb-[1.5rem] flex flex-wrap gap-[0.5rem]">
-          {article.tags.map((tag) => (
-            <Tag key={tag} label={tag} href={`${basePath}?tag=${tag}`} />
-          ))}
-        </div>
-      )}
+
+      {/* Metadata (Dates, Views) */}
+      <ArticleMeta metadata={article} />
+
+      {/* Taxonomy Links (Category, Series, Tags) */}
+      <ArticleTaxonomies
+        metadata={article}
+        basePath={basePath}
+        className="pt-[0.25rem]"
+      />
     </div>
   );
 }

@@ -7,7 +7,7 @@ import type {
 } from "./article-types";
 
 /**
- * Helper to get the first string value from a search parameter.
+ * Extracts the first string value from a search parameter.
  */
 export function getParam(
   param: string | string[] | undefined,
@@ -18,8 +18,8 @@ export function getParam(
 }
 
 /**
- * Determines the database field and sort order based on search parameters.
- * Encapsulates business logic for default sorting.
+ * Calculates the sorting configuration based on search parameters.
+ * Defaults to "createdAt" descending, or "seriesOrder" ascending if a series is selected.
  */
 export function getSortConfig(params: ArticleSearchParams): {
   field: keyof ArticleMetadata;
@@ -28,32 +28,43 @@ export function getSortConfig(params: ArticleSearchParams): {
 } {
   const sortByParam = getParam(params.sortBy) as SortBy;
   const orderParam = getParam(params.order) as SortOrder;
+  const hasSeries = !!getParam(params.series);
 
   let field: keyof ArticleMetadata = "createdAt";
   let sortBy: SortBy = "created";
 
+  // Map sortBy parameter to metadata fields
   if (sortByParam === "modified") {
     field = "modifiedAt";
     sortBy = "modified";
   } else if (sortByParam === "views") {
     field = "viewCount";
     sortBy = "views";
+  } else if (hasSeries && !sortByParam) {
+    // Optimization: Default to seriesOrder for series filtering
+    field = "seriesOrder";
+    sortBy = "created";
   }
 
-  // Modified and Views are always descending by default/forced
+  // Determine sort order
+  // - Modified and Views always default to descending
+  // - Series filtering defaults to ascending (oldest first)
+  // - Otherwise, default to descending (newest first)
   const order =
     field === "modifiedAt" || field === "viewCount"
       ? "desc"
-      : orderParam === "asc"
-        ? "asc"
-        : "desc";
+      : orderParam
+        ? orderParam
+        : hasSeries
+          ? "asc"
+          : "desc";
 
   return { field, order, sortBy };
 }
 
 /**
- * Sorts articles by a specific field and order.
- * Handles dates (createdAt, modifiedAt), numbers (viewCount), and strings.
+ * Sorts an array of article metadata.
+ * Supports dates, numbers, and string-based fields.
  */
 export function sortArticles(
   articles: ArticleMetadata[],
@@ -64,15 +75,17 @@ export function sortArticles(
     let leftVal = left[field];
     let rightVal = right[field];
 
-    // Specialized date handling
+    // Handle date strings
     if (field === "createdAt" || field === "modifiedAt") {
       leftVal = Date.parse(leftVal as string);
       rightVal = Date.parse(rightVal as string);
     }
 
+    // Handle null/undefined values
     if (leftVal === null || leftVal === undefined) return 1;
     if (rightVal === null || rightVal === undefined) return -1;
 
+    // Standard comparison
     if (leftVal < rightVal) return order === "asc" ? -1 : 1;
     if (leftVal > rightVal) return order === "asc" ? 1 : -1;
     return 0;
@@ -80,7 +93,7 @@ export function sortArticles(
 }
 
 /**
- * Formats a date string for localized display.
+ * Formats an ISO date string into a localized, user-friendly format.
  */
 export function formatDate(value: string): string {
   return new Date(value).toLocaleString(siteConfig.locale, {
@@ -91,7 +104,7 @@ export function formatDate(value: string): string {
 }
 
 /**
- * Extracts unique taxonomies (tags, categories, series) from a list of articles.
+ * Extracts unique taxonomy values (tags, categories, series) from a list of articles.
  */
 export function getTaxonomies(articles: ArticleMetadata[]) {
   return {
@@ -104,7 +117,7 @@ export function getTaxonomies(articles: ArticleMetadata[]) {
 }
 
 /**
- * Calculates the next seriesOrder for a given series name.
+ * Determines the next seriesOrder index for a new article in a given series.
  */
 export function getNextSeriesOrder(
   seriesName: string,
@@ -121,7 +134,7 @@ export function getNextSeriesOrder(
 }
 
 /**
- * Filters articles based on search parameters.
+ * Filters article metadata based on the provided search parameters.
  */
 export function filterArticles(
   articles: ArticleMetadata[],
@@ -137,6 +150,7 @@ export function filterArticles(
   }
 
   return articles.filter((article) => {
+    // Keyword search across multiple fields
     if (query) {
       const matches =
         article.title.toLowerCase().includes(query) ||
@@ -147,6 +161,7 @@ export function filterArticles(
       if (!matches) return false;
     }
 
+    // Tag filtering (supports comma-separated tags)
     if (tag) {
       const searchTags = tag
         .split(",")
@@ -156,6 +171,7 @@ export function filterArticles(
       if (!searchTags.every((st) => articleTags.includes(st))) return false;
     }
 
+    // Series and Category filtering
     if (series && article.series?.toLowerCase() !== series) return false;
     if (category && article.category.toLowerCase() !== category) return false;
 
