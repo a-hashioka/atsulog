@@ -14,6 +14,7 @@ import {
   CheckSquare,
   Link as LinkIcon,
   FileCode,
+  FileText,
   Table,
   Image as ImageIcon,
   Loader2,
@@ -57,6 +58,7 @@ export function MarkdownField({
   const [isUploading, setIsUploading] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const markdownInputRef = useRef<HTMLInputElement>(null);
 
   // Auto-resize textarea to fit content
   useEffect(() => {
@@ -121,10 +123,48 @@ export function MarkdownField({
     [insertMarkdown],
   );
 
+  const handleMarkdownUpload = useCallback(
+    (file: File) => {
+      const lowerName = file.name.toLowerCase();
+      const isMarkdown =
+        lowerName.endsWith(".md") ||
+        lowerName.endsWith(".markdown") ||
+        file.type === "text/markdown" ||
+        file.type === "text/plain";
+
+      if (!isMarkdown) {
+        alert("Please upload a markdown (.md) file.");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result === "string") {
+          onChange(reader.result);
+          return;
+        }
+
+        alert("Failed to read the markdown file.");
+      };
+      reader.onerror = () => {
+        console.error("Failed to read markdown file:", reader.error);
+        alert("Failed to read the markdown file.");
+      };
+      reader.readAsText(file);
+    },
+    [onChange],
+  );
+
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) handleImageUpload(file);
     // Reset input so the same file can be uploaded again if needed
+    if (e.target) e.target.value = "";
+  };
+
+  const onMarkdownFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) handleMarkdownUpload(file);
     if (e.target) e.target.value = "";
   };
 
@@ -261,6 +301,7 @@ export function MarkdownField({
           <Toolbar
             onAction={insertMarkdown}
             onUploadClick={() => fileInputRef.current?.click()}
+            onMarkdownUploadClick={() => markdownInputRef.current?.click()}
             isUploading={isUploading}
           />
           <input
@@ -268,6 +309,13 @@ export function MarkdownField({
             ref={fileInputRef}
             onChange={onFileChange}
             accept="image/*"
+            className="hidden"
+          />
+          <input
+            type="file"
+            ref={markdownInputRef}
+            onChange={onMarkdownFileChange}
+            accept=".md,.markdown,text/markdown,text/plain"
             className="hidden"
           />
         </div>
@@ -302,10 +350,12 @@ export function MarkdownField({
 function Toolbar({
   onAction,
   onUploadClick,
+  onMarkdownUploadClick,
   isUploading,
 }: {
   onAction: (prefix: string, suffix?: string, placeholder?: string) => void;
   onUploadClick: () => void;
+  onMarkdownUploadClick: () => void;
   isUploading: boolean;
 }) {
   const groups = [
@@ -453,7 +503,7 @@ function Toolbar({
         type="button"
         onClick={onUploadClick}
         disabled={isUploading}
-        className="p-[0.375rem] text-emerald-600 hover:bg-emerald-50 rounded-md transition-colors disabled:opacity-50"
+        className="p-[0.375rem] text-gray-700 hover:text-black hover:bg-gray-100 rounded-md transition-colors disabled:opacity-50"
         title="Upload Image"
       >
         {isUploading ? (
@@ -461,6 +511,14 @@ function Toolbar({
         ) : (
           <ImageIcon className="size-[1rem]" />
         )}
+      </button>
+      <button
+        type="button"
+        onClick={onMarkdownUploadClick}
+        className="p-[0.375rem] text-gray-700 hover:text-black hover:bg-gray-100 rounded-md transition-colors"
+        title="Load Markdown"
+      >
+        <FileText className="size-[1rem]" />
       </button>
     </div>
   );

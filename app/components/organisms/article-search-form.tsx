@@ -1,6 +1,7 @@
 "use client";
 
-import { Search, RotateCcw } from "lucide-react";
+import { ChevronDown, ChevronUp, Search, RotateCcw } from "lucide-react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Form from "next/form";
 import { SearchFields } from "@/app/components/atoms/search-field";
@@ -33,33 +34,60 @@ export function ArticleSearchForm({
   action = "/articles",
 }: ArticleSearchFormProps) {
   const router = useRouter();
+  const hasActiveSearchParams = Object.values(searchParams).some((value) => {
+    if (Array.isArray(value)) {
+      return value.some((item) => item.trim().length > 0);
+    }
+
+    if (typeof value === "string") {
+      return value.trim().length > 0;
+    }
+
+    return false;
+  });
+  const [isOpen, setIsOpen] = useState(hasActiveSearchParams);
 
   return (
-    <section className="mb-[4rem]">
-      <h2 className="text-3xl font-bold tracking-tight mb-[2rem]">
-        Search & Filter
-      </h2>
-      <Form action={action}>
-        <SearchFields
-          key={JSON.stringify(searchParams)}
-          searchParams={searchParams}
-          candidates={candidates}
-        />
+    <section className={isOpen ? "mb-[4rem]" : "mb-[2rem]"}>
+      <div className="flex items-center justify-between mb-[2rem]">
+        <h2 className="text-3xl font-bold tracking-tight">Search & Filter</h2>
+        <button
+          type="button"
+          onClick={() => setIsOpen((prev) => !prev)}
+          title={isOpen ? "Hide search form" : "Show search form"}
+          className="inline-flex items-center gap-1 px-2 py-1 text-sm font-medium text-gray-500 transition-colors hover:text-black"
+        >
+          <span className="hidden md:inline">{isOpen ? "Hide" : "Show"}</span>
+          {isOpen ? (
+            <ChevronUp className="size-4.5 md:size-4" />
+          ) : (
+            <ChevronDown className="size-4.5 md:size-4" />
+          )}
+        </button>
+      </div>
+      {isOpen && (
+        <Form action={action}>
+          <SearchFields
+            key={JSON.stringify(searchParams)}
+            searchParams={searchParams}
+            candidates={candidates}
+          />
 
-        <div className="flex items-center space-x-[1rem]">
-          <Button type="submit" icon={Search} variant="primary">
-            Search
-          </Button>
-          <Button
-            type="button"
-            onClick={() => router.push(action)}
-            icon={RotateCcw}
-            variant="outline"
-          >
-            Clear
-          </Button>
-        </div>
-      </Form>
+          <div className="flex items-center space-x-[1rem]">
+            <Button type="submit" icon={Search} variant="primary">
+              Search
+            </Button>
+            <Button
+              type="button"
+              onClick={() => router.push(action)}
+              icon={RotateCcw}
+              variant="outline"
+            >
+              Clear
+            </Button>
+          </div>
+        </Form>
+      )}
     </section>
   );
 }

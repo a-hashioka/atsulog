@@ -38,6 +38,7 @@ export default async function EditDashboardPage({
       <CreateArticleSection />
 
       <ArticleSearchForm
+        key={JSON.stringify(resolvedSearchParams)}
         searchParams={resolvedSearchParams}
         candidates={taxonomies}
         action="/edit"

@@ -36,6 +36,7 @@ export default async function ArticlesPage({
   return (
     <main>
       <ArticleSearchForm
+        key={JSON.stringify(resolvedSearchParams)}
         searchParams={resolvedSearchParams}
         candidates={candidates}
       />
