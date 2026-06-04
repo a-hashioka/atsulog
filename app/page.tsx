@@ -1,11 +1,14 @@
+import { siteConfig } from "@/app/lib/site-config";
 import { getArticles } from "@/app/lib/article-repository";
 import { RecentArticles } from "@/app/components/organisms/recent-articles";
 import { HomeHero } from "@/app/components/organisms/home-hero";
 import { getTaxonomies } from "@/app/lib/article-utils";
 import type { Metadata } from "next";
 
+const siteTitle = siteConfig.title[0].toUpperCase() + siteConfig.title.slice(1);
+
 export const metadata: Metadata = {
-  title: "Home",
+  title: `Home | ${siteTitle}`,
 };
 
 export default async function Home() {
