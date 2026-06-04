@@ -1,4 +1,5 @@
 import { PaginatedArticleList } from "@/app/components/organisms/paginated-article-list";
+import type { Metadata } from "next";
 import { getArticles } from "@/app/lib/article-repository";
 import {
   sortArticles,
@@ -8,6 +9,11 @@ import {
 } from "@/app/lib/article-utils";
 import { ArticleSearchForm } from "@/app/components/organisms/article-search-form";
 import type { ArticleSearchParams } from "@/app/lib/article-types";
+
+export const metadata: Metadata = {
+  title: "Articles",
+  description: "Browse all articles.",
+};
 
 /**
  * Renders the paginated articles list page with search and filtering.

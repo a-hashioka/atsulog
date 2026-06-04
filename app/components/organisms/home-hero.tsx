@@ -19,7 +19,7 @@ export function HomeHero({ counts }: HomeHeroProps) {
     <div className="space-y-10 md:space-y-12">
       <div className="flex justify-center">
         <Image
-          src={siteConfig.icon}
+          src={siteConfig.iconWebp}
           alt={siteConfig.title}
           width={200}
           height={200}

@@ -1,4 +1,5 @@
 import { ArrowLeft, Pencil } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MarkdownRenderer } from "@/app/components/atoms/markdown-renderer";
@@ -11,6 +12,44 @@ import { isAuthenticated } from "@/app/lib/auth";
 import { ArticleMeta } from "@/app/components/atoms/article-meta";
 import { ArticleTaxonomies } from "@/app/components/atoms/article-taxonomies";
 import { SeriesNavigation } from "@/app/components/atoms/series-navigation";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const articles = await getArticles();
+  const articleDetail = await getArticleBySlug(articles, slug);
+
+  if (!articleDetail || !articleDetail.metadata.published) {
+    return {};
+  }
+
+  // Create a plain text description from content (simple version)
+  const description = articleDetail.content
+    .replace(/[#*`[\]()]/g, "") // Very basic markdown strip
+    .slice(0, 160)
+    .trim();
+
+  return {
+    title: articleDetail.metadata.title,
+    description: description,
+    openGraph: {
+      title: articleDetail.metadata.title,
+      description: description,
+      type: "article",
+      publishedTime: articleDetail.metadata.createdAt,
+      modifiedTime: articleDetail.metadata.modifiedAt,
+      tags: articleDetail.metadata.tags,
+    },
+    twitter: {
+      card: "summary",
+      title: articleDetail.metadata.title,
+      description: description,
+    },
+  };
+}
 
 /**
  * Renders an individual article detail page.
