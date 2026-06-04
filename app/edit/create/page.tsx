@@ -25,6 +25,7 @@ export default async function NewArticlePage() {
     createdAt: "",
     modifiedAt: "",
     viewCount: 0,
+    published: false,
   };
 
   /**
@@ -34,11 +35,12 @@ export default async function NewArticlePage() {
     "use server";
 
     const raw = Object.fromEntries(formData) as Record<string, string>;
+    const isPublished = raw.intent === "publish";
     const now = new Date();
     const isoString = now.toISOString();
 
     // Generate a timestamp-based slug (YYYYMMDDHHMMSS)
-    const slug = [
+    const timestamp = [
       now.getFullYear(),
       (now.getMonth() + 1).toString().padStart(2, "0"),
       now.getDate().toString().padStart(2, "0"),
@@ -46,6 +48,8 @@ export default async function NewArticlePage() {
       now.getMinutes().toString().padStart(2, "0"),
       now.getSeconds().toString().padStart(2, "0"),
     ].join("");
+
+    const slug = isPublished ? timestamp : `draft-${timestamp}`;
 
     const newMetadata: ArticleMetadata = {
       slug,
@@ -61,6 +65,7 @@ export default async function NewArticlePage() {
       createdAt: isoString,
       modifiedAt: isoString,
       viewCount: 0,
+      published: isPublished,
     };
 
     await saveArticle(await getArticles(), newMetadata, raw.content);

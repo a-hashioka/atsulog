@@ -24,14 +24,15 @@ export default async function ArticlePage({
   const articles = await getArticles();
   const articleDetail = await getArticleBySlug(articles, slug);
 
-  if (!articleDetail) {
+  if (!articleDetail || !articleDetail.metadata.published) {
     notFound();
   }
+
+  const { metadata, content } = articleDetail;
 
   // Record a view for this article
   await incrementViewCount(articles, slug);
 
-  const { metadata, content } = articleDetail;
   const authenticated = await isAuthenticated();
 
   // Handle series-based navigation if the article belongs to one
@@ -39,7 +40,7 @@ export default async function ArticlePage({
   let nextInSeries = null;
   if (metadata.series && metadata.seriesOrder !== null) {
     const seriesArticles = articles
-      .filter((a) => a.series === metadata.series)
+      .filter((a) => a.series === metadata.series && a.published)
       .sort((a, b) => (a.seriesOrder ?? 0) - (b.seriesOrder ?? 0));
 
     const currentIndex = seriesArticles.findIndex((a) => a.slug === slug);

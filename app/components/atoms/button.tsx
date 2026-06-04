@@ -7,6 +7,8 @@ type ButtonProps = {
   children: ReactNode;
   onClick?: () => void;
   type?: "button" | "submit" | "reset";
+  name?: string;
+  value?: string;
   variant?: ButtonVariant;
   icon?: LucideIcon;
   disabled?: boolean;
@@ -22,6 +24,8 @@ export function Button({
   children,
   onClick,
   type = "button",
+  name,
+  value,
   variant = "primary",
   icon: Icon,
   disabled = false,
@@ -41,6 +45,8 @@ export function Button({
   return (
     <button
       type={type}
+      name={name}
+      value={value}
       onClick={onClick}
       disabled={disabled}
       title={title}

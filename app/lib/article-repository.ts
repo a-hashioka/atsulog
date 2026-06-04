@@ -1,6 +1,6 @@
 import "server-only";
 
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile, unlink } from "node:fs/promises";
 import path from "node:path";
 
 import type { ArticleMetadata, ArticleDetail } from "@/app/lib/article-types";
@@ -29,7 +29,10 @@ export async function getArticles(): Promise<ArticleMetadata[]> {
       throw new TypeError("data/articles.json must contain an array.");
     }
 
-    return parsed as ArticleMetadata[];
+    return (parsed as ArticleMetadata[]).map((article) => ({
+      ...article,
+      published: article.published ?? true,
+    }));
   } catch (error: unknown) {
     if (isNotFound(error)) {
       return [];
@@ -94,9 +97,33 @@ export async function saveArticle(
     );
   }
 
+  let oldFilePath: string | null = null;
+
   if (index !== -1) {
+    const existing = updatedList[index];
+
+    // Transition from draft to published
+    if (!existing.published && articleToSave.published) {
+      const now = new Date();
+      const isoString = now.toISOString();
+      const newSlug = [
+        now.getFullYear(),
+        (now.getMonth() + 1).toString().padStart(2, "0"),
+        now.getDate().toString().padStart(2, "0"),
+        now.getHours().toString().padStart(2, "0"),
+        now.getMinutes().toString().padStart(2, "0"),
+        now.getSeconds().toString().padStart(2, "0"),
+      ].join("");
+
+      oldFilePath = existing.filePath;
+      articleToSave.slug = newSlug;
+      articleToSave.createdAt = isoString;
+      articleToSave.modifiedAt = isoString;
+      articleToSave.filePath = `data/articles/${newSlug}.md`;
+    }
+
     // Preserve existing fields if not provided
-    articleToSave = { ...updatedList[index], ...articleToSave };
+    articleToSave = { ...existing, ...articleToSave };
     updatedList[index] = articleToSave;
   } else {
     updatedList.push(articleToSave);
@@ -105,6 +132,18 @@ export async function saveArticle(
   const tasks: Promise<void>[] = [saveArticles(updatedList)];
   if (content !== undefined) {
     tasks.push(writeContent(articleToSave.filePath, content));
+  }
+
+  if (oldFilePath && oldFilePath !== articleToSave.filePath) {
+    tasks.push(
+      (async () => {
+        try {
+          await unlink(resolveProjectPath(oldFilePath!));
+        } catch (e) {
+          console.error(`Failed to delete old draft file: ${oldFilePath}`, e);
+        }
+      })(),
+    );
   }
 
   await Promise.all(tasks);

@@ -4,7 +4,8 @@ import { HomeHero } from "@/app/components/organisms/home-hero";
 import { getTaxonomies } from "@/app/lib/article-utils";
 
 export default async function Home() {
-  const articles = await getArticles();
+  const allArticles = await getArticles();
+  const articles = allArticles.filter((a) => a.published);
   const taxonomies = getTaxonomies(articles);
 
   const counts = {

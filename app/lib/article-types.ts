@@ -12,6 +12,7 @@ export type ArticleMetadata = {
   seriesOrder: number | null;
   category: string;
   viewCount: number;
+  published: boolean;
 };
 
 /**

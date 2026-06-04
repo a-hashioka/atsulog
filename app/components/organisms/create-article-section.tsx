@@ -20,7 +20,7 @@ export function CreateArticleSection() {
             <Plus className="size-5" />
           </div>
           <span className="text-lg font-semibold text-gray-900 group-hover:text-black transition-colors">
-            Write a new article
+            New Articles
           </span>
         </div>
         <span className="text-gray-300 group-hover:text-black group-hover:translate-x-1 transition-all duration-300">

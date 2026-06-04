@@ -1,6 +1,14 @@
 "use client";
 
-import { Save, BookOpen, Type, Folder, Tag } from "lucide-react";
+import {
+  Save,
+  BookOpen,
+  Type,
+  Folder,
+  Tag,
+  FileText,
+  Check,
+} from "lucide-react";
 import type { ArticleMetadata } from "@/app/lib/article-types";
 import { FormField } from "@/app/components/atoms/form-field";
 import { MarkdownField } from "@/app/components/atoms/markdown-field";
@@ -87,15 +95,32 @@ export function EditArticleForm(props: EditArticleFormProps) {
         onChange={setters.setCurrentContent}
       />
 
-      <div className="pt-[1.5rem] border-t border-gray-100 flex justify-end">
+      <div className="pt-[1.5rem] border-t border-gray-100 flex justify-end space-x-4">
         <Button
           type="submit"
-          icon={Save}
+          name="intent"
+          value="draft"
+          icon={FileText}
+          variant="outline"
+          className="px-[2rem] py-[0.75rem]"
+          disabled={states.isSubmitting}
+        >
+          {states.isSubmitting ? "Saving..." : "Save Draft"}
+        </Button>
+        <Button
+          type="submit"
+          name="intent"
+          value="publish"
+          icon={props.metadata.published ? Save : Check}
           variant="primary"
           className="px-[2.5rem] py-[0.75rem]"
           disabled={states.isSubmitting}
         >
-          {states.isSubmitting ? "Saving..." : "Save Changes"}
+          {states.isSubmitting
+            ? "Saving..."
+            : props.metadata.published
+              ? "Save Changes"
+              : "Publish"}
         </Button>
       </div>
     </form>

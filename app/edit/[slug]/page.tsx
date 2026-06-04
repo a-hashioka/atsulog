@@ -37,6 +37,7 @@ export default async function EditArticlePage({
     "use server";
 
     const raw = Object.fromEntries(formData) as Record<string, string>;
+    const isPublished = raw.intent === "publish";
 
     const updatedMetadata = {
       ...detail!.metadata,
@@ -48,6 +49,7 @@ export default async function EditArticlePage({
         .map((t) => t.trim())
         .filter(Boolean),
       modifiedAt: new Date().toISOString(),
+      published: detail!.metadata.published || isPublished,
     };
 
     // Use fresh metadata list for saving

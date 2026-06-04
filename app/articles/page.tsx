@@ -23,12 +23,16 @@ export default async function ArticlesPage({
 
   // 1. Data Fetching
   const allMetadata = await getArticles();
+  const publishedMetadata = allMetadata.filter((a) => a.published);
 
   // 2. Prepare Form Candidates
-  const candidates = getTaxonomies(allMetadata);
+  const candidates = getTaxonomies(publishedMetadata);
 
   // 3. Filtering & Sorting
-  const filteredArticles = filterArticles(allMetadata, resolvedSearchParams);
+  const filteredArticles = filterArticles(
+    publishedMetadata,
+    resolvedSearchParams,
+  );
   const { field, order } = getSortConfig(resolvedSearchParams);
   const sortedArticles = sortArticles(filteredArticles, field, order);
 
@@ -36,7 +40,6 @@ export default async function ArticlesPage({
   return (
     <main>
       <ArticleSearchForm
-        key={JSON.stringify(resolvedSearchParams)}
         searchParams={resolvedSearchParams}
         candidates={candidates}
       />

@@ -34,17 +34,22 @@ export function ArticleSearchForm({
   action = "/articles",
 }: ArticleSearchFormProps) {
   const router = useRouter();
-  const hasActiveSearchParams = Object.values(searchParams).some((value) => {
-    if (Array.isArray(value)) {
-      return value.some((item) => item.trim().length > 0);
-    }
+  const hasActiveSearchParams = Object.entries(searchParams).some(
+    ([key, value]) => {
+      // Ignore pagination and sorting parameters for auto-opening
+      if (key === "page" || key === "sortBy" || key === "order") return false;
 
-    if (typeof value === "string") {
-      return value.trim().length > 0;
-    }
+      if (Array.isArray(value)) {
+        return value.some((item) => item.trim().length > 0);
+      }
 
-    return false;
-  });
+      if (typeof value === "string") {
+        return value.trim().length > 0;
+      }
+
+      return false;
+    },
+  );
   const [isOpen, setIsOpen] = useState(hasActiveSearchParams);
 
   return (

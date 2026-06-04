@@ -30,25 +30,37 @@ export default async function EditDashboardPage({
 
   // 3. Filtering & Sorting
   const filteredArticles = filterArticles(allMetadata, resolvedSearchParams);
+
+  const drafts = filteredArticles.filter((a) => !a.published);
+  const publishedArticles = filteredArticles.filter((a) => a.published);
+
   const { field, order } = getSortConfig(resolvedSearchParams);
-  const sortedArticles = sortArticles(filteredArticles, field, order);
+  const sortedPublished = sortArticles(publishedArticles, field, order);
+  const sortedDrafts = sortArticles(drafts, field, order);
 
   return (
     <main className="space-y-12">
       <CreateArticleSection />
 
       <ArticleSearchForm
-        key={JSON.stringify(resolvedSearchParams)}
         searchParams={resolvedSearchParams}
         candidates={taxonomies}
         action="/edit"
       />
 
-      <div className="space-y-10">
+      <div className="space-y-16">
         <PaginatedArticleList
-          articles={sortedArticles}
+          articles={sortedDrafts}
           searchParams={resolvedSearchParams}
           basePath="/edit"
+          title={`Drafts (${drafts.length})`}
+        />
+
+        <PaginatedArticleList
+          articles={sortedPublished}
+          searchParams={resolvedSearchParams}
+          basePath="/edit"
+          title="Published Articles"
         />
       </div>
     </main>
