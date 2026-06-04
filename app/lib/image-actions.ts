@@ -3,6 +3,7 @@
 import { writeFile, mkdir, access } from "node:fs/promises";
 import { join, parse } from "node:path";
 import { isAuthenticated } from "@/app/lib/auth";
+import { formatDateCompact } from "./article-utils";
 
 /**
  * Handles image upload from the Markdown editor.
@@ -24,8 +25,7 @@ export async function uploadImageAction(formData: FormData) {
   const buffer = Buffer.from(bytes);
 
   // 1. Prepare directory: data/images/YYYYMMDD
-  const now = new Date();
-  const dateDir = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}`;
+  const dateDir = formatDateCompact(new Date());
   const uploadDir = join(process.cwd(), "data", "images", dateDir);
 
   try {

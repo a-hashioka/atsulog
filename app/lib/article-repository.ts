@@ -4,16 +4,12 @@ import { mkdir, readFile, writeFile, unlink } from "node:fs/promises";
 import path from "node:path";
 
 import type { ArticleMetadata, ArticleDetail } from "@/app/lib/article-types";
-import { getNextSeriesOrder } from "./article-utils";
+import { getNextSeriesOrder, generateSlug } from "./article-utils";
 
 // --- Constants ---
 
-const ARTICLES_JSON_PATH = path.join(
-  /*turbopackIgnore: true*/ process.cwd(),
-  "data",
-  "articles.json",
-);
 const PROJECT_ROOT = process.cwd();
+const ARTICLES_JSON_PATH = path.join(PROJECT_ROOT, "data", "articles.json");
 
 // --- Public API ---
 
@@ -106,14 +102,7 @@ export async function saveArticle(
     if (!existing.published && articleToSave.published) {
       const now = new Date();
       const isoString = now.toISOString();
-      const newSlug = [
-        now.getFullYear(),
-        (now.getMonth() + 1).toString().padStart(2, "0"),
-        now.getDate().toString().padStart(2, "0"),
-        now.getHours().toString().padStart(2, "0"),
-        now.getMinutes().toString().padStart(2, "0"),
-        now.getSeconds().toString().padStart(2, "0"),
-      ].join("");
+      const newSlug = generateSlug(now);
 
       oldFilePath = existing.filePath;
       articleToSave.slug = newSlug;
@@ -189,10 +178,7 @@ async function readContent(filePath: string): Promise<string> {
 }
 
 async function writeContent(filePath: string, content: string): Promise<void> {
-  const fullPath = path.resolve(
-    /*turbopackIgnore: true*/ PROJECT_ROOT,
-    filePath,
-  );
+  const fullPath = resolveProjectPath(filePath);
   try {
     await mkdir(path.dirname(fullPath), { recursive: true });
     await writeFile(fullPath, content, "utf8");

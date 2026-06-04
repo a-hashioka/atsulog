@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import type { ArticleMetadata } from "@/app/lib/article-types";
 import { useNavigationGuard } from "./use-navigation-guard";
+import { useTagInput } from "./use-tag-input";
 
 /**
  * Hook to manage the state and logic for the article editor.
@@ -26,10 +27,12 @@ export function useArticleEditor({
   const [title, setTitle] = useState(metadata.title);
   const [series, setSeries] = useState(metadata.series ?? "");
   const [category, setCategory] = useState(metadata.category);
-  const [tags, setTags] = useState(metadata.tags.join(", "));
-  const [tagCandidates, setTagCandidates] = useState<string[]>(
-    candidates?.tags ?? [],
-  );
+  const {
+    value: tags,
+    setValue: setTags,
+    handleChange: handleTagsChange,
+    suggestions: tagCandidates,
+  } = useTagInput(metadata.tags.join(", "), candidates?.tags);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Check if the form is "dirty" (has unsaved changes)
@@ -86,30 +89,16 @@ export function useArticleEditor({
         }
       }
     },
-    [title, articles, category, tags],
-  );
-
-  const handleTagsChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const value = e.target.value;
-      setTags(value);
-
-      const tagsList = candidates?.tags;
-      if (!tagsList) return;
-
-      const lastCommaIndex = value.lastIndexOf(",");
-      const prefix = value.substring(0, lastCommaIndex + 1);
-      const lastPart = value.substring(lastCommaIndex + 1).trim();
-
-      const filtered = tagsList.filter((c) =>
-        c.toLowerCase().includes(lastPart.toLowerCase()),
-      );
-
-      setTagCandidates(
-        filtered.map((c) => `${prefix}${prefix ? " " : ""}${c}`),
-      );
-    },
-    [candidates?.tags],
+    [
+      title,
+      articles,
+      category,
+      tags,
+      setTags,
+      setSeries,
+      setTitle,
+      setCategory,
+    ],
   );
 
   return {

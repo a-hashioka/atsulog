@@ -1,8 +1,8 @@
-import { useState, useCallback } from "react";
 import { Search, Folder, BookOpen, Tag } from "lucide-react";
 import { FormField } from "./form-field";
 import type { ArticleSearchParams } from "@/app/lib/article-types";
 import { getParam } from "@/app/lib/article-utils";
+import { useTagInput } from "@/app/lib/use-tag-input";
 
 type SearchFieldsProps = {
   searchParams: ArticleSearchParams;
@@ -17,35 +17,11 @@ type SearchFieldsProps = {
  * Renders the full set of search fields as a block.
  */
 export function SearchFields({ searchParams, candidates }: SearchFieldsProps) {
-  const initialTagValue = getParam(searchParams.tag);
-  const [tagValue, setTagValue] = useState(initialTagValue);
-  const [tagCandidates, setTagCandidates] = useState<string[]>(
-    candidates?.tags ?? [],
-  );
-
-  const tags = candidates?.tags;
-
-  const handleTagsChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const value = e.target.value;
-      setTagValue(value);
-
-      if (!tags) return;
-
-      const lastCommaIndex = value.lastIndexOf(",");
-      const prefix = value.substring(0, lastCommaIndex + 1);
-      const lastPart = value.substring(lastCommaIndex + 1).trim();
-
-      const filtered = tags.filter((c) =>
-        c.toLowerCase().includes(lastPart.toLowerCase()),
-      );
-
-      setTagCandidates(
-        filtered.map((c) => `${prefix}${prefix ? " " : ""}${c}`),
-      );
-    },
-    [tags],
-  );
+  const {
+    value: tagValue,
+    handleChange: handleTagsChange,
+    suggestions: tagCandidates,
+  } = useTagInput(getParam(searchParams.tag), candidates?.tags);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">

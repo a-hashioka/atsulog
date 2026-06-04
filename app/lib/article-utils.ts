@@ -18,6 +18,29 @@ export function getParam(
 }
 
 /**
+ * Formats a date into a compact YYYYMMDD string.
+ */
+export function formatDateCompact(date: Date = new Date()): string {
+  return [
+    date.getFullYear(),
+    String(date.getMonth() + 1).padStart(2, "0"),
+    String(date.getDate()).padStart(2, "0"),
+  ].join("");
+}
+
+/**
+ * Generates a timestamp-based slug from the current date (YYYYMMDDHHMMSS).
+ * Used for transitioning articles from draft to published.
+ */
+export function generateSlug(date: Date = new Date()): string {
+  const timePart = [date.getHours(), date.getMinutes(), date.getSeconds()]
+    .map((p) => String(p).padStart(2, "0"))
+    .join("");
+
+  return `${formatDateCompact(date)}${timePart}`;
+}
+
+/**
  * Calculates the sorting configuration based on search parameters.
  * Defaults to "createdAt" descending, or "seriesOrder" ascending if a series is selected.
  */
@@ -30,21 +53,18 @@ export function getSortConfig(params: ArticleSearchParams): {
   const orderParam = getParam(params.order) as SortOrder;
   const hasSeries = !!getParam(params.series);
 
-  let field: keyof ArticleMetadata = "createdAt";
-  let sortBy: SortBy = "created";
+  const configMap: Record<
+    string,
+    { field: keyof ArticleMetadata; sortBy: SortBy }
+  > = {
+    modified: { field: "modifiedAt", sortBy: "modified" },
+    views: { field: "viewCount", sortBy: "views" },
+  };
 
-  // Map sortBy parameter to metadata fields
-  if (sortByParam === "modified") {
-    field = "modifiedAt";
-    sortBy = "modified";
-  } else if (sortByParam === "views") {
-    field = "viewCount";
-    sortBy = "views";
-  } else if (hasSeries && !sortByParam) {
-    // Optimization: Default to seriesOrder for series filtering
-    field = "seriesOrder";
-    sortBy = "created";
-  }
+  const { field, sortBy } = configMap[sortByParam] ?? {
+    field: hasSeries && !sortByParam ? "seriesOrder" : "createdAt",
+    sortBy: "created",
+  };
 
   // Determine sort order
   // - Modified and Views always default to descending
@@ -53,11 +73,7 @@ export function getSortConfig(params: ArticleSearchParams): {
   const order =
     field === "modifiedAt" || field === "viewCount"
       ? "desc"
-      : orderParam
-        ? orderParam
-        : hasSeries
-          ? "asc"
-          : "desc";
+      : orderParam || (hasSeries ? "asc" : "desc");
 
   return { field, order, sortBy };
 }
@@ -71,24 +87,24 @@ export function sortArticles(
   field: keyof ArticleMetadata = "createdAt",
   order: SortOrder = "desc",
 ): ArticleMetadata[] {
-  return [...articles].sort((left, right) => {
-    let leftVal = left[field];
-    let rightVal = right[field];
+  const isAsc = order === "asc";
+  return [...articles].sort((a, b) => {
+    let aVal = a[field];
+    let bVal = b[field];
 
     // Handle date strings
     if (field === "createdAt" || field === "modifiedAt") {
-      leftVal = Date.parse(leftVal as string);
-      rightVal = Date.parse(rightVal as string);
+      aVal = Date.parse(aVal as string);
+      bVal = Date.parse(bVal as string);
     }
 
-    // Handle null/undefined values
-    if (leftVal === null || leftVal === undefined) return 1;
-    if (rightVal === null || rightVal === undefined) return -1;
+    // Handle null/undefined values (push to the end)
+    if (aVal === null || aVal === undefined) return 1;
+    if (bVal === null || bVal === undefined) return -1;
 
-    // Standard comparison
-    if (leftVal < rightVal) return order === "asc" ? -1 : 1;
-    if (leftVal > rightVal) return order === "asc" ? 1 : -1;
-    return 0;
+    if (aVal === bVal) return 0;
+    const comparison = aVal < bVal ? -1 : 1;
+    return isAsc ? comparison : -comparison;
   });
 }
 
@@ -177,4 +193,37 @@ export function filterArticles(
 
     return true;
   });
+}
+
+/**
+ * Constructs a URL with article search parameters, preserving existing ones.
+ */
+export function buildArticleSearchUrl(
+  basePath: string,
+  searchParams: ArticleSearchParams,
+  updates: Record<string, string | number | null | undefined>,
+): string {
+  const params = new URLSearchParams();
+
+  // 1. Copy existing params
+  Object.entries(searchParams).forEach(([key, value]) => {
+    if (!value) return;
+    if (Array.isArray(value)) {
+      value.forEach((v) => params.append(key, v));
+    } else {
+      params.append(key, value);
+    }
+  });
+
+  // 2. Apply updates
+  Object.entries(updates).forEach(([key, value]) => {
+    if (value === null || value === undefined) {
+      params.delete(key);
+    } else {
+      params.set(key, String(value));
+    }
+  });
+
+  const queryString = params.toString();
+  return queryString ? `${basePath}?${queryString}` : basePath;
 }

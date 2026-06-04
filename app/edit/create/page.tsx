@@ -75,7 +75,7 @@ export default async function NewArticlePage() {
   return (
     <main className="space-y-8">
       <h1 className="text-3xl font-bold tracking-tight mb-8">
-        Create New Article
+        Create New Articles
       </h1>
       <EditArticleForm
         metadata={initialMetadata}

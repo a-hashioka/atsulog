@@ -10,6 +10,7 @@ import {
   ChevronsRight,
 } from "lucide-react";
 import type { ArticleSearchParams } from "@/app/lib/article-types";
+import { buildArticleSearchUrl } from "@/app/lib/article-utils";
 
 type PaginationNavProps = {
   currentPage: number;
@@ -42,30 +43,11 @@ export function PaginationNav({
   const hasPreviousPage = currentPage > 1;
   const hasNextPage = currentPage < totalPages;
 
-  /**
-   * Generates a URL for a specific page, preserving other search parameters.
-   */
-  const getPageUrl = (page: number) => {
-    const params = new URLSearchParams();
-
-    Object.entries(searchParams).forEach(([key, value]) => {
-      if (key === "page" || !value) return;
-      if (Array.isArray(value)) {
-        value.forEach((v) => params.append(key, v));
-      } else {
-        params.append(key, value);
-      }
-    });
-
-    params.set("page", page.toString());
-    return `${basePath}?${params.toString()}`;
-  };
-
   const handleJump = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     const page = parseInt(inputPage);
     if (!isNaN(page) && page >= 1 && page <= totalPages) {
-      router.push(getPageUrl(page));
+      router.push(buildArticleSearchUrl(basePath, searchParams, { page }));
       setIsEditing(false);
     } else {
       setInputPage(currentPage.toString());
@@ -82,7 +64,7 @@ export function PaginationNav({
         {hasPreviousPage ? (
           <>
             <Link
-              href={getPageUrl(1)}
+              href={buildArticleSearchUrl(basePath, searchParams, { page: 1 })}
               className="p-2 text-gray-400 hover:text-black hover:bg-gray-50 rounded-lg transition-all"
               title="First Page"
             >
@@ -90,7 +72,9 @@ export function PaginationNav({
               <ChevronsLeft className="size-4" />
             </Link>
             <Link
-              href={getPageUrl(currentPage - 1)}
+              href={buildArticleSearchUrl(basePath, searchParams, {
+                page: currentPage - 1,
+              })}
               className="p-2 px-3 text-sm font-medium text-gray-600 hover:text-black hover:bg-gray-50 rounded-lg border border-transparent hover:border-gray-200 transition-all flex items-center"
             >
               <ChevronLeft className="size-4 md:mr-1" />
@@ -146,14 +130,18 @@ export function PaginationNav({
         {hasNextPage ? (
           <>
             <Link
-              href={getPageUrl(currentPage + 1)}
+              href={buildArticleSearchUrl(basePath, searchParams, {
+                page: currentPage + 1,
+              })}
               className="p-2 px-3 text-sm font-medium text-gray-600 hover:text-black hover:bg-gray-50 rounded-lg border border-transparent hover:border-gray-200 transition-all flex items-center"
             >
               <span className="md:mr-1 hidden md:inline">Next</span>
               <ChevronRight className="size-4" />
             </Link>
             <Link
-              href={getPageUrl(totalPages)}
+              href={buildArticleSearchUrl(basePath, searchParams, {
+                page: totalPages,
+              })}
               className="p-2 text-gray-400 hover:text-black hover:bg-gray-50 rounded-lg transition-all"
               title="Last Page"
             >

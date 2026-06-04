@@ -12,7 +12,11 @@ import type {
   ArticleMetadata,
   ArticleSearchParams,
 } from "@/app/lib/article-types";
-import { getParam, getSortConfig } from "@/app/lib/article-utils";
+import {
+  getParam,
+  getSortConfig,
+  buildArticleSearchUrl,
+} from "@/app/lib/article-utils";
 import { siteConfig } from "@/app/lib/site-config";
 
 // --- Constants ---
@@ -67,40 +71,17 @@ export function PaginatedArticleList({
     startIndex + siteConfig.articlesPerPage,
   );
 
-  /**
-   * Generates a URL with updated parameters, preserving others.
-   */
-  const getUpdateUrl = (updates: Record<string, string>) => {
-    const params = new URLSearchParams();
-    Object.entries(searchParams).forEach(([key, value]) => {
-      if (!value) return;
-      if (Array.isArray(value)) {
-        value.forEach((v) => params.append(key, v));
-      } else {
-        params.append(key, value);
-      }
-    });
-
-    Object.entries(updates).forEach(([key, value]) => {
-      params.set(key, value);
-    });
-
-    return `${basePath}?${params.toString()}`;
-  };
-
   return (
     <section className="space-y-10">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         {title && (
-          <h1 className="text-3xl font-bold tracking-tight">
-            {title}
-          </h1>
+          <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
         )}
 
         <div className="flex items-center space-x-[0.5rem]">
           {/* Sort By Toggle */}
           <Link
-            href={getUpdateUrl({
+            href={buildArticleSearchUrl(basePath, searchParams, {
               sortBy: nextSortBy,
               // When switching to modified or views, force desc order
               ...(nextSortBy === "modified" || nextSortBy === "views"
@@ -137,7 +118,9 @@ export function PaginatedArticleList({
           {/* Order Toggle - Only show if sorting by created (Modified and Views are desc-only) */}
           {isCreated && (
             <Link
-              href={getUpdateUrl({ order: isAsc ? "desc" : "asc" })}
+              href={buildArticleSearchUrl(basePath, searchParams, {
+                order: isAsc ? "desc" : "asc",
+              })}
               className="flex items-center space-x-[0.5rem] px-[0.75rem] py-[0.375rem] text-sm font-medium text-gray-500 hover:text-black hover:bg-gray-50 border border-gray-100 hover:border-gray-200 rounded-lg transition-all"
               title={isAsc ? "Sort Descending" : "Sort Ascending"}
             >
