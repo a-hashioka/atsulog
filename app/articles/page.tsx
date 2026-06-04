@@ -12,7 +12,6 @@ import type { ArticleSearchParams } from "@/app/lib/article-types";
 
 export const metadata: Metadata = {
   title: "Articles",
-  description: "Browse all articles.",
 };
 
 /**
