@@ -3,7 +3,6 @@ export const siteConfig = {
   url: "https://atsulog.com", // Replace with your actual URL
   twitterHandle: "@atsurohashioka", // Replace with your Twitter handle
   cookie: "atsulog-cookie",
-  description: "Atsulog is a personal blog.",
   iconWebp: "/icon.webp",
   iconPng: "/icon.png",
   htmlLang: "ja",

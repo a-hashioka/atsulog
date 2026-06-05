@@ -9,9 +9,34 @@ import {
 } from "@/app/lib/article-utils";
 import { ArticleSearchForm } from "@/app/components/organisms/article-search-form";
 import type { ArticleSearchParams } from "@/app/lib/article-types";
+import { siteConfig } from "@/app/lib/site-config";
+
+const siteTitle = siteConfig.title[0].toUpperCase() + siteConfig.title.slice(1);
 
 export const metadata: Metadata = {
-  title: "Articles",
+  metadataBase: new URL(siteConfig.url),
+  title: `Articles | ${siteTitle}`,
+  description: `Browse all articles on ${siteTitle}.`,
+  openGraph: {
+    title: `Articles | ${siteTitle}`,
+    description: `Browse all articles on ${siteTitle}.`,
+    type: "website",
+    images: [
+      {
+        url: siteConfig.iconPng,
+        width: 600,
+        height: 600,
+        alt: siteConfig.title,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary",
+    title: `Articles | ${siteTitle}`,
+    description: `Browse all articles on ${siteTitle}.`,
+    creator: siteConfig.twitterHandle,
+    images: [siteConfig.iconPng],
+  },
 };
 
 /**

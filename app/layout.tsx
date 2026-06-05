@@ -1,44 +1,9 @@
 import { Home, Newspaper, Pencil } from "lucide-react";
-import type { Metadata } from "next";
 import Link from "next/link";
 import { siteConfig } from "@/app/lib/site-config";
 import { isAuthenticated } from "@/app/lib/auth";
 import { LogoutButton } from "@/app/components/atoms/logout-button";
 import "./globals.css";
-
-const siteTitle = siteConfig.title[0].toUpperCase() + siteConfig.title.slice(1);
-
-export const metadata: Metadata = {
-  metadataBase: new URL(siteConfig.url),
-  title: {
-    default: siteTitle,
-    template: `%s | ${siteTitle}`,
-  },
-  description: siteConfig.description,
-  openGraph: {
-    title: siteTitle,
-    description: siteConfig.description,
-    url: siteConfig.url,
-    siteName: siteTitle,
-    locale: siteConfig.locale,
-    type: "website",
-    images: [
-      {
-        url: siteConfig.iconPng,
-        width: 600,
-        height: 600,
-        alt: siteConfig.title,
-      },
-    ],
-  },
-  twitter: {
-    card: "summary",
-    title: siteConfig.title,
-    description: siteConfig.description,
-    creator: siteConfig.twitterHandle,
-    images: [siteConfig.iconPng],
-  },
-};
 
 export default async function RootLayout({
   children,

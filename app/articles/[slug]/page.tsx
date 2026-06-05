@@ -12,10 +12,55 @@ import { isAuthenticated } from "@/app/lib/auth";
 import { ArticleMeta } from "@/app/components/atoms/article-meta";
 import { ArticleTaxonomies } from "@/app/components/atoms/article-taxonomies";
 import { SeriesNavigation } from "@/app/components/atoms/series-navigation";
+import { siteConfig } from "@/app/lib/site-config";
 
-export const metadata: Metadata = {
-  title: "Articles",
-};
+const siteTitle = siteConfig.title[0].toUpperCase() + siteConfig.title.slice(1);
+
+/**
+ * Generates dynamic metadata for the article page.
+ */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const articles = await getArticles();
+  const article = await getArticleBySlug(articles, slug);
+
+  if (!article) {
+    return {
+      title: `Article Not Found | ${siteTitle}`,
+    };
+  }
+
+  return {
+    metadataBase: new URL(siteConfig.url),
+    title: `${article.metadata.title} | ${siteTitle}`,
+    description: `Read "${article.metadata.title}" on ${siteTitle}.`,
+    openGraph: {
+      title: article.metadata.title,
+      description: `Read "${article.metadata.title}" on ${siteTitle}.`,
+      type: "article",
+      publishedTime: article.metadata.createdAt,
+      images: [
+        {
+          url: siteConfig.iconPng,
+          width: 600,
+          height: 600,
+          alt: siteConfig.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary",
+      title: `${article.metadata.title} | ${siteTitle}`,
+      description: `Read "${article.metadata.title}" on ${siteTitle}.`,
+      creator: siteConfig.twitterHandle,
+      images: [siteConfig.iconPng],
+    },
+  };
+}
 
 /**
  * Renders an individual article detail page.

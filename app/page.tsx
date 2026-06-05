@@ -8,7 +8,32 @@ import type { Metadata } from "next";
 const siteTitle = siteConfig.title[0].toUpperCase() + siteConfig.title.slice(1);
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteConfig.url),
   title: `Home | ${siteTitle}`,
+  description: `${siteTitle} is a personal blog.`,
+  openGraph: {
+    title: siteTitle,
+    description: `${siteTitle} is a personal blog.`,
+    url: siteConfig.url,
+    siteName: siteTitle,
+    locale: siteConfig.locale,
+    type: "website",
+    images: [
+      {
+        url: siteConfig.iconPng,
+        width: 600,
+        height: 600,
+        alt: siteConfig.title,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary",
+    title: siteConfig.title,
+    description: `${siteTitle} is a personal blog.`,
+    creator: siteConfig.twitterHandle,
+    images: [siteConfig.iconPng],
+  },
 };
 
 export default async function Home() {
