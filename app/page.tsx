@@ -8,7 +8,6 @@ import type { Metadata } from "next";
 const siteTitle = siteConfig.title[0].toUpperCase() + siteConfig.title.slice(1);
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteConfig.url),
   title: `Home | ${siteTitle}`,
   description: `${siteTitle} is a personal blog.`,
   openGraph: {
@@ -26,13 +25,6 @@ export const metadata: Metadata = {
         alt: siteConfig.title,
       },
     ],
-  },
-  twitter: {
-    card: "summary",
-    title: siteConfig.title,
-    description: `${siteTitle} is a personal blog.`,
-    creator: siteConfig.twitterHandle,
-    images: [siteConfig.iconPng],
   },
 };
 

@@ -35,8 +35,7 @@ export async function generateMetadata({
   }
 
   return {
-    metadataBase: new URL(siteConfig.url),
-    title: `${article.metadata.title} | ${siteTitle}`,
+    title: article.metadata.title,
     description: `Read "${article.metadata.title}" on ${siteTitle}.`,
     openGraph: {
       title: article.metadata.title,
@@ -51,13 +50,6 @@ export async function generateMetadata({
           alt: siteConfig.title,
         },
       ],
-    },
-    twitter: {
-      card: "summary",
-      title: `${article.metadata.title} | ${siteTitle}`,
-      description: `Read "${article.metadata.title}" on ${siteTitle}.`,
-      creator: siteConfig.twitterHandle,
-      images: [siteConfig.iconPng],
     },
   };
 }

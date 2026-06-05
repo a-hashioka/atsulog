@@ -14,8 +14,7 @@ import { siteConfig } from "@/app/lib/site-config";
 const siteTitle = siteConfig.title[0].toUpperCase() + siteConfig.title.slice(1);
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteConfig.url),
-  title: `Articles | ${siteTitle}`,
+  title: "Articles",
   description: `Browse all articles on ${siteTitle}.`,
   openGraph: {
     title: `Articles | ${siteTitle}`,
@@ -29,13 +28,6 @@ export const metadata: Metadata = {
         alt: siteConfig.title,
       },
     ],
-  },
-  twitter: {
-    card: "summary",
-    title: `Articles | ${siteTitle}`,
-    description: `Browse all articles on ${siteTitle}.`,
-    creator: siteConfig.twitterHandle,
-    images: [siteConfig.iconPng],
   },
 };
 
