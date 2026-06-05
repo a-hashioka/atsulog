@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title: `Home | ${siteTitle}`,
   description: `${siteTitle} is a personal blog.`,
   openGraph: {
-    title: siteTitle,
+    title: "Home",
     description: `${siteTitle} is a personal blog.`,
     url: siteConfig.url,
     siteName: siteTitle,

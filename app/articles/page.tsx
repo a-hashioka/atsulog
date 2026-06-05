@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   title: "Articles",
   description: `Browse all articles on ${siteTitle}.`,
   openGraph: {
-    title: `Articles | ${siteTitle}`,
+    title: "Articles",
     description: `Browse all articles on ${siteTitle}.`,
     type: "website",
     images: [
