@@ -15,8 +15,11 @@ export const metadata: Metadata = {
   title: "Articles",
   description: `Browse all articles on ${siteConfig.title}.`,
   openGraph: {
-    title: "Articles",
+    title: `Articles | ${siteConfig.title}`,
     description: `Browse all articles on ${siteConfig.title}.`,
+    url: `${siteConfig.url}/articles`,
+    siteName: siteConfig.title,
+    locale: siteConfig.locale,
     type: "website",
     images: [
       {
@@ -26,6 +29,13 @@ export const metadata: Metadata = {
         alt: siteConfig.title,
       },
     ],
+  },
+  twitter: {
+    card: "summary",
+    title: `Articles | ${siteConfig.title}`,
+    description: `Browse all articles on ${siteConfig.title}.`,
+    creator: siteConfig.twitterHandle,
+    images: [siteConfig.iconPng],
   },
 };
 

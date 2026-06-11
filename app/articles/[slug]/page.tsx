@@ -38,6 +38,8 @@ export async function generateMetadata({
     openGraph: {
       title: article.metadata.title,
       description: `Read "${article.metadata.title}" on ${siteConfig.title}.`,
+      url: `${siteConfig.url}/articles/${slug}`,
+      siteName: siteConfig.title,
       type: "article",
       publishedTime: article.metadata.createdAt,
       images: [
@@ -48,6 +50,13 @@ export async function generateMetadata({
           alt: siteConfig.title,
         },
       ],
+    },
+    twitter: {
+      card: "summary",
+      title: article.metadata.title,
+      description: `Read "${article.metadata.title}" on ${siteConfig.title}.`,
+      creator: siteConfig.twitterHandle,
+      images: [siteConfig.iconPng],
     },
   };
 }

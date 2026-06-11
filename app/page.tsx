@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: `Home | ${siteConfig.title}`,
   description: `${siteConfig.title} is a personal blog.`,
   openGraph: {
-    title: "Home",
+    title: `Home | ${siteConfig.title}`,
     description: `${siteConfig.title} is a personal blog.`,
     url: siteConfig.url,
     siteName: siteConfig.title,
@@ -23,6 +23,13 @@ export const metadata: Metadata = {
         alt: siteConfig.title,
       },
     ],
+  },
+  twitter: {
+    card: "summary",
+    title: `Home | ${siteConfig.title}`,
+    description: `${siteConfig.title} is a personal blog.`,
+    creator: siteConfig.twitterHandle,
+    images: [siteConfig.iconPng],
   },
 };
 

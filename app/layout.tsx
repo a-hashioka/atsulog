@@ -12,12 +12,6 @@ export const metadata: Metadata = {
     default: siteConfig.title,
     template: `%s | ${siteConfig.title}`,
   },
-  description: `${siteConfig.title} is a personal blog.`,
-  twitter: {
-    card: "summary",
-    creator: siteConfig.twitterHandle,
-    images: [siteConfig.iconPng],
-  },
 };
 
 export default async function RootLayout({
@@ -42,7 +36,7 @@ export default async function RootLayout({
                 <span className="text-[1.5rem] text-emerald-500 mr-2 group-hover:translate-x-0.5 transition-transform duration-200">
                   &gt;
                 </span>
-                <span className="group-hover:text-gray-600">
+                <span className="group-hover:text-gray-600 lowercase">
                   {siteConfig.title}
                 </span>
               </Link>
@@ -85,7 +79,7 @@ export default async function RootLayout({
         <div className="flex-1 max-w-3xl mx-auto w-full px-6 py-12">
           <main>{children}</main>
         </div>
-        <footer className="max-w-3xl mx-auto w-full px-6 py-8 border-t border-gray-100 text-sm text-muted text-center">
+        <footer className="max-w-3xl mx-auto w-full px-6 py-8 border-t border-gray-100 text-sm text-muted text-center lowercase">
           &copy; {currentYear} {siteConfig.title}
         </footer>
       </body>
