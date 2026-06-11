@@ -1,4 +1,4 @@
-# atsulog
+# Atsulog
 
 A minimal, file-based personal blog engine built with Next.js (App Router) and Tailwind CSS. Articles are managed as local Markdown files.
 
