@@ -6,14 +6,13 @@ import { isAuthenticated } from "@/app/lib/auth";
 import { LogoutButton } from "@/app/components/atoms/logout-button";
 import "./globals.css";
 
-const siteTitle = siteConfig.title[0].toUpperCase() + siteConfig.title.slice(1);
-
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: siteTitle,
-    template: `%s | ${siteTitle}`,
+    default: siteConfig.title,
+    template: `%s | ${siteConfig.title}`,
   },
+  description: `${siteConfig.title} is a personal blog.`,
   twitter: {
     card: "summary",
     creator: siteConfig.twitterHandle,

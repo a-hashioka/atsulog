@@ -5,16 +5,14 @@ import { HomeHero } from "@/app/components/organisms/home-hero";
 import { getTaxonomies } from "@/app/lib/article-utils";
 import type { Metadata } from "next";
 
-const siteTitle = siteConfig.title[0].toUpperCase() + siteConfig.title.slice(1);
-
 export const metadata: Metadata = {
-  title: `Home | ${siteTitle}`,
-  description: `${siteTitle} is a personal blog.`,
+  title: `Home | ${siteConfig.title}`,
+  description: `${siteConfig.title} is a personal blog.`,
   openGraph: {
     title: "Home",
-    description: `${siteTitle} is a personal blog.`,
+    description: `${siteConfig.title} is a personal blog.`,
     url: siteConfig.url,
-    siteName: siteTitle,
+    siteName: siteConfig.title,
     locale: siteConfig.locale,
     type: "website",
     images: [

@@ -11,14 +11,12 @@ import { ArticleSearchForm } from "@/app/components/organisms/article-search-for
 import type { ArticleSearchParams } from "@/app/lib/article-types";
 import { siteConfig } from "@/app/lib/site-config";
 
-const siteTitle = siteConfig.title[0].toUpperCase() + siteConfig.title.slice(1);
-
 export const metadata: Metadata = {
   title: "Articles",
-  description: `Browse all articles on ${siteTitle}.`,
+  description: `Browse all articles on ${siteConfig.title}.`,
   openGraph: {
     title: "Articles",
-    description: `Browse all articles on ${siteTitle}.`,
+    description: `Browse all articles on ${siteConfig.title}.`,
     type: "website",
     images: [
       {

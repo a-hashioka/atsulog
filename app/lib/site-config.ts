@@ -1,7 +1,7 @@
 export const siteConfig = {
-  title: "atsulog",
-  url: "https://atsulog.com", // Replace with your actual URL
-  twitterHandle: "@atsurohashioka", // Replace with your Twitter handle
+  title: "Atsulog",
+  url: "https://atsulog.com",
+  twitterHandle: "@atsurohashioka",
   cookie: "atsulog-cookie",
   iconWebp: "/icon.webp",
   iconPng: "/icon.png",

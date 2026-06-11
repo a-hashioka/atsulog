@@ -14,8 +14,6 @@ import { ArticleTaxonomies } from "@/app/components/atoms/article-taxonomies";
 import { SeriesNavigation } from "@/app/components/atoms/series-navigation";
 import { siteConfig } from "@/app/lib/site-config";
 
-const siteTitle = siteConfig.title[0].toUpperCase() + siteConfig.title.slice(1);
-
 /**
  * Generates dynamic metadata for the article page.
  */
@@ -30,16 +28,16 @@ export async function generateMetadata({
 
   if (!article) {
     return {
-      title: `Article Not Found | ${siteTitle}`,
+      title: `Article Not Found | ${siteConfig.title}`,
     };
   }
 
   return {
     title: article.metadata.title,
-    description: `Read "${article.metadata.title}" on ${siteTitle}.`,
+    description: `Read "${article.metadata.title}" on ${siteConfig.title}.`,
     openGraph: {
       title: article.metadata.title,
-      description: `Read "${article.metadata.title}" on ${siteTitle}.`,
+      description: `Read "${article.metadata.title}" on ${siteConfig.title}.`,
       type: "article",
       publishedTime: article.metadata.createdAt,
       images: [
@@ -98,28 +96,27 @@ export default async function ArticlePage({
       </div>
 
       {/* Series Navigation (Previous/Next) */}
-      <SeriesNavigation articles={articles} metadata={metadata} />
-
-      {/* Admin Actions and Navigation */}
-      <footer className="border-t border-gray-100 pt-8 flex items-center justify-between">
-        <Link
-          href="/articles"
-          className="inline-flex items-center text-sm font-medium text-gray-500 hover:text-black transition-colors"
-        >
-          <ArrowLeft className="size-4 mr-2" />
-          Back to Articles
-        </Link>
-
-        {authenticated && (
+      <div className="border-t border-gray-100 pt-12">
+        <SeriesNavigation metadata={metadata} articles={articles} />
+        <div className="mt-12">
           <Link
-            href={`/edit/${slug}`}
-            className="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors"
+            href="/articles"
+            className="inline-flex items-center text-sm font-medium text-emerald-600 hover:text-emerald-500 transition-colors"
           >
-            <Pencil className="size-4 mr-2" />
-            Edit this article
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Articles
           </Link>
-        )}
-      </footer>
+          {authenticated && (
+            <Link
+              href={`/edit/${slug}`}
+              className="ml-6 inline-flex items-center text-sm font-medium text-gray-500 hover:text-black transition-colors"
+            >
+              <Pencil className="mr-2 h-4 w-4" />
+              Edit Article
+            </Link>
+          )}
+        </div>
+      </div>
     </article>
   );
 }
