@@ -27,7 +27,6 @@ export function SiteStats({ articles }: { articles: ArticleMetadata[] }) {
         new Date().toLocaleTimeString("en-GB", {
           hour: "2-digit",
           minute: "2-digit",
-          second: "2-digit",
         }),
       );
     };
@@ -37,10 +36,6 @@ export function SiteStats({ articles }: { articles: ArticleMetadata[] }) {
   }, []);
 
   const stats = [
-    { label: "articles", value: articles.length, icon: Newspaper },
-    { label: "series", value: taxonomies.series.length, icon: BookOpen },
-    { label: "categories", value: taxonomies.category.length, icon: Folder },
-    { label: "tags", value: taxonomies.tags.length, icon: Tag },
     ...(launchedAt
       ? [
           {
@@ -50,6 +45,10 @@ export function SiteStats({ articles }: { articles: ArticleMetadata[] }) {
           },
         ]
       : []),
+    { label: "articles", value: articles.length, icon: Newspaper },
+    { label: "series", value: taxonomies.series.length, icon: BookOpen },
+    { label: "categories", value: taxonomies.category.length, icon: Folder },
+    { label: "tags", value: taxonomies.tags.length, icon: Tag },
   ];
 
   return (
