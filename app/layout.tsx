@@ -33,7 +33,7 @@ export default async function RootLayout({
                 href="/"
                 className="group flex items-center text-xl font-bold tracking-tight transition-colors"
               >
-                <span className="text-[1.5rem] text-emerald-500 mr-2 group-hover:translate-x-0.5 transition-transform duration-200">
+                <span className="text-emerald-500 mr-2 group-hover:translate-x-0.5 transition-transform duration-200">
                   &gt;
                 </span>
                 <span className="group-hover:text-gray-600 lowercase">

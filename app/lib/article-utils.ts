@@ -120,15 +120,32 @@ export function formatDate(value: string): string {
 }
 
 /**
- * Extracts unique taxonomy values (tags, categories, series) from a list of articles.
+ * Extracts unique taxonomy values (tags, categories, series) and the oldest creation date (launchedAt) from a list of articles.
  */
 export function getTaxonomies(articles: ArticleMetadata[]) {
+  const tagsSet = new Set<string>();
+  const categorySet = new Set<string>();
+  const seriesSet = new Set<string>();
+  let oldestDate: Date | null = null;
+  let launchedAt: string | null = null;
+
+  for (const article of articles) {
+    article.tags.forEach((t) => tagsSet.add(t));
+    categorySet.add(article.category);
+    if (article.series) seriesSet.add(article.series);
+
+    const createdAt = new Date(article.createdAt);
+    if (!oldestDate || createdAt < oldestDate) {
+      oldestDate = createdAt;
+      launchedAt = article.createdAt;
+    }
+  }
+
   return {
-    tags: Array.from(new Set(articles.flatMap((a) => a.tags))).sort(),
-    category: Array.from(new Set(articles.map((a) => a.category))).sort(),
-    series: Array.from(
-      new Set(articles.map((a) => a.series).filter((s): s is string => !!s)),
-    ).sort(),
+    tags: Array.from(tagsSet).sort(),
+    category: Array.from(categorySet).sort(),
+    series: Array.from(seriesSet).sort(),
+    launchedAt,
   };
 }
 

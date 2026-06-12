@@ -7,7 +7,7 @@ import { siteConfig } from "@/app/lib/site-config";
  */
 export function HeroTitle() {
   return (
-    <section className="relative flex justify-center py-24 md:py-32 overflow-hidden w-full">
+    <section className="relative flex justify-center py-20 md:py-28 overflow-hidden w-full">
       {/* Simple & Clean CSS Dot Grid */}
       <div
         className="absolute inset-0 -z-10"
