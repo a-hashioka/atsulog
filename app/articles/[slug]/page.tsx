@@ -104,27 +104,33 @@ export default async function ArticlePage({
         <MarkdownRenderer content={content} />
       </div>
 
-      {/* Series Navigation (Previous/Next) */}
-      <div className="border-t border-gray-100 pt-12">
+      {/* Footer Navigation */}
+      <div className="mt-16">
+        {/* Series Navigation (Previous/Next) */}
         <SeriesNavigation metadata={metadata} articles={articles} />
-        <div className="mt-12">
+
+        <nav
+          aria-label="Article navigation"
+          className="border-t pt-[2.5rem] flex items-center justify-between"
+        >
           <Link
             href="/articles"
-            className="inline-flex items-center text-sm font-medium text-emerald-600 hover:text-emerald-500 transition-colors"
+            className="text-sm font-medium text-gray-600 hover:text-black transition-colors flex items-center"
           >
-            <ArrowLeft className="mr-2 h-4 w-4" />
+            <ArrowLeft className="size-[1rem] mr-[0.5rem]" />
             Back to Articles
           </Link>
+
           {authenticated && (
             <Link
               href={`/edit/${slug}`}
-              className="ml-6 inline-flex items-center text-sm font-medium text-gray-500 hover:text-black transition-colors"
+              className="text-sm font-medium text-emerald-600 hover:text-emerald-700 transition-colors flex items-center"
             >
-              <Pencil className="mr-2 h-4 w-4" />
-              Edit Article
+              <Pencil className="size-[1rem] mr-[0.5rem]" />
+              Edit this article
             </Link>
           )}
-        </div>
+        </nav>
       </div>
     </article>
   );
