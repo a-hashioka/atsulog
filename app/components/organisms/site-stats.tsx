@@ -57,11 +57,12 @@ export function SiteStats({ articles }: { articles: ArticleMetadata[] }) {
         {/* Zsh Prompt Line (Creative Engineer Style) */}
         <div className="flex flex-wrap items-center gap-x-2 mb-6">
           <span className="text-sky-600 font-bold">~/mylife</span>
-          <span className="text-gray-400">on</span>
-          <span className="text-emerald-600 font-bold">main</span>
+          <span className="text-gray-400">in</span>
+          <span className="text-emerald-600 font-bold">
+            {siteConfig.locale}
+          </span>
           <span className="text-emerald-600 font-bold ml-1">&gt;</span>
           <span className="text-gray-900">{commandName} --info</span>
-          <span className="w-2 h-4 bg-gray-400 animate-pulse ml-1" />
           {mounted && (
             <span className="ml-auto text-gray-400 hidden sm:inline">
               at {currentTime}
