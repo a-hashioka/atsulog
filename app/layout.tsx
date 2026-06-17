@@ -1,6 +1,7 @@
 import { Home, Newspaper, Pencil } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { siteConfig } from "@/app/lib/site-config";
 import { isAuthenticated } from "@/app/lib/auth";
 import { LogoutButton } from "@/app/components/atoms/logout-button";
@@ -33,9 +34,13 @@ export default async function RootLayout({
                 href="/"
                 className="group flex items-center text-xl font-bold tracking-tight transition-colors"
               >
-                <span className="text-emerald-500 mr-2 group-hover:translate-x-0.5 transition-transform duration-200">
-                  &gt;
-                </span>
+                <Image
+                  src="/favicon.ico"
+                  alt="Site Icon"
+                  width={20}
+                  height={20}
+                  className="mr-1"
+                />
                 <span className="group-hover:text-gray-600 lowercase">
                   {siteConfig.title}
                 </span>
