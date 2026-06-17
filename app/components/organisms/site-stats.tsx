@@ -51,6 +51,8 @@ export function SiteStats({ articles }: { articles: ArticleMetadata[] }) {
     { label: "tags", value: taxonomies.tags.length, icon: Tag },
   ];
 
+  const separator = "=";
+
   return (
     <section className="flex justify-center py-4 md:py-6">
       <div className="w-full font-mono text-sm md:text-base">
@@ -81,7 +83,9 @@ export function SiteStats({ articles }: { articles: ArticleMetadata[] }) {
                 <stat.icon className="size-4 text-gray-400" />
                 <span className="whitespace-nowrap">{stat.label}</span>
               </div>
-              <div className="flex-1 border-b border-dashed border-gray-200 mb-1.5 min-w-[1rem]" />
+              <div className="flex-1 overflow-hidden whitespace-nowrap text-gray-200 px-2 select-none tracking-widest">
+                {separator.repeat(100)}
+              </div>
               <div className="shrink-0">
                 <span className="text-emerald-600 font-bold">{stat.value}</span>
               </div>
