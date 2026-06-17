@@ -9,6 +9,7 @@ echo "Starting standalone deployment build..."
 echo "Cleaning up old build artifacts..."
 rm -rf .next
 rm -f deploy.tar.gz
+rm -rf data
 
 # 2. Run Next.js build
 # Requires 'output: standalone' in next.config.ts
