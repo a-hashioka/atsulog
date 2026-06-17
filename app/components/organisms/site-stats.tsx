@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Newspaper, BookOpen, Folder, Tag, Calendar } from "lucide-react";
+import { Newspaper, BookOpen, Folder, Tag, Calendar, Eye } from "lucide-react";
 import { getTaxonomies } from "@/app/lib/article-utils";
 import { siteConfig } from "@/app/lib/site-config";
 import type { ArticleMetadata } from "@/app/lib/article-types";
@@ -45,6 +45,11 @@ export function SiteStats({ articles }: { articles: ArticleMetadata[] }) {
           },
         ]
       : []),
+    {
+      label: "total views",
+      value: taxonomies.totalViews.toLocaleString(),
+      icon: Eye,
+    },
     { label: "articles", value: articles.length, icon: Newspaper },
     { label: "series", value: taxonomies.series.length, icon: BookOpen },
     { label: "categories", value: taxonomies.category.length, icon: Folder },

@@ -128,11 +128,13 @@ export function getTaxonomies(articles: ArticleMetadata[]) {
   const seriesSet = new Set<string>();
   let oldestDate: Date | null = null;
   let launchedAt: string | null = null;
+  let totalViews = 0;
 
   for (const article of articles) {
     article.tags.forEach((t) => tagsSet.add(t));
     categorySet.add(article.category);
     if (article.series) seriesSet.add(article.series);
+    totalViews += article.viewCount;
 
     const createdAt = new Date(article.createdAt);
     if (!oldestDate || createdAt < oldestDate) {
@@ -146,6 +148,7 @@ export function getTaxonomies(articles: ArticleMetadata[]) {
     category: Array.from(categorySet).sort(),
     series: Array.from(seriesSet).sort(),
     launchedAt,
+    totalViews,
   };
 }
 
