@@ -11,7 +11,7 @@ export function HeroTitle() {
       <div className="relative z-10 text-center px-4">
         <h1 className="text-4xl md:text-6xl leading-tight tracking-tighter text-gray-900">
           <span className="font-light text-gray-400">Welcome to</span>{" "}
-          <span>{siteConfig.title}</span>
+          <span className="font-light">{siteConfig.title}</span>
         </h1>
       </div>
     </section>
