@@ -2,13 +2,12 @@
 
 import { writeFile, mkdir, access } from "node:fs/promises";
 import { join, parse } from "node:path";
-import sharp from "sharp";
 import { isAuthenticated } from "@/app/lib/auth";
 import { formatDateCompact } from "./article-utils";
 
 /**
  * Handles image upload from the Markdown editor.
- * Saves to data/images/YYYYMMDD/ with duplicate handling and optimization.
+ * Saves to data/images/YYYYMMDD/ with duplicate handling.
  * @param formData - The form data containing the 'image' file.
  * @returns An object with the final image URL or an error message.
  */
@@ -35,30 +34,9 @@ export async function uploadImageAction(formData: FormData) {
     // Already exists or other error
   }
 
-  // 2. Optimize image if it's a standard raster format
-  const { name, ext: originalExt } = parse(file.name);
-  let finalBuffer: Uint8Array = buffer;
-  let finalExt = originalExt;
-
-  // We optimize most images to WebP, but skip SVGs to keep them as vectors
-  if (file.type.startsWith("image/") && file.type !== "image/svg+xml") {
-    try {
-      finalBuffer = await sharp(buffer)
-        .resize(1200, undefined, {
-          withoutEnlargement: true,
-          fit: "inside",
-        })
-        .webp({ quality: 80 })
-        .toBuffer();
-      finalExt = ".webp";
-    } catch (error) {
-      console.error("Image optimization failed, using original file:", error);
-      // Fallback to original buffer if optimization fails
-    }
-  }
-
-  // 3. Handle duplicate names
-  let finalFileName = `${name}${finalExt}`;
+  // 2. Handle duplicate names
+  const { name, ext } = parse(file.name);
+  let finalFileName = file.name;
   let counter = 1;
 
   while (true) {
@@ -66,7 +44,7 @@ export async function uploadImageAction(formData: FormData) {
     try {
       await access(filePath);
       // If no error, file exists
-      finalFileName = `${name}(${counter})${finalExt}`;
+      finalFileName = `${name}(${counter})${ext}`;
       counter++;
     } catch {
       // File does not exist, safe to use
@@ -75,9 +53,9 @@ export async function uploadImageAction(formData: FormData) {
   }
 
   const finalPath = join(uploadDir, finalFileName);
-  await writeFile(finalPath, finalBuffer);
+  await writeFile(finalPath, buffer);
 
-  // 4. Return the URL path
+  // 3. Return the URL path
   return {
     url: `/images/${dateDir}/${finalFileName}`,
     name: finalFileName,
