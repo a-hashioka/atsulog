@@ -1,5 +1,6 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
 
 type MarkdownRendererProps = {
   content: string;
@@ -16,7 +17,12 @@ export function MarkdownRenderer({
 }: MarkdownRendererProps) {
   return (
     <div className={`prose-site ${className}`}>
-      <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        rehypePlugins={[rehypeHighlight]}
+      >
+        {content}
+      </ReactMarkdown>
     </div>
   );
 }

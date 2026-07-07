@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 // --- Types & Constants ---
 type Vec3 = [number, number, number];
@@ -9,7 +9,7 @@ type Edge = [number, number];
 
 const COLORS = {
   STOKE: "#F97316", // Orange
-  NODE: "#000000",  // Black
+  NODE: "#000000", // Black
 };
 
 const ROTATION_SPEEDS = {
@@ -23,22 +23,50 @@ const ROTATION_SPEEDS = {
 /**
  * Generates a subdivided Icosphere wireframe.
  */
-function generateIcosphere(subdivisions: number = 1): { vertices: Vec3[]; edges: Edge[] } {
+function generateIcosphere(subdivisions: number = 1): {
+  vertices: Vec3[];
+  edges: Edge[];
+} {
   const phi = (1 + Math.sqrt(5)) / 2;
   const vertices: Vec3[] = [
-    [-1, phi, 0], [1, phi, 0], [-1, -phi, 0], [1, -phi, 0],
-    [0, -1, phi], [0, 1, phi], [0, -1, -phi], [0, 1, -phi],
-    [phi, 0, -1], [phi, 0, 1], [-phi, 0, -1], [-phi, 0, 1],
-  ].map(v => {
+    [-1, phi, 0],
+    [1, phi, 0],
+    [-1, -phi, 0],
+    [1, -phi, 0],
+    [0, -1, phi],
+    [0, 1, phi],
+    [0, -1, -phi],
+    [0, 1, -phi],
+    [phi, 0, -1],
+    [phi, 0, 1],
+    [-phi, 0, -1],
+    [-phi, 0, 1],
+  ].map((v) => {
     const len = Math.sqrt(v[0] ** 2 + v[1] ** 2 + v[2] ** 2);
     return [v[0] / len, v[1] / len, v[2] / len] as Vec3;
   });
 
   let faces: Face[] = [
-    [0, 11, 5], [0, 5, 1], [0, 1, 7], [0, 7, 10], [0, 10, 11],
-    [1, 5, 9], [5, 11, 4], [11, 10, 2], [10, 7, 6], [7, 1, 8],
-    [3, 9, 4], [3, 4, 2], [3, 2, 6], [3, 6, 8], [3, 8, 9],
-    [4, 9, 5], [2, 4, 11], [6, 2, 10], [8, 6, 7], [9, 8, 1],
+    [0, 11, 5],
+    [0, 5, 1],
+    [0, 1, 7],
+    [0, 7, 10],
+    [0, 10, 11],
+    [1, 5, 9],
+    [5, 11, 4],
+    [11, 10, 2],
+    [10, 7, 6],
+    [7, 1, 8],
+    [3, 9, 4],
+    [3, 4, 2],
+    [3, 2, 6],
+    [3, 6, 8],
+    [3, 8, 9],
+    [4, 9, 5],
+    [2, 4, 11],
+    [6, 2, 10],
+    [8, 6, 7],
+    [9, 8, 1],
   ];
 
   const midPointCache = new Map<string, number>();
@@ -49,7 +77,11 @@ function generateIcosphere(subdivisions: number = 1): { vertices: Vec3[]; edges:
 
     const v1 = vertices[v1Idx];
     const v2 = vertices[v2Idx];
-    const mid: Vec3 = [(v1[0] + v2[0]) / 2, (v1[1] + v2[1]) / 2, (v1[2] + v2[2]) / 2];
+    const mid: Vec3 = [
+      (v1[0] + v2[0]) / 2,
+      (v1[1] + v2[1]) / 2,
+      (v1[2] + v2[2]) / 2,
+    ];
     const len = Math.sqrt(mid[0] ** 2 + mid[1] ** 2 + mid[2] ** 2);
     const normalized: Vec3 = [mid[0] / len, mid[1] / len, mid[2] / len];
 
@@ -73,7 +105,11 @@ function generateIcosphere(subdivisions: number = 1): { vertices: Vec3[]; edges:
   const edgeSet = new Set<string>();
   const edges: Edge[] = [];
   faces.forEach(([v1, v2, v3]) => {
-    [[v1, v2], [v2, v3], [v3, v1]].forEach(([a, b]) => {
+    [
+      [v1, v2],
+      [v2, v3],
+      [v3, v1],
+    ].forEach(([a, b]) => {
       const key = a < b ? `${a}-${b}` : `${b}-${a}`;
       if (!edgeSet.has(key)) {
         edgeSet.add(key);
@@ -106,7 +142,10 @@ export function CanvasSphere() {
 
     const remToPx = (rem: number) => {
       if (typeof window === "undefined") return rem * 16;
-      return rem * parseFloat(getComputedStyle(document.documentElement).fontSize || "16");
+      return (
+        rem *
+        parseFloat(getComputedStyle(document.documentElement).fontSize || "16")
+      );
     };
 
     const resize = () => {
@@ -123,7 +162,9 @@ export function CanvasSphere() {
     window.addEventListener("resize", resize);
     resize();
 
-    let rx = 0, ry = 0, rz = 0;
+    let rx = 0,
+      ry = 0,
+      rz = 0;
 
     const render = () => {
       ctx.clearRect(0, 0, width, height);
@@ -132,9 +173,12 @@ export function CanvasSphere() {
       ry += ROTATION_SPEEDS.Y;
       rz += ROTATION_SPEEDS.Z;
 
-      const cX = Math.cos(rx), sX = Math.sin(rx);
-      const cY = Math.cos(ry), sY = Math.sin(ry);
-      const cZ = Math.cos(rz), sZ = Math.sin(rz);
+      const cX = Math.cos(rx),
+        sX = Math.sin(rx);
+      const cY = Math.cos(ry),
+        sY = Math.sin(ry);
+      const cZ = Math.cos(rz),
+        sZ = Math.sin(rz);
 
       const isMobile = window.innerWidth < 768;
       const radiusPx = isMobile ? remToPx(6) : remToPx(10);
@@ -142,21 +186,32 @@ export function CanvasSphere() {
       const centerY = height / 2;
 
       // Map to store projected positions and depths for reuse
-      const projected = vertices.map((v): { x: number; y: number; z: number; p: number } => {
-        let [x, y, z] = v;
-        // Rotation
-        const x1 = x * cZ - y * sZ; const y1 = x * sZ + y * cZ; x = x1; y = y1;
-        const x2 = x * cY - z * sY; const z2 = x * sY + z * cY; x = x2; z = z2;
-        const y3 = y * cX - z * sX; const z3 = y * sX + z * cX; y = y3; z = z3;
+      const projected = vertices.map(
+        (v): { x: number; y: number; z: number; p: number } => {
+          let [x, y, z] = v;
+          // Rotation
+          const x1 = x * cZ - y * sZ;
+          const y1 = x * sZ + y * cZ;
+          x = x1;
+          y = y1;
+          const x2 = x * cY - z * sY;
+          const z2 = x * sY + z * cY;
+          x = x2;
+          z = z2;
+          const y3 = y * cX - z * sX;
+          const z3 = y * sX + z * cX;
+          y = y3;
+          z = z3;
 
-        const p = 1 / (1 - z * 0.2);
-        return {
-          x: centerX + x * radiusPx * p,
-          y: centerY + y * radiusPx * p,
-          z: z, // Depth range approx [-1, 1]
-          p: p,
-        };
-      });
+          const p = 1 / (1 - z * 0.2);
+          return {
+            x: centerX + x * radiusPx * p,
+            y: centerY + y * radiusPx * p,
+            z: z, // Depth range approx [-1, 1]
+            p: p,
+          };
+        },
+      );
 
       // Helper for opacity based on depth (z: -1 to 1)
       const getOpacity = (z: number) => {
@@ -169,12 +224,12 @@ export function CanvasSphere() {
       for (const [v1, v2] of edges) {
         const p1 = projected[v1];
         const p2 = projected[v2];
-        
+
         // Average depth for the edge
         const avgZ = (p1.z + p2.z) / 2;
         ctx.globalAlpha = getOpacity(avgZ);
         ctx.strokeStyle = COLORS.STOKE;
-        
+
         ctx.beginPath();
         ctx.moveTo(p1.x, p1.y);
         ctx.lineTo(p2.x, p2.y);
@@ -186,7 +241,7 @@ export function CanvasSphere() {
       for (const p of projected) {
         ctx.globalAlpha = getOpacity(p.z);
         ctx.fillStyle = COLORS.NODE;
-        
+
         ctx.beginPath();
         ctx.arc(p.x, p.y, nodeR, 0, Math.PI * 2);
         ctx.fill();
