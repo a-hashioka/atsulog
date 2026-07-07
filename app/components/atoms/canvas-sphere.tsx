@@ -181,7 +181,9 @@ export function CanvasSphere() {
         sZ = Math.sin(rz);
 
       const isMobile = window.innerWidth < 768;
-      const radiusPx = isMobile ? remToPx(6) : remToPx(10);
+      const baseRadiusPx = remToPx(10);
+      const radiusPx = isMobile ? remToPx(6) : baseRadiusPx;
+      const scale = radiusPx / baseRadiusPx;
       const centerX = width / 2;
       const centerY = height / 2;
 
@@ -220,7 +222,7 @@ export function CanvasSphere() {
       };
 
       // Draw Wireframe
-      ctx.lineWidth = remToPx(0.0625);
+      ctx.lineWidth = remToPx(0.0625) * scale;
       for (const [v1, v2] of edges) {
         const p1 = projected[v1];
         const p2 = projected[v2];
@@ -237,7 +239,7 @@ export function CanvasSphere() {
       }
 
       // Draw Nodes
-      const nodeR = remToPx(0.09375);
+      const nodeR = remToPx(0.09375) * scale;
       for (const p of projected) {
         ctx.globalAlpha = getOpacity(p.z);
         ctx.fillStyle = COLORS.NODE;
