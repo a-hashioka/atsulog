@@ -82,15 +82,25 @@ export async function saveArticle(
     (article) => article.slug === newArticle.slug,
   );
   const updatedList = [...articles];
+  const existingBeforeUpdate = index !== -1 ? updatedList[index] : null;
 
   let articleToSave = { ...newArticle };
 
-  // Assign seriesOrder for new articles in a series
-  if (index === -1 && articleToSave.series) {
+  // Recalculate seriesOrder whenever the article is new to its series (created
+  // directly in one, freshly assigned to one via edit, or moved between
+  // series) or its seriesOrder is missing — the old order no longer applies.
+  if (
+    articleToSave.series &&
+    (!existingBeforeUpdate ||
+      existingBeforeUpdate.series !== articleToSave.series ||
+      articleToSave.seriesOrder == null)
+  ) {
     articleToSave.seriesOrder = getNextSeriesOrder(
       articleToSave.series,
-      articles,
+      articles.filter((article) => article.slug !== articleToSave.slug),
     );
+  } else if (!articleToSave.series) {
+    articleToSave.seriesOrder = null;
   }
 
   let oldFilePath: string | null = null;
