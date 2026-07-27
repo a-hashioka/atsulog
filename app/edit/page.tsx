@@ -1,5 +1,6 @@
 import { getArticles } from "@/app/lib/article-repository";
 import { PaginatedArticleList } from "@/app/components/organisms/paginated-article-list";
+import { DraftArticleList } from "@/app/components/organisms/draft-article-list";
 import {
   sortArticles,
   getTaxonomies,
@@ -36,7 +37,6 @@ export default async function EditDashboardPage({
 
   const { field, order } = getSortConfig(resolvedSearchParams);
   const sortedPublished = sortArticles(publishedArticles, field, order);
-  const sortedDrafts = sortArticles(drafts, field, order);
 
   return (
     <main className="space-y-12">
@@ -49,12 +49,7 @@ export default async function EditDashboardPage({
       />
 
       <div className="space-y-16">
-        <PaginatedArticleList
-          articles={sortedDrafts}
-          searchParams={resolvedSearchParams}
-          basePath="/edit"
-          title={`Drafts (${drafts.length})`}
-        />
+        <DraftArticleList articles={drafts} basePath="/edit" />
 
         <PaginatedArticleList
           articles={sortedPublished}
