@@ -23,19 +23,19 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: siteConfig.iconPng,
-        width: 600,
-        height: 600,
+        url: siteConfig.shareImage,
+        width: 1200,
+        height: 630,
         alt: siteConfig.title,
       },
     ],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: `Articles`,
     description: `Browse all articles on ${siteConfig.title}.`,
     creator: siteConfig.twitterHandle,
-    images: [siteConfig.iconPng],
+    images: [siteConfig.shareImage],
   },
 };
 

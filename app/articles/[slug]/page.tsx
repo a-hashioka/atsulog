@@ -44,19 +44,19 @@ export async function generateMetadata({
       publishedTime: article.metadata.createdAt,
       images: [
         {
-          url: siteConfig.iconPng,
-          width: 600,
-          height: 600,
+          url: siteConfig.shareImage,
+          width: 1200,
+          height: 630,
           alt: siteConfig.title,
         },
       ],
     },
     twitter: {
-      card: "summary",
+      card: "summary_large_image",
       title: article.metadata.title,
       description: `Read "${article.metadata.title}" on ${siteConfig.title}.`,
       creator: siteConfig.twitterHandle,
-      images: [siteConfig.iconPng],
+      images: [siteConfig.shareImage],
     },
   };
 }
