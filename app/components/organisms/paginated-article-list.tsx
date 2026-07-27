@@ -4,7 +4,7 @@ import {
   ArrowUpNarrowWide,
   Calendar,
   RotateCcw,
-  BarChart3,
+  Eye,
 } from "lucide-react";
 import { ArticleList } from "@/app/components/atoms/article-list";
 import { PaginationNav } from "@/app/components/atoms/pagination-nav";
@@ -99,7 +99,7 @@ export function PaginatedArticleList({
           >
             {isViews ? (
               <>
-                <BarChart3 className="size-[0.875rem]" />
+                <Eye className="size-[0.875rem]" />
                 <span>Views</span>
               </>
             ) : isModified ? (

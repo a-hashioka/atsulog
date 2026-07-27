@@ -46,7 +46,7 @@ export function SiteStats({ articles }: { articles: ArticleMetadata[] }) {
         ]
       : []),
     {
-      label: "total views",
+      label: "views",
       value: taxonomies.totalViews.toLocaleString(),
       icon: Eye,
     },
