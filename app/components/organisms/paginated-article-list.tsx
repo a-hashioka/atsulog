@@ -27,7 +27,6 @@ type PaginatedArticleListProps = {
   articles: ArticleMetadata[];
   searchParams: ArticleSearchParams;
   basePath?: string;
-  title?: string | null;
 };
 
 // --- Main Component ---
@@ -41,7 +40,6 @@ export function PaginatedArticleList({
   articles,
   searchParams,
   basePath = "/articles",
-  title = "Articles",
 }: PaginatedArticleListProps) {
   // Parse current page
   const rawPage = Number.parseInt(getParam(searchParams.page, "1"), 10);
@@ -74,9 +72,7 @@ export function PaginatedArticleList({
   return (
     <section className="space-y-10">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        {title && (
-          <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
-        )}
+        <h1 className="text-3xl font-bold tracking-tight">Articles</h1>
 
         <div className="flex items-center space-x-[0.5rem]">
           {/* Sort By Toggle */}

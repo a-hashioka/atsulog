@@ -55,7 +55,6 @@ export default async function EditDashboardPage({
           articles={sortedPublished}
           searchParams={resolvedSearchParams}
           basePath="/edit"
-          title="Published Articles"
         />
       </div>
     </main>
