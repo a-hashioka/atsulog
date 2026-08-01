@@ -63,7 +63,7 @@ export async function generateMetadata({
 
 /**
  * Renders an individual article detail page.
- * Increments the view count on every render.
+ * Increments the view count on every render, except when the admin is authenticated.
  */
 export default async function ArticlePage({
   params,
@@ -80,10 +80,12 @@ export default async function ArticlePage({
 
   const { metadata, content } = articleDetail;
 
-  // Record a view for this article
-  await incrementViewCount(articles, slug);
-
   const authenticated = await isAuthenticated();
+
+  // Record a view for this article (skip when the admin is viewing)
+  if (!authenticated) {
+    await incrementViewCount(articles, slug);
+  }
 
   return (
     <article className="py-10">
