@@ -1,6 +1,7 @@
-# [Atsulog](https://atsulog.com)
+# Atsulog
 
 A minimal, file-based personal blog engine built with Next.js (App Router) and Tailwind CSS. Articles are managed as local Markdown files.
+https://atsulog.com
 
 ![share_image](./public/share-image.png)
 
