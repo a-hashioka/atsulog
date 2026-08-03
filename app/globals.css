@@ -39,28 +39,70 @@ body {
   scroll-behavior: smooth;
 }
 
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-semibold tracking-tight;
+  }
+
+  a {
+    @apply transition-colors duration-200;
+  }
+}
+
 @layer utilities {
-  /* Custom Markdown Styling (Safe and Extensible) */
+  /* Custom Markdown Styling (Safe and Extensible)
+   *
+   * Design tokens — only these values are used below:
+   *   radius : 8px (block) / 4px (inline)
+   *   rule   : #e5e7eb (gray-200)
+   *   shadow : none
+   */
   .prose-site {
     @apply prose max-w-none prose-sky prose-headings:scroll-mt-20;
 
-    /* Tables */
-    & table {
-      @apply border-collapse border-2 border-gray-300 w-full my-8 shadow-sm;
+    /* Headings
+       Hierarchy comes from size and leading space alone — no rules, no color.
+       Weight is pinned to bold at every level on purpose: no webfont is loaded,
+       so Japanese falls back to OS fonts that ship Regular/Bold only, and the
+       CSS font matching rules resolve 600 to Bold and 500 to Regular anyway.
+       `#` is capped below the 30px article title in articles/[slug]/page.tsx. */
+    & h1 {
+      @apply text-[1.75rem] font-bold mt-14 mb-4;
     }
-    & th {
-      @apply bg-gray-100 text-gray-900 border-2 border-gray-300 px-4 py-3 text-left text-sm font-bold uppercase tracking-wide;
+    & h2 {
+      @apply text-[1.625rem] font-bold mt-14 mb-4;
     }
-    & td {
-      @apply border border-gray-300 px-4 py-3 text-sm text-gray-700 bg-white;
+    & h3 {
+      @apply text-[1.3125rem] font-bold mt-10 mb-3;
     }
-    & tr:hover td {
-      @apply bg-sky-50/30 transition-colors;
+    & h4 {
+      @apply text-base font-bold mt-7 mb-2;
     }
 
-    /* Code Blocks */
+    /* Tables — rules between rows only, no outer frame.
+       `uppercase` is deliberately absent: it does nothing to Japanese headers
+       and would make English-only tables look like a different component. */
+    & table {
+      @apply w-full my-8 border-collapse;
+    }
+    & thead {
+      @apply border-b border-gray-200;
+    }
+    & th {
+      @apply px-3 py-2 text-left text-sm font-bold text-gray-900;
+    }
+    & td {
+      @apply border-b border-gray-200 px-3 py-2 text-sm text-gray-700;
+    }
+
+    /* Code Blocks — the dark block is the one deliberate accent on the page */
     & pre {
-      @apply bg-gray-900 rounded-xl p-4 shadow-inner overflow-x-auto;
+      @apply bg-gray-900 rounded-[8px] p-4 overflow-x-auto;
     }
     & code {
       @apply font-mono text-sm leading-relaxed;
@@ -69,7 +111,7 @@ body {
       background: transparent;
     }
     & :not(pre) > code {
-      @apply bg-gray-100 text-sky-600 px-1.5 py-0.5 rounded-md font-medium;
+      @apply bg-gray-100 text-sky-600 px-1.5 py-0.5 rounded-[4px] font-medium;
       &::before,
       &::after {
         content: none;
@@ -81,18 +123,23 @@ body {
       @apply text-sky-500 no-underline font-medium hover:underline;
     }
 
-    /* Blockquotes */
+    /* Blockquotes
+       Used as the article lead-in, not as a citation. `not-italic` is required
+       because the typography plugin sets italic, and Japanese fonts have no
+       italic glyphs — browsers would slant them mechanically. */
     & blockquote {
-      @apply border-l-4 border-sky-500 bg-sky-50/50 py-1 pl-4 rounded-r-lg italic text-gray-700;
+      @apply border-l-4 border-sky-300 bg-sky-50 py-1 pl-4 rounded-r-[8px] text-gray-700;
       & p::before,
       & p::after {
         content: none;
       }
     }
 
-    /* Images */
+    /* Images
+       35rem is the smallest cap that still lets a landscape screenshot fill the
+       720px column (768px container minus the px-6 gutters in layout.tsx). */
     & img {
-      @apply max-w-full h-auto max-h-[25rem] mx-auto rounded-3xl shadow-md border border-gray-100 object-contain;
+      @apply max-w-full h-auto max-h-[35rem] mx-auto rounded-[8px];
     }
 
     /* Lists */
@@ -105,18 +152,31 @@ body {
         }
       }
     }
+
+    /* Task Lists (remark-gfm emits .contains-task-list / .task-list-item)
+       The checkbox is drawn by hand because react-markdown renders it with
+       `disabled`, and browsers grey those out — a completed item would read as
+       "unavailable" rather than "done". `accent-color` does not reach disabled
+       inputs, so `appearance-none` is the only way to color the checked state. */
+    & ul.contains-task-list {
+      @apply list-none pl-0;
+    }
+    & li.task-list-item {
+      @apply pl-0;
+    }
+    & li.task-list-item > input[type="checkbox"] {
+      @apply appearance-none inline-block shrink-0 w-[1.05em] h-[1.05em] mr-2
+        align-[-0.15em] rounded-[4px] border border-gray-300 bg-white;
+    }
+    & li.task-list-item > input[type="checkbox"]:checked {
+      @apply bg-sky-500 border-sky-500;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23ffffff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.5 8.5l3 3 6-6'/%3E%3C/svg%3E");
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: 0.75em;
+    }
+    & li.task-list-item:has(> input[type="checkbox"]:checked) {
+      @apply text-gray-500 line-through;
+    }
   }
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  @apply font-semibold tracking-tight;
-}
-
-a {
-  @apply transition-colors duration-200;
 }
