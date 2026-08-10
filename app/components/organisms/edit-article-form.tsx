@@ -96,17 +96,19 @@ export function EditArticleForm(props: EditArticleFormProps) {
       />
 
       <div className="pt-[1.5rem] border-t border-gray-100 flex justify-end space-x-4">
-        <Button
-          type="submit"
-          name="intent"
-          value="draft"
-          icon={FileText}
-          variant="outline"
-          className="px-[2rem] py-[0.75rem]"
-          disabled={states.isSubmitting}
-        >
-          {states.isSubmitting ? "Saving..." : "Save Draft"}
-        </Button>
+        {!props.metadata.published && (
+          <Button
+            type="submit"
+            name="intent"
+            value="draft"
+            icon={FileText}
+            variant="outline"
+            className="px-[2rem] py-[0.75rem]"
+            disabled={states.isSubmitting}
+          >
+            {states.isSubmitting ? "Saving..." : "Save Draft"}
+          </Button>
+        )}
         <Button
           type="submit"
           name="intent"
