@@ -40,6 +40,27 @@ export function generateSlug(date: Date = new Date()): string {
   return `${formatDateCompact(date)}${timePart}`;
 }
 
+/** Upper bound for a sanitized stem, leaving room for a suffix and extension. */
+const MAX_FILENAME_STEM_LENGTH = 100;
+
+/**
+ * Normalizes a file name stem so it is safe inside a Markdown image URL.
+ * Everything outside [a-z0-9._-] — spaces, symbols and non-ASCII alike —
+ * collapses into "-", which keeps the URL free of characters that would
+ * terminate a Markdown link destination early.
+ * Returns an empty string when nothing usable remains, so the caller can
+ * fall back to a generated name.
+ */
+export function sanitizeFileName(stem: string): string {
+  return stem
+    .toLowerCase()
+    .replace(/[^a-z0-9._-]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^[-.]+|[-.]+$/g, "")
+    .slice(0, MAX_FILENAME_STEM_LENGTH)
+    .replace(/[-.]+$/g, "");
+}
+
 /**
  * Calculates the sorting configuration based on search parameters.
  * Defaults to "createdAt" descending, or "seriesOrder" ascending if a series is selected.

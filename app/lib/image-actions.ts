@@ -3,13 +3,19 @@
 import { writeFile, mkdir, access } from "node:fs/promises";
 import { join, parse } from "node:path";
 import { isAuthenticated } from "@/app/lib/auth";
-import { formatDateCompact } from "./article-utils";
+import {
+  formatDateCompact,
+  generateSlug,
+  sanitizeFileName,
+} from "./article-utils";
+import { extensionForMimeType } from "./image-mime";
 
 /**
  * Handles image upload from the Markdown editor.
- * Saves to data/images/YYYYMMDD/ with duplicate handling.
+ * Saves to data/images/YYYYMMDD/ with duplicate handling. The stored file name
+ * is normalized so it never breaks a Markdown image URL.
  * @param formData - The form data containing the 'image' file.
- * @returns An object with the final image URL or an error message.
+ * @returns The image URL, plus the original file name for use as alt text.
  */
 export async function uploadImageAction(formData: FormData) {
   if (!(await isAuthenticated())) {
@@ -34,9 +40,14 @@ export async function uploadImageAction(formData: FormData) {
     // Already exists or other error
   }
 
-  // 2. Handle duplicate names
-  const { name, ext } = parse(file.name);
-  let finalFileName = file.name;
+  // 2. Normalize the name, then handle duplicates.
+  // The extension comes from the MIME type rather than from the original name:
+  // path.parse("shot.png (1)") reports ext as ".png (1)", which would smuggle a
+  // space back into the URL and break Markdown rendering.
+  const ext = `.${extensionForMimeType(file.type)}`;
+  // Fall back to a timestamp when nothing usable survives sanitizing
+  const safeName = sanitizeFileName(parse(file.name).name) || generateSlug();
+  let finalFileName = `${safeName}${ext}`;
   let counter = 1;
 
   while (true) {
@@ -44,7 +55,7 @@ export async function uploadImageAction(formData: FormData) {
     try {
       await access(filePath);
       // If no error, file exists
-      finalFileName = `${name}(${counter})${ext}`;
+      finalFileName = `${safeName}-${counter}${ext}`;
       counter++;
     } catch {
       // File does not exist, safe to use
@@ -55,9 +66,9 @@ export async function uploadImageAction(formData: FormData) {
   const finalPath = join(uploadDir, finalFileName);
   await writeFile(finalPath, buffer);
 
-  // 3. Return the URL path
+  // 3. Return the URL path, keeping the original name for display
   return {
     url: `/images/${dateDir}/${finalFileName}`,
-    name: finalFileName,
+    name: file.name,
   };
 }

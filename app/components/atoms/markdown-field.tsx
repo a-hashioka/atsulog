@@ -41,6 +41,16 @@ export type MarkdownFieldProps = {
   rows?: number;
 };
 
+// --- Helpers ---
+
+/**
+ * Escapes the characters that would terminate a Markdown alt text early.
+ * The backslash must be handled first to avoid double-escaping.
+ */
+function escapeAltText(text: string): string {
+  return text.replace(/[\\[\]]/g, "\\$&");
+}
+
 // --- Main Component ---
 
 /**
@@ -112,7 +122,11 @@ export function MarkdownField({
         formData.append("image", file);
         const result = await uploadImageAction(formData);
         // Insert as an image link: ![filename](/path/to/image)
-        insertMarkdown(`![${result.name}](${result.url})`, "", "");
+        insertMarkdown(
+          `![${escapeAltText(result.name)}](${result.url})`,
+          "",
+          "",
+        );
       } catch (error) {
         console.error("Upload failed:", error);
         alert("Failed to upload image.");

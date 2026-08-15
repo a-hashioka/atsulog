@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { type NextRequest, NextResponse } from "next/server";
+import { mimeTypeForExtension } from "@/app/lib/image-mime";
 
 /**
  * Route handler to serve images stored in the data directory.
@@ -24,12 +25,8 @@ export async function GET(
     const buffer = await readFile(filePath);
 
     // Determine content type based on extension
-    const ext = filename.split(".").pop()?.toLowerCase();
-    let contentType = "image/png";
-    if (ext === "jpg" || ext === "jpeg") contentType = "image/jpeg";
-    if (ext === "gif") contentType = "image/gif";
-    if (ext === "webp") contentType = "image/webp";
-    if (ext === "svg") contentType = "image/svg+xml";
+    const ext = filename.includes(".") ? filename.split(".").pop() : "";
+    const contentType = mimeTypeForExtension(ext ?? "");
 
     return new NextResponse(buffer, {
       headers: {
