@@ -18,14 +18,40 @@ export function getParam(
 }
 
 /**
+ * Reads wall-clock fields in siteConfig.timeZone rather than the host's, so a
+ * slug is the same whether it is generated locally or on the server. The
+ * locale only carries latin digits here — the field order is imposed below.
+ */
+const zonedFormatter = new Intl.DateTimeFormat("en-US", {
+  timeZone: siteConfig.timeZone,
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+  hourCycle: "h23",
+});
+
+/**
+ * Concatenates the requested wall-clock fields of a date, zero-padded.
+ */
+function formatZoned(
+  date: Date,
+  fields: readonly Intl.DateTimeFormatPartTypes[],
+): string {
+  const values = new Map(
+    zonedFormatter.formatToParts(date).map((part) => [part.type, part.value]),
+  );
+
+  return fields.map((field) => values.get(field) ?? "").join("");
+}
+
+/**
  * Formats a date into a compact YYYYMMDD string.
  */
 export function formatDateCompact(date: Date = new Date()): string {
-  return [
-    date.getFullYear(),
-    String(date.getMonth() + 1).padStart(2, "0"),
-    String(date.getDate()).padStart(2, "0"),
-  ].join("");
+  return formatZoned(date, ["year", "month", "day"]);
 }
 
 /**
@@ -33,11 +59,14 @@ export function formatDateCompact(date: Date = new Date()): string {
  * Used for transitioning articles from draft to published.
  */
 export function generateSlug(date: Date = new Date()): string {
-  const timePart = [date.getHours(), date.getMinutes(), date.getSeconds()]
-    .map((p) => String(p).padStart(2, "0"))
-    .join("");
-
-  return `${formatDateCompact(date)}${timePart}`;
+  return formatZoned(date, [
+    "year",
+    "month",
+    "day",
+    "hour",
+    "minute",
+    "second",
+  ]);
 }
 
 /** Upper bound for a sanitized stem, leaving room for a suffix and extension. */

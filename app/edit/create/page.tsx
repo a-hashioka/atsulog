@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { EditArticleForm } from "@/app/components/organisms/edit-article-form";
 import { getArticles, saveArticle } from "@/app/lib/article-repository";
 import type { ArticleMetadata } from "@/app/lib/article-types";
-import { getTaxonomies } from "@/app/lib/article-utils";
+import { generateSlug, getTaxonomies } from "@/app/lib/article-utils";
 
 /**
  * Page for creating a new article.
@@ -39,16 +39,7 @@ export default async function NewArticlePage() {
     const now = new Date();
     const isoString = now.toISOString();
 
-    // Generate a timestamp-based slug (YYYYMMDDHHMMSS)
-    const timestamp = [
-      now.getFullYear(),
-      (now.getMonth() + 1).toString().padStart(2, "0"),
-      now.getDate().toString().padStart(2, "0"),
-      now.getHours().toString().padStart(2, "0"),
-      now.getMinutes().toString().padStart(2, "0"),
-      now.getSeconds().toString().padStart(2, "0"),
-    ].join("");
-
+    const timestamp = generateSlug(now);
     const slug = isPublished ? timestamp : `draft-${timestamp}`;
 
     const newMetadata: ArticleMetadata = {
