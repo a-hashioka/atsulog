@@ -1,10 +1,46 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useSyncExternalStore } from "react";
 import { Newspaper, BookOpen, Folder, Tag, Calendar, Eye } from "lucide-react";
 import { getTaxonomies } from "@/app/lib/article-utils";
 import { siteConfig } from "@/app/lib/site-config";
 import type { ArticleMetadata } from "@/app/lib/article-types";
+
+/** Latest clock reading shared by every subscriber. Empty until the first tick. */
+let clockSnapshot = "";
+
+/**
+ * Subscribes to the wall clock, notifying React only when the displayed time changes.
+ * @param onChange - Callback invoked when the snapshot becomes stale.
+ * @returns An unsubscribe function that stops the timer.
+ */
+function subscribeToClock(onChange: () => void) {
+  const tick = () => {
+    const next = new Date().toLocaleTimeString("en-GB", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    if (next === clockSnapshot) return;
+    clockSnapshot = next;
+    onChange();
+  };
+  tick();
+  const timer = setInterval(tick, 1000);
+  return () => clearInterval(timer);
+}
+
+/**
+ * Reads the current time on the client. Renders empty on the server and during
+ * hydration so the markup stays identical on both sides.
+ * @returns The current time as HH:MM, or an empty string before hydration.
+ */
+function useCurrentTime() {
+  return useSyncExternalStore(
+    subscribeToClock,
+    () => clockSnapshot,
+    () => "",
+  );
+}
 
 /**
  * A Zsh terminal-style display for site statistics.
@@ -13,27 +49,11 @@ import type { ArticleMetadata } from "@/app/lib/article-types";
  * @returns A Zsh-style terminal list of statistics.
  */
 export function SiteStats({ articles }: { articles: ArticleMetadata[] }) {
-  const [mounted, setMounted] = useState(false);
-  const [currentTime, setCurrentTime] = useState("");
+  const currentTime = useCurrentTime();
 
   const taxonomies = getTaxonomies(articles);
   const launchedAt = taxonomies.launchedAt;
   const commandName = siteConfig.title.toLowerCase();
-
-  useEffect(() => {
-    setMounted(true);
-    const updateTime = () => {
-      setCurrentTime(
-        new Date().toLocaleTimeString("en-GB", {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-      );
-    };
-    updateTime();
-    const timer = setInterval(updateTime, 1000);
-    return () => clearInterval(timer);
-  }, []);
 
   const stats = [
     ...(launchedAt
@@ -70,7 +90,7 @@ export function SiteStats({ articles }: { articles: ArticleMetadata[] }) {
           </span>
           <span className="text-emerald-600 font-bold ml-1">&gt;</span>
           <span className="text-gray-900">{commandName} --info</span>
-          {mounted && (
+          {currentTime && (
             <span className="ml-auto text-gray-400 hidden sm:inline">
               at {currentTime}
             </span>
