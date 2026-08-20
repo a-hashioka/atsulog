@@ -108,15 +108,40 @@ body {
       @apply border-b border-gray-200 px-3 py-2 text-sm text-gray-700;
     }
 
-    /* Code Blocks — the dark block is the one deliberate accent on the page */
+    /* Code Blocks — the dark block is the one deliberate accent on the page.
+       `pre` is the frame; the inner `code` is the box the content scrolls in.
+       That split is highlight.js's: its theme puts `display:block;
+       overflow-x:auto; padding:1em` on `pre code.hljs`. But rehype-highlight
+       only marks a fence `.hljs` when it carries a language tag (`detect` is
+       off), so an untagged fence used to scroll on `pre` instead — a full-bleed
+       bar against the block's bottom edge, and half the padding. The rule below
+       claims those three properties for every `pre > code`, tagged or not, and
+       pins the padding to the p-4 token instead of the theme's font-relative
+       1em. Specificity ties with the theme's rule; this layer wins on order. */
     & pre {
-      @apply bg-gray-900 rounded-[8px] p-4 overflow-x-auto;
+      @apply bg-gray-900 rounded-[8px] p-4;
+      color: #f8f8f2;
+      /* The typography plugin puts `overflow-x: auto` on `pre`. The frame is
+         not the scroll box any more, and it no longer carries scrollbar
+         styling either, so the container is handed back to `code` outright
+         rather than left to sit here unreachable. */
+      overflow: visible;
+    }
+    & pre > code {
+      @apply block overflow-x-auto p-4;
     }
     & code {
       @apply font-mono text-sm leading-relaxed;
     }
+    /* The theme paints both of its block colors on `.hljs`, which only exists
+       on tagged fences; both are handed back to `pre` above so every block is
+       lit the same way. `#f8f8f2` is a11y-dark's own foreground — the whole
+       palette in this block comes from the theme, so its base belongs there
+       too. The `.hljs-*` token colors are untouched: they land on child spans,
+       not on this element. */
     & pre .hljs {
       background: transparent;
+      color: inherit;
     }
     & :not(pre) > code {
       @apply bg-gray-100 text-sky-600 px-1.5 py-0.5 rounded-[4px] font-medium;
@@ -127,8 +152,8 @@ body {
     }
 
     /* Math — display math never wraps, so it scrolls inside its own block,
-       the same containment `pre` gets. Without it a long equation widens the
-       whole page instead. The padding keeps the scrollbar off the glyphs. */
+       the same containment a code fence gets. Without it a long equation widens
+       the whole page instead. The padding keeps the scrollbar off the glyphs. */
     & .katex-display {
       @apply overflow-x-auto overflow-y-hidden pt-1 pb-3;
     }
@@ -140,19 +165,18 @@ body {
        contrast as the hairlines already in this design — gray-200, the same
        #e5e7eb used for every rule — brightening one step on hover.
 
-       `pre code` is in the list because it, not `pre`, is what actually
-       scrolls: the highlight.js theme sets `display:block; overflow-x:auto` on
-       `.hljs`, so the bar belongs to the inner element. `pre` stays listed for
-       fences that highlight.js does not claim. */
+       A code fence is listed as `pre > code`, not `pre`: the inner element is
+       the one that scrolls (see Code Blocks above), so the bar rides 16px in
+       from the block's edges rather than against them. */
     @supports not selector(::-webkit-scrollbar) {
       /* Firefox only — see below for why the two APIs cannot both be set. */
-      & :is(pre, pre code, .katex-display, .table-scroll) {
+      & :is(pre > code, .katex-display, .table-scroll) {
         scrollbar-width: thin;
       }
       & :is(.katex-display, .table-scroll) {
         scrollbar-color: #e5e7eb transparent;
       }
-      & :is(pre, pre code) {
+      & pre > code {
         scrollbar-color: rgb(255 255 255 / 0.15) transparent;
       }
     }
@@ -160,13 +184,13 @@ body {
     /* Chrome drops every `::-webkit-scrollbar` rule as soon as `scrollbar-color`
        is set on the element, which is why the standard pair above is fenced off
        to the one engine that has no `::-webkit-scrollbar` selector. */
-    & :is(pre, pre code, .katex-display, .table-scroll)::-webkit-scrollbar {
+    & :is(pre > code, .katex-display, .table-scroll)::-webkit-scrollbar {
       @apply h-1.5;
     }
-    & :is(pre, pre code, .katex-display, .table-scroll)::-webkit-scrollbar-track {
+    & :is(pre > code, .katex-display, .table-scroll)::-webkit-scrollbar-track {
       background: transparent;
     }
-    & :is(pre, pre code, .katex-display, .table-scroll)::-webkit-scrollbar-button {
+    & :is(pre > code, .katex-display, .table-scroll)::-webkit-scrollbar-button {
       @apply hidden;
     }
     /* 4px is the inline radius token; on a 6px bar it clamps to a full round. */
@@ -176,7 +200,7 @@ body {
         @apply bg-gray-300;
       }
     }
-    & :is(pre, pre code)::-webkit-scrollbar-thumb {
+    & pre > code::-webkit-scrollbar-thumb {
       @apply bg-white/15 rounded-[4px];
       &:hover {
         @apply bg-white/30;
