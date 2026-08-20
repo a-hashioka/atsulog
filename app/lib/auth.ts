@@ -11,16 +11,19 @@ const SECRET_KEY = new TextEncoder().encode(process.env.SESSION_SECRET);
 
 const SESSION_COOKIE_NAME = siteConfig.cookie;
 
+const SESSION_DURATION_MS = siteConfig.sessionDurationHours * 60 * 60 * 1000;
+
 /**
  * Encrypts a payload into a JWT.
  * @param payload - The data to include in the session.
+ * @param expires - When the token should stop being accepted.
  * @returns The encrypted JWT string.
  */
-async function encrypt(payload: Record<string, unknown>) {
+async function encrypt(payload: Record<string, unknown>, expires: Date) {
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime("3h")
+    .setExpirationTime(expires)
     .sign(SECRET_KEY);
 }
 
@@ -45,8 +48,8 @@ export async function decrypt(session: string | undefined) {
  * Creates a new session and sets the session cookie.
  */
 export async function createSession() {
-  const expires = new Date(Date.now() + 3 * 60 * 60 * 1000); // 3 hours
-  const session = await encrypt({ authenticated: true, expires });
+  const expires = new Date(Date.now() + SESSION_DURATION_MS);
+  const session = await encrypt({ authenticated: true }, expires);
 
   const cookieStore = await cookies();
   cookieStore.set(SESSION_COOKIE_NAME, session, {

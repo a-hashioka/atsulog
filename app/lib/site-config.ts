@@ -3,6 +3,7 @@ export const siteConfig = {
   url: "https://atsulog.com",
   twitterHandle: "@atsurohashioka",
   cookie: "atsulog-cookie",
+  sessionDurationHours: 24,
   shareImage: "/share-image.png",
   htmlLang: "ja",
   locale: "ja-JP",
