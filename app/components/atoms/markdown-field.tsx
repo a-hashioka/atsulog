@@ -16,6 +16,8 @@ import {
   FileCode,
   FileText,
   Table,
+  Sigma,
+  Radical,
   Image as ImageIcon,
   Loader2,
   Pencil,
@@ -477,6 +479,27 @@ function Toolbar({
           suffix: " | Cell |\n",
           placeholder: "Cell",
           title: "Table",
+        },
+      ],
+    },
+    {
+      items: [
+        {
+          icon: Sigma,
+          prefix: "$",
+          suffix: "$",
+          placeholder: "x^2",
+          title: "Inline Math",
+        },
+        {
+          // The surrounding blank lines are the point of this button: without
+          // them the `$$` is swallowed by the neighbouring paragraph and the
+          // equation renders inline.
+          icon: Radical,
+          prefix: "\n$$\n",
+          suffix: "\n$$\n",
+          placeholder: "x^2",
+          title: "Math Block",
         },
       ],
     },

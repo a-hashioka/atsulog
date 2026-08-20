@@ -41,6 +41,7 @@ https://atsulog.com
 
 - **Web UI**: Log in at `/login` to create and edit articles directly in your browser.
 - **Local Files**: Articles and images are saved locally in the `data/` folder, making it easy to manage with Git.
+- **Math**: Write `$E = mc^2$` for inline math and `$$ ... $$` for a display equation; both are typeset with KaTeX. A literal dollar sign in prose needs escaping as `\$` (inside code spans and fenced blocks it is left alone).
 
 ## Customization
 
