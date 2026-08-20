@@ -1,4 +1,4 @@
-import ReactMarkdown from "react-markdown";
+import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import rehypeHighlight from "rehype-highlight";
@@ -10,6 +10,23 @@ import rehypeKatex from "rehype-katex";
 // files it references are emitted to .next/static/media, which standalone.sh
 // already copies.
 import "katex/dist/katex.min.css";
+
+/**
+ * remark-gfm emits a bare <table>, which cannot contain itself once its columns
+ * outgrow the article column — it pushes the whole page sideways instead. The
+ * wrapper gives it a box to scroll inside; `.table-scroll` is styled in
+ * globals.css alongside the other scrolling blocks.
+ */
+const components: Components = {
+  // `node` is react-markdown's hast node — destructured off so it is not
+  // spread onto the DOM element, where React would warn about it.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  table: ({ node, ...props }) => (
+    <div className="table-scroll">
+      <table {...props} />
+    </div>
+  ),
+};
 
 type MarkdownRendererProps = {
   content: string;
@@ -33,6 +50,7 @@ export function MarkdownRenderer({
         // this order lets KaTeX replace the <pre> before highlighting rewrites
         // its text into <span>s.
         rehypePlugins={[rehypeKatex, rehypeHighlight]}
+        components={components}
       >
         {content}
       </ReactMarkdown>
