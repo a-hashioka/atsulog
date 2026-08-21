@@ -53,7 +53,9 @@ export default async function ArticlesPage({
 
   // 1. Data Fetching
   const allMetadata = await getArticles();
-  const publishedMetadata = allMetadata.filter((a) => a.published);
+  const publishedMetadata = allMetadata.filter(
+    (a) => a.published && a.slug !== siteConfig.aboutSlug,
+  );
 
   // 2. Prepare Form Candidates
   const candidates = getTaxonomies(publishedMetadata);

@@ -10,4 +10,5 @@ export const siteConfig = {
   timeZone: "Asia/Tokyo",
   articlesPerPage: 6,
   recentArticlesCount: 3,
+  aboutSlug: "about",
 } as const;

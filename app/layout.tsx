@@ -1,4 +1,4 @@
-import { Home, Newspaper, Pencil } from "lucide-react";
+import { Home, Newspaper, Pencil, User } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
@@ -67,6 +67,13 @@ export default async function RootLayout({
               >
                 <Newspaper className="size-4.5 md:size-4 md:mr-1.5" />
                 <span className="hidden md:inline">Articles</span>
+              </Link>
+              <Link
+                href={`/articles/${siteConfig.aboutSlug}`}
+                className="text-sm font-medium text-gray-500 hover:text-black transition-colors flex items-center"
+              >
+                <User className="size-4.5 md:size-4 md:mr-1.5" />
+                <span className="hidden md:inline">About</span>
               </Link>
               {authenticated && (
                 <Link

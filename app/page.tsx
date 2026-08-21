@@ -35,7 +35,9 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   const allArticles = await getArticles();
-  const articles = allArticles.filter((a) => a.published);
+  const articles = allArticles.filter(
+    (a) => a.published && a.slug !== siteConfig.aboutSlug,
+  );
 
   return (
     <div className="space-y-16">
