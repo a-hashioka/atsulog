@@ -1,14 +1,14 @@
 import { getArticles } from "@/app/lib/article-repository";
-import { PaginatedArticleList } from "@/app/components/organisms/paginated-article-list";
-import { DraftArticleList } from "@/app/components/organisms/draft-article-list";
+import { PaginatedArticleList } from "@/app/components/article/paginated-article-list";
+import { DraftArticleList } from "@/app/components/editor/draft-article-list";
 import {
   sortArticles,
   getTaxonomies,
   filterArticles,
   getSortConfig,
 } from "@/app/lib/article-utils";
-import { ArticleSearchForm } from "@/app/components/organisms/article-search-form";
-import { CreateArticleSection } from "@/app/components/organisms/create-article-section";
+import { ArticleSearchForm } from "@/app/components/article/article-search-form";
+import { CreateArticleSection } from "@/app/components/editor/create-article-section";
 import type { ArticleSearchParams } from "@/app/lib/article-types";
 
 /**

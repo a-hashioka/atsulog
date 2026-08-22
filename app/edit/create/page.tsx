@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { EditArticleForm } from "@/app/components/organisms/edit-article-form";
+import { EditArticleForm } from "@/app/components/editor/edit-article-form";
 import { getArticles, saveArticle } from "@/app/lib/article-repository";
 import type { ArticleMetadata } from "@/app/lib/article-types";
 import { generateSlug, getTaxonomies } from "@/app/lib/article-utils";

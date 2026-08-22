@@ -4,7 +4,7 @@ import { sortArticles } from "@/app/lib/article-utils";
 import {
   ArticleList,
   type ArticleListProps,
-} from "@/app/components/atoms/article-list";
+} from "@/app/components/article/article-list";
 
 import { siteConfig } from "@/app/lib/site-config";
 

@@ -10,9 +10,9 @@ import {
   Check,
 } from "lucide-react";
 import type { ArticleMetadata } from "@/app/lib/article-types";
-import { FormField } from "@/app/components/atoms/form-field";
-import { MarkdownField } from "@/app/components/atoms/markdown-field";
-import { Button } from "@/app/components/atoms/button";
+import { FormField } from "@/app/components/ui/form-field";
+import { MarkdownField } from "@/app/components/markdown/markdown-field";
+import { Button } from "@/app/components/ui/button";
 import { useArticleEditor } from "@/app/lib/use-article-editor";
 
 // --- Types ---

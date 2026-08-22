@@ -3,8 +3,8 @@
 import { Search, RotateCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Form from "next/form";
-import { SearchFields } from "@/app/components/atoms/search-field";
-import { Button } from "@/app/components/atoms/button";
+import { SearchFields } from "@/app/components/article/search-fields";
+import { Button } from "@/app/components/ui/button";
 
 type SearchParams = {
   keyword?: string | string[];

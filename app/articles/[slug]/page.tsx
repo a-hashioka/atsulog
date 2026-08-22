@@ -2,16 +2,16 @@ import { ArrowLeft, Pencil } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { MarkdownRenderer } from "@/app/components/atoms/markdown-renderer";
+import { MarkdownRenderer } from "@/app/components/markdown/markdown-renderer";
 import {
   getArticles,
   getArticleBySlug,
   incrementViewCount,
 } from "@/app/lib/article-repository";
 import { isAuthenticated } from "@/app/lib/auth";
-import { ArticleMeta } from "@/app/components/atoms/article-meta";
-import { ArticleTaxonomies } from "@/app/components/atoms/article-taxonomies";
-import { SeriesNavigation } from "@/app/components/atoms/series-navigation";
+import { ArticleMeta } from "@/app/components/article/article-meta";
+import { ArticleTaxonomies } from "@/app/components/article/article-taxonomies";
+import { SeriesNavigation } from "@/app/components/article/series-navigation";
 import { siteConfig } from "@/app/lib/site-config";
 
 /**

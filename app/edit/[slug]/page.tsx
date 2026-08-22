@@ -7,7 +7,7 @@ import {
   getArticles,
   saveArticle,
 } from "@/app/lib/article-repository";
-import { EditArticleForm } from "@/app/components/organisms/edit-article-form";
+import { EditArticleForm } from "@/app/components/editor/edit-article-form";
 import { getTaxonomies } from "@/app/lib/article-utils";
 
 type EditArticlePageProps = {

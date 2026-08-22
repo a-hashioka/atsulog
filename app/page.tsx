@@ -1,8 +1,8 @@
 import { siteConfig } from "@/app/lib/site-config";
 import { getArticles } from "@/app/lib/article-repository";
-import { RecentArticles } from "@/app/components/organisms/recent-articles";
-import { HeroTitle } from "@/app/components/organisms/hero-title";
-import { SiteStats } from "@/app/components/organisms/site-stats";
+import { RecentArticles } from "@/app/components/article/recent-articles";
+import { HeroTitle } from "@/app/components/home/hero-title";
+import { SiteStats } from "@/app/components/home/site-stats";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

@@ -1,5 +1,5 @@
 import type { ArticleMetadata } from "@/app/lib/article-types";
-import { Tag } from "@/app/components/atoms/tag";
+import { Tag } from "@/app/components/ui/tag";
 
 /**
  * Props for the ArticleTaxonomies component.

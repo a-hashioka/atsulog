@@ -1,5 +1,5 @@
 import { Search, Folder, BookOpen, Tag } from "lucide-react";
-import { FormField } from "./form-field";
+import { FormField } from "@/app/components/ui/form-field";
 import type { ArticleSearchParams } from "@/app/lib/article-types";
 import { getParam } from "@/app/lib/article-utils";
 import { useTagInput } from "@/app/lib/use-tag-input";

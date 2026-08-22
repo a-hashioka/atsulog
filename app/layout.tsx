@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { siteConfig } from "@/app/lib/site-config";
 import { isAuthenticated } from "@/app/lib/auth";
-import { LogoutButton } from "@/app/components/atoms/logout-button";
+import { LogoutButton } from "@/app/components/ui/logout-button";
 import "./globals.css";
 
 export const metadata: Metadata = {

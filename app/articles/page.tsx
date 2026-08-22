@@ -1,4 +1,4 @@
-import { PaginatedArticleList } from "@/app/components/organisms/paginated-article-list";
+import { PaginatedArticleList } from "@/app/components/article/paginated-article-list";
 import type { Metadata } from "next";
 import { getArticles } from "@/app/lib/article-repository";
 import {
@@ -7,7 +7,7 @@ import {
   filterArticles,
   getSortConfig,
 } from "@/app/lib/article-utils";
-import { ArticleSearchForm } from "@/app/components/organisms/article-search-form";
+import { ArticleSearchForm } from "@/app/components/article/article-search-form";
 import type { ArticleSearchParams } from "@/app/lib/article-types";
 import { siteConfig } from "@/app/lib/site-config";
 

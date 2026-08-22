@@ -23,7 +23,7 @@ import {
   Pencil,
   Eye,
 } from "lucide-react";
-import { MarkdownRenderer } from "./markdown-renderer";
+import { MarkdownRenderer } from "@/app/components/markdown/markdown-renderer";
 import { uploadImageAction } from "@/app/lib/image-actions";
 
 // --- Types ---

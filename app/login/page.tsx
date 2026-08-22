@@ -1,6 +1,6 @@
 import { loginAction } from "@/app/lib/auth-actions";
-import { FormField } from "@/app/components/atoms/form-field";
-import { Button } from "@/app/components/atoms/button";
+import { FormField } from "@/app/components/ui/form-field";
+import { Button } from "@/app/components/ui/button";
 import { LogIn } from "lucide-react";
 import Image from "next/image";
 import { siteConfig } from "@/app/lib/site-config";

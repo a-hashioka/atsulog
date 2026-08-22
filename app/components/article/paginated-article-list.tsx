@@ -6,8 +6,8 @@ import {
   RotateCcw,
   Eye,
 } from "lucide-react";
-import { ArticleList } from "@/app/components/atoms/article-list";
-import { PaginationNav } from "@/app/components/atoms/pagination-nav";
+import { ArticleList } from "@/app/components/article/article-list";
+import { PaginationNav } from "@/app/components/article/pagination-nav";
 import type {
   ArticleMetadata,
   ArticleSearchParams,

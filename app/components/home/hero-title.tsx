@@ -1,5 +1,5 @@
 import { siteConfig } from "@/app/lib/site-config";
-import { CanvasSphere } from "@/app/components/atoms/canvas-sphere";
+import { CanvasSphere } from "@/app/components/home/canvas-sphere";
 
 /**
  * A simple, minimalist hero section with refined typography and a dynamic 3D icosphere background.
