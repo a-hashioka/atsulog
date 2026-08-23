@@ -20,6 +20,59 @@ type PaginationNavProps = {
 };
 
 /**
+ * The two kinds of control in the row. `edge` jumps to the first or last page
+ * and is icon-only; `step` moves one page and carries a label. They differ in
+ * their resting colour, so the split is not merely cosmetic.
+ */
+const VARIANTS = {
+  edge: {
+    base: "p-2",
+    enabled:
+      "rounded-lg transition-all text-gray-400 hover:text-black hover:bg-gray-50",
+  },
+  step: {
+    base: "p-2 px-3 text-sm font-medium flex items-center",
+    enabled:
+      "rounded-lg transition-all text-gray-600 hover:text-black hover:bg-gray-50 border border-transparent hover:border-gray-200",
+  },
+};
+
+/**
+ * One pagination control. Renders a Link when the target page exists and an
+ * inert span when it does not, so a disabled control still occupies its slot
+ * and the row never reflows as you page through.
+ */
+function PageLink({
+  href,
+  disabled,
+  title,
+  variant,
+  children,
+}: {
+  href: string;
+  disabled: boolean;
+  title?: string;
+  variant: keyof typeof VARIANTS;
+  children: React.ReactNode;
+}) {
+  const { base, enabled } = VARIANTS[variant];
+
+  if (disabled) {
+    return (
+      <span className={`${base} text-gray-200 cursor-not-allowed`}>
+        {children}
+      </span>
+    );
+  }
+
+  return (
+    <Link href={href} title={title} className={`${base} ${enabled}`}>
+      {children}
+    </Link>
+  );
+}
+
+/**
  * Renders pagination links that are valid for the current position.
  * Allows clicking on the page indicator to input a specific page number to jump to.
  */
@@ -43,11 +96,14 @@ export function PaginationNav({
   const hasPreviousPage = currentPage > 1;
   const hasNextPage = currentPage < totalPages;
 
+  const pageHref = (page: number) =>
+    buildArticleSearchUrl(basePath, searchParams, { page });
+
   const handleJump = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     const page = parseInt(inputPage);
     if (!isNaN(page) && page >= 1 && page <= totalPages) {
-      router.push(buildArticleSearchUrl(basePath, searchParams, { page }));
+      router.push(pageHref(page));
       setIsEditing(false);
     } else {
       setInputPage(currentPage.toString());
@@ -61,37 +117,23 @@ export function PaginationNav({
       className="flex justify-center items-center mt-[3rem] py-[2rem] border-t border-gray-100"
     >
       <div className="flex items-center space-x-[0.5rem]">
-        {hasPreviousPage ? (
-          <>
-            <Link
-              href={buildArticleSearchUrl(basePath, searchParams, { page: 1 })}
-              className="p-2 text-gray-400 hover:text-black hover:bg-gray-50 rounded-lg transition-all"
-              title="First Page"
-            >
-              <span className="sr-only">First</span>
-              <ChevronsLeft className="size-4" />
-            </Link>
-            <Link
-              href={buildArticleSearchUrl(basePath, searchParams, {
-                page: currentPage - 1,
-              })}
-              className="p-2 px-3 text-sm font-medium text-gray-600 hover:text-black hover:bg-gray-50 rounded-lg border border-transparent hover:border-gray-200 transition-all flex items-center"
-            >
-              <ChevronLeft className="size-4 md:mr-1" />
-              <span className="hidden md:inline">Prev</span>
-            </Link>
-          </>
-        ) : (
-          <>
-            <span className="p-2 text-gray-200 cursor-not-allowed">
-              <ChevronsLeft className="size-4" />
-            </span>
-            <span className="p-2 px-3 text-sm font-medium text-gray-200 cursor-not-allowed flex items-center">
-              <ChevronLeft className="size-4 md:mr-1" />
-              <span className="hidden md:inline">Prev</span>
-            </span>
-          </>
-        )}
+        <PageLink
+          href={pageHref(1)}
+          disabled={!hasPreviousPage}
+          title="First Page"
+          variant="edge"
+        >
+          <span className="sr-only">First</span>
+          <ChevronsLeft className="size-4" />
+        </PageLink>
+        <PageLink
+          href={pageHref(currentPage - 1)}
+          disabled={!hasPreviousPage}
+          variant="step"
+        >
+          <ChevronLeft className="size-4 md:mr-1" />
+          <span className="hidden md:inline">Prev</span>
+        </PageLink>
 
         {isEditing ? (
           <form
@@ -127,39 +169,23 @@ export function PaginationNav({
           </button>
         )}
 
-        {hasNextPage ? (
-          <>
-            <Link
-              href={buildArticleSearchUrl(basePath, searchParams, {
-                page: currentPage + 1,
-              })}
-              className="p-2 px-3 text-sm font-medium text-gray-600 hover:text-black hover:bg-gray-50 rounded-lg border border-transparent hover:border-gray-200 transition-all flex items-center"
-            >
-              <span className="md:mr-1 hidden md:inline">Next</span>
-              <ChevronRight className="size-4" />
-            </Link>
-            <Link
-              href={buildArticleSearchUrl(basePath, searchParams, {
-                page: totalPages,
-              })}
-              className="p-2 text-gray-400 hover:text-black hover:bg-gray-50 rounded-lg transition-all"
-              title="Last Page"
-            >
-              <span className="sr-only">Last</span>
-              <ChevronsRight className="size-4" />
-            </Link>
-          </>
-        ) : (
-          <>
-            <span className="p-2 px-3 text-sm font-medium text-gray-200 cursor-not-allowed flex items-center">
-              <span className="md:mr-1 hidden md:inline">Next</span>
-              <ChevronRight className="size-4" />
-            </span>
-            <span className="p-2 text-gray-200 cursor-not-allowed">
-              <ChevronsRight className="size-4" />
-            </span>
-          </>
-        )}
+        <PageLink
+          href={pageHref(currentPage + 1)}
+          disabled={!hasNextPage}
+          variant="step"
+        >
+          <span className="md:mr-1 hidden md:inline">Next</span>
+          <ChevronRight className="size-4" />
+        </PageLink>
+        <PageLink
+          href={pageHref(totalPages)}
+          disabled={!hasNextPage}
+          title="Last Page"
+          variant="edge"
+        >
+          <span className="sr-only">Last</span>
+          <ChevronsRight className="size-4" />
+        </PageLink>
       </div>
     </nav>
   );
