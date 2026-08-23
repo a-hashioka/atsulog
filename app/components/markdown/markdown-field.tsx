@@ -16,7 +16,6 @@ export type MarkdownFieldProps = {
   value: string;
   onChange: (value: string) => void;
   label?: string;
-  rows?: number;
 };
 
 // --- Main Component ---
@@ -31,7 +30,6 @@ export function MarkdownField({
   value,
   onChange,
   label = "Content (Markdown)",
-  rows = 20,
 }: MarkdownFieldProps) {
   const { states, handlers, textareaRef, fileInputRef, markdownInputRef } =
     useMarkdownField({ value, onChange });
@@ -81,7 +79,6 @@ export function MarkdownField({
             value={value}
             onChange={onChange}
             onKeyDown={handlers.handleKeyDown}
-            rows={rows}
           />
         ) : (
           <Preview content={value} />
@@ -95,19 +92,34 @@ export function MarkdownField({
 
 /**
  * The actual textarea for editing Markdown.
+ *
+ * The height is fixed and the document scrolls inside it, the way an editor
+ * pane behaves. It used to grow to fit its content from a `useEffect` in
+ * useMarkdownField, which is what made the page lurch on every keystroke:
+ * measuring meant setting `height: auto` first, and reading `scrollHeight` back
+ * forced a layout while the document was momentarily collapsed to a fraction of
+ * its height. The browser clamped `scrollY` into that shorter document and did
+ * not put it back when the height was restored. `transition-all` compounded it
+ * by animating the height the effect had just written, and `overflow-hidden`
+ * meant the caret left the box while it did — so the window scrolled to chase
+ * it. Nothing here changes the document's height any more, so there is no
+ * scroll for the browser to correct: `transition-shadow` covers the focus ring
+ * and nothing else, and the caret is followed inside this box.
+ *
+ * Dropping the measurement also hands the resize grip back — it was being
+ * overwritten on every keystroke. `resize-y` keeps it to the axis that cannot
+ * break the `w-full` column.
  */
 function Editor({
   textareaRef,
   value,
   onChange,
   onKeyDown,
-  rows,
 }: {
   textareaRef: React.RefObject<HTMLTextAreaElement | null>;
   value: string;
   onChange: (value: string) => void;
   onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
-  rows: number;
 }) {
   return (
     <textarea
@@ -118,8 +130,7 @@ function Editor({
       onChange={(event) => onChange(event.target.value)}
       onKeyDown={onKeyDown}
       required
-      rows={rows}
-      className="w-full p-[1rem] bg-gray-50/50 rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-sky-500/10 transition-all overflow-hidden"
+      className="w-full h-[70dvh] min-h-[18rem] resize-y overflow-auto p-[1rem] bg-gray-50/50 rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-sky-500/10 transition-shadow"
     />
   );
 }

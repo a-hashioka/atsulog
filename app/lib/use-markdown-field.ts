@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { uploadImageAction } from "@/app/lib/image-actions";
 import {
   continueList,
@@ -32,19 +32,19 @@ export function useMarkdownField({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const markdownInputRef = useRef<HTMLInputElement>(null);
 
-  // Auto-resize textarea to fit content
-  useEffect(() => {
-    const textarea = textareaRef.current;
-    if (textarea && mode === "edit") {
-      textarea.style.height = "auto";
-      textarea.style.height = `${textarea.scrollHeight}px`;
-    }
-  }, [value, mode]);
-
   /**
    * Pushes an edit up and restores the caret afterwards. The timeout is what
    * makes it stick: the textarea is controlled, so setting the selection before
    * React has re-rendered the new value would simply be overwritten.
+   *
+   * A zero delay is enough because every caller reaches here from a discrete
+   * event — a keydown, or a click on a toolbar button — and React commits those
+   * updates synchronously, so the DOM already carries the new value by the time
+   * the next macrotask runs. That is the whole of the guarantee, and it is worth
+   * naming because it is not a property of the timeout itself: move this call
+   * behind a transition or any async path and the wait stops being long enough.
+   * Switch it to `flushSync` around the `onChange`, or park the selection in a
+   * ref and restore it from a `useLayoutEffect`, before doing so.
    */
   const applyEdit = useCallback(
     (result: EditResult, refocus = false) => {
