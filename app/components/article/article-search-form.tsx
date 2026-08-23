@@ -5,21 +5,14 @@ import { useRouter } from "next/navigation";
 import Form from "next/form";
 import { SearchFields } from "@/app/components/article/search-fields";
 import { Button } from "@/app/components/ui/button";
-
-type SearchParams = {
-  keyword?: string | string[];
-  tag?: string | string[];
-  series?: string | string[];
-  category?: string | string[];
-};
+import type {
+  ArticleSearchParams,
+  TaxonomyCandidates,
+} from "@/app/lib/article-types";
 
 type ArticleSearchFormProps = {
-  searchParams: SearchParams;
-  candidates?: {
-    tags?: string[];
-    category?: string[];
-    series?: string[];
-  };
+  searchParams: ArticleSearchParams;
+  candidates?: TaxonomyCandidates;
   action?: string;
 };
 

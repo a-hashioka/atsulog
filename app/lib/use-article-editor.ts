@@ -1,5 +1,8 @@
 import { useState, useCallback } from "react";
-import type { ArticleMetadata } from "@/app/lib/article-types";
+import type {
+  ArticleMetadata,
+  TaxonomyCandidates,
+} from "@/app/lib/article-types";
 import { useNavigationGuard } from "./use-navigation-guard";
 import { useTagInput } from "./use-tag-input";
 
@@ -17,11 +20,7 @@ export function useArticleEditor({
   initialContent: string;
   action: (formData: FormData) => Promise<void>;
   articles: ArticleMetadata[];
-  candidates?: {
-    tags?: string[];
-    category?: string[];
-    series?: string[];
-  };
+  candidates?: TaxonomyCandidates;
 }) {
   const [currentContent, setCurrentContent] = useState(initialContent);
   const [title, setTitle] = useState(metadata.title);

@@ -47,6 +47,17 @@ export type ArticleSearchParams = {
 };
 
 /**
+ * Autocomplete candidates for the taxonomy fields, as produced by
+ * getTaxonomies(). Every field is optional because a caller may offer
+ * suggestions for only some of them.
+ */
+export type TaxonomyCandidates = {
+  tags?: string[];
+  category?: string[];
+  series?: string[];
+};
+
+/**
  * Standard props for pages that handle article search parameters.
  */
 export type ArticlePageProps = {

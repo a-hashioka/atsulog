@@ -1,16 +1,15 @@
 import { Search, Folder, BookOpen, Tag } from "lucide-react";
 import { FormField } from "@/app/components/ui/form-field";
-import type { ArticleSearchParams } from "@/app/lib/article-types";
+import type {
+  ArticleSearchParams,
+  TaxonomyCandidates,
+} from "@/app/lib/article-types";
 import { getParam } from "@/app/lib/article-utils";
 import { useTagInput } from "@/app/lib/use-tag-input";
 
 type SearchFieldsProps = {
   searchParams: ArticleSearchParams;
-  candidates?: {
-    tags?: string[];
-    category?: string[];
-    series?: string[];
-  };
+  candidates?: TaxonomyCandidates;
 };
 
 /**

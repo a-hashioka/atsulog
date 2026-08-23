@@ -9,7 +9,10 @@ import {
   FileText,
   Check,
 } from "lucide-react";
-import type { ArticleMetadata } from "@/app/lib/article-types";
+import type {
+  ArticleMetadata,
+  TaxonomyCandidates,
+} from "@/app/lib/article-types";
 import { FormField } from "@/app/components/ui/form-field";
 import { MarkdownField } from "@/app/components/markdown/markdown-field";
 import { Button } from "@/app/components/ui/button";
@@ -25,11 +28,7 @@ type EditArticleFormProps = {
   content: string;
   action: (formData: FormData) => Promise<void>;
   articles: ArticleMetadata[];
-  candidates?: {
-    tags?: string[];
-    category?: string[];
-    series?: string[];
-  };
+  candidates?: TaxonomyCandidates;
 };
 
 // --- Main Component ---
