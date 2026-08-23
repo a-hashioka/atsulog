@@ -265,13 +265,36 @@ body {
       @apply max-w-full h-auto max-h-[35rem] mx-auto rounded-[8px];
     }
 
-    /* Lists */
+    /* Lists
+       One step per level, the same step at every depth, on `ol` as much as on
+       `ul`. 1.5rem is the page gutter from layout.tsx: a list hangs off the
+       text by the same distance the text hangs off the edge of the screen.
+
+       Both of the typography plugin's own values are claimed here — 1.625em on
+       the list and 0.375em on the item — because leaving either one in place is
+       what produced the indent this replaces. 26px, 6px and an `ml-6` stacked
+       to 56px a level, putting a second-level item 88px in: a quarter of the
+       342px column a phone has. `ol` never carried that `ml-6`, so the two list
+       kinds stepped by different amounts as well.
+
+       Roughly 20px is the floor here, not 0: the markers are `outside`, so a
+       two-digit `10.` is drawn inside this padding and starts hanging into the
+       text above it once the padding is narrower than the number.
+
+       `marker:` reaches descendants as well as the element, so the nested rules
+       below only have to name the shape. */
+    & :is(ul, ol) {
+      @apply ps-6;
+    }
+    & :is(ul, ol) > li {
+      @apply ps-0;
+    }
     & ul {
       @apply list-disc marker:text-gray-900;
       & ul {
-        @apply list-[circle] ml-6 marker:text-gray-900;
+        @apply list-[circle];
         & ul {
-          @apply list-[square] ml-6 marker:text-gray-900;
+          @apply list-[square];
         }
       }
     }
