@@ -44,7 +44,7 @@ export function MarkdownField({
       </div>
 
       {states.mode === "edit" && (
-        <div className="flex flex-col space-y-[0.5rem] animate-fade-in">
+        <div className="flex flex-col space-y-[0.5rem]">
           <MarkdownToolbar
             onAction={handlers.insertMarkdown}
             onUploadClick={handlers.openImagePicker}
