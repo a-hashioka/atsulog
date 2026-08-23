@@ -1,13 +1,26 @@
 export const siteConfig = {
+  // Site identity
   title: "Atsulog",
   url: "https://atsulog.com",
-  twitterHandle: "@atsurohashioka",
-  cookie: "atsulog-cookie",
-  sessionDurationHours: 24,
-  shareImage: "/share-image.png",
+
+  // Author's public accounts — bare identifiers; callers add "@" or the host
+  twitter: "atzroh",
+  github: "atzroh",
+  email: "atzroh@gmail.com",
+
+  // Language & region
   htmlLang: "ja",
   locale: "ja-JP",
   timeZone: "Asia/Tokyo",
+
+  // Social sharing
+  shareImage: "/share-image.png",
+
+  // Session auth
+  cookie: "atsulog-cookie",
+  sessionDurationHours: 24,
+
+  // Article listing
   articlesPerPage: 6,
   recentArticlesCount: 3,
   aboutSlug: "about",

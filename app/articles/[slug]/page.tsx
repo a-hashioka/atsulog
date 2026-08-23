@@ -55,7 +55,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: article.metadata.title,
       description: `Read "${article.metadata.title}" on ${siteConfig.title}.`,
-      creator: siteConfig.twitterHandle,
+      creator: `@${siteConfig.twitter}`,
       images: [siteConfig.shareImage],
     },
   };

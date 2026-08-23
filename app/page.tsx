@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: `Home`,
     description: `${siteConfig.title} is a personal blog.`,
-    creator: siteConfig.twitterHandle,
+    creator: `@${siteConfig.twitter}`,
     images: [siteConfig.shareImage],
   },
 };

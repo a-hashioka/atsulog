@@ -5,6 +5,7 @@ import Image from "next/image";
 import { siteConfig } from "@/app/lib/site-config";
 import { isAuthenticated } from "@/app/lib/auth";
 import { LogoutButton } from "@/app/components/ui/logout-button";
+import { SocialLinks } from "@/app/components/ui/social-links";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -92,6 +93,7 @@ export default async function RootLayout({
           <main>{children}</main>
         </div>
         <footer className="max-w-3xl mx-auto w-full px-6 py-8 border-t border-gray-100 text-sm text-muted text-center lowercase">
+          <SocialLinks />
           &copy; {currentYear} {siteConfig.title}
         </footer>
       </body>
