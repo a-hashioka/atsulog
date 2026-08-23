@@ -91,21 +91,45 @@ body {
        `.table-scroll` is the wrapper markdown-renderer.tsx puts around every
        table: remark-gfm emits a bare <table>, which has no way to contain
        itself once the columns outgrow the column width. The margin lives on
-       the wrapper so it stays outside the scrolling box. */
+       the wrapper so it stays outside the scrolling box.
+
+       `w-max` is what makes that wrapper mean anything. Under the `w-full` it
+       replaces, the table was pinned to the wrapper's own width, so the columns
+       could never outgrow it and `overflow-x-auto` never had anything to
+       scroll — the cells wrapped instead, which on a phone (342px of column
+       inside a 390px screen) reads as a table full of stray line breaks.
+
+       `min-w-full` is deliberately absent alongside it. Stretching a narrow
+       table out to the column hands the spare width to the columns to divide
+       up, and a cell held to the cap below cannot take its share — the
+       `border-b` rules would stop short of the table's own edge, and those
+       rules are the only frame this table has. Sized to `max-content` exactly,
+       there is no spare width to divide and the rules always reach the end.
+       `mx-auto` is the other half of that bargain: not filling the column, the
+       table is centred in it instead. It costs the scrolling nothing, because a
+       table wider than the column has negative free space and auto margins
+       resolve to zero — which centring the wrapper's flex line would not do,
+       and the overflow off the left would then be unreachable.
+
+       The cap on the cells is the other half of `max-content`: intrinsic sizing
+       ignores every soft wrap opportunity, so a single prose cell would set
+       itself as one unbroken line and drag the table past 1000px. 20rem sits
+       just under that 342px phone column — no one cell outgrows a phone screen
+       — and the `break-words` further down does the wrapping. */
     & .table-scroll {
       @apply my-8 overflow-x-auto;
     }
     & table {
-      @apply w-full my-0 border-collapse;
+      @apply w-max mx-auto my-0 border-collapse;
     }
     & thead {
       @apply border-b border-gray-200;
     }
     & th {
-      @apply px-3 py-2 text-left text-sm font-bold text-gray-900;
+      @apply px-3 py-2 text-left text-sm font-bold text-gray-900 max-w-[20rem];
     }
     & td {
-      @apply border-b border-gray-200 px-3 py-2 text-sm text-gray-700;
+      @apply border-b border-gray-200 px-3 py-2 text-sm text-gray-700 max-w-[20rem];
     }
 
     /* Code Blocks — the dark block is the one deliberate accent on the page.
