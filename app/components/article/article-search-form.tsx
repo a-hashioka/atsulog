@@ -29,9 +29,7 @@ export function ArticleSearchForm({
 
   return (
     <section className="mb-[4rem]">
-      <div className="flex items-center justify-between mb-[2rem]">
-        <h2 className="text-3xl font-bold tracking-tight">Search & Filter</h2>
-      </div>
+      <h1 className="text-3xl font-bold tracking-tight mb-8">Search & Filter</h1>
       <Form action={action}>
         <SearchFields
           key={JSON.stringify(searchParams)}

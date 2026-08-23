@@ -8,9 +8,9 @@ import { Plus } from "lucide-react";
 export function CreateArticleSection() {
   return (
     <section>
-      <h2 className="text-3xl font-bold tracking-tight mb-8">
+      <h1 className="text-3xl font-bold tracking-tight mb-8">
         Create Articles
-      </h2>
+      </h1>
       <Link
         href="/edit/create"
         className="group flex items-center justify-between p-6 bg-white border border-gray-100 rounded-2xl hover:border-gray-300 transition-all duration-300"

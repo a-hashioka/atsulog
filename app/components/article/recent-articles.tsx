@@ -18,7 +18,7 @@ export function RecentArticles({ articles }: ArticleListProps) {
   );
 
   return (
-    <section className="space-y-10">
+    <section>
       <div>
         <h1 className="text-3xl font-bold tracking-tight mb-8">
           Recent Articles
