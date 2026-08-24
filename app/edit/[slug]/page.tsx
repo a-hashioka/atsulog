@@ -80,13 +80,17 @@ export default async function EditArticlePage({
           <ArrowLeft className="size-[1rem] mr-[0.5rem]" />
           Back to Edit List
         </Link>
-        <Link
-          href={`/articles/${slug}`}
-          className="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors flex items-center"
-        >
-          View this article
-          <ExternalLink className="size-[1rem] ml-[0.5rem]" />
-        </Link>
+        {/* The public article route 404s on an unpublished article, so this
+            link is only ever reachable once the draft has been published. */}
+        {detail.metadata.published && (
+          <Link
+            href={`/articles/${slug}`}
+            className="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors flex items-center"
+          >
+            View this article
+            <ExternalLink className="size-[1rem] ml-[0.5rem]" />
+          </Link>
+        )}
       </nav>
     </main>
   );
