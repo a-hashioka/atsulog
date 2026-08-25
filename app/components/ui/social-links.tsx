@@ -62,8 +62,8 @@ function MailIcon({ className }: IconProps) {
 
 /**
  * The author's public accounts, in the order they appear in the footer.
- * siteConfig holds only the bare identifiers, so the host and the mailto
- * scheme are assembled here.
+ * siteConfig holds the two social handles as bare identifiers, so their hosts
+ * are assembled here; the contact form is already a full URL.
  */
 const links = [
   {
@@ -79,10 +79,10 @@ const links = [
     external: true,
   },
   {
-    href: `mailto:${siteConfig.email}`,
-    label: "Email",
+    href: siteConfig.contactForm,
+    label: "Contact",
     Icon: MailIcon,
-    external: false,
+    external: true,
   },
 ];
 

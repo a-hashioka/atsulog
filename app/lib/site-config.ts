@@ -6,7 +6,11 @@ export const siteConfig = {
   // Author's public accounts — bare identifiers; callers add "@" or the host
   twitter: "atzroh",
   github: "atzroh",
-  email: "atzroh@gmail.com",
+
+  // Contact goes through a Google Form instead of a published address, so the
+  // markup carries nothing for harvesters to scrape. Stored as a full URL —
+  // unlike the handles above, there is no host for the caller to assemble.
+  contactForm: "https://forms.gle/gRH1uf3XdhNxuR1g7",
 
   // Language & region
   htmlLang: "ja",
